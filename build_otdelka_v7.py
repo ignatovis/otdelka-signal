@@ -554,94 +554,99 @@ sc(ws_rep.cell(rr,9),fill=F_LVL1,border=BRD)
 
 # ═══════════════════════════════════════════════════════════
 # 5. SIGNAL — горизонтальная раскладка, агрегатные карточки
+#    Каждая карточка = 3 столбца (ключ/дата, значение/план, факт)
+#    Между карточками — 3 пустых столбца
 # ═══════════════════════════════════════════════════════════
 ws_sig = wb.create_sheet("SIGNAL"); ws_sig.sheet_properties.tabColor = "4472C4"
 ws_sig.cell(1,1,"Дата отчета"); sc(ws_sig.cell(1,1),BOLD,F_PAR,LW,BRD)
 ws_sig.cell(1,2,datetime(2026,6,29)); sc(ws_sig.cell(1,2),BOLD,F_PAR,border=BRD,nf="DD.MM.YYYY")
 ws_sig.cell(1,2).comment=Comment("Замените на =TODAY()","Шаблон")
 
-# Each group = 3 cards (total, rough, finish) × 2 cols (Plan, Fact) = 6 cols
-GRP_W = 6
-grps = [{"label":"8.1 Подземная часть","pa":f"={REF}!D{SUM_UG}"}]
+CARD_W = 3; GAP_W = 3; STRIDE = CARD_W + GAP_W
+
+grp_meta = [("8.1 Подземная часть", f"={REF}!D{SUM_UG}")]
 for bn in BUILDINGS:
     psum = "+".join([f"{REF}!{cl(2+j)}{BLDG_ROWS[bn]}" for j in range(N_AG)])
-    grps.append({"label":f"8.2 Надземная {bn}","pa":f"={psum}"})
-grps.append({"label":"8.2 Надзем. (все)","pa":f"={REF}!D{SUM_AG}"})
-grps.append({"label":"8. Отделка общий","pa":f"={REF}!D{SUM_UG}+{REF}!D{SUM_AG}"})
-N_GRP = len(grps)
+    grp_meta.append((f"8.2 Надземная {bn}", f"={psum}"))
+grp_meta.append(("8.2 Надзем. (все)", f"={REF}!D{SUM_AG}"))
+grp_meta.append(("8. Отделка общий", f"={REF}!D{SUM_UG}+{REF}!D{SUM_AG}"))
+N_GRP = len(grp_meta)
 CTYPES = ["Общий","Черновая","Чистовая"]
+N_CARDS = N_GRP * 3
 
-def sc_(gi, ci, pf):
-    return 2 + gi*GRP_W + ci*2 + pf
+card_names = []; card_pa = []
+for gl, pa in grp_meta:
+    for ct in CTYPES:
+        card_names.append(f"{gl}: {ct}")
+        card_pa.append(pa)
 
-# Row 3: group headers (merged across 6 cols)
-for gi, g in enumerate(grps):
-    gc = 2 + gi*GRP_W
-    ws_sig.merge_cells(start_row=3, start_column=gc, end_row=3, end_column=gc+GRP_W-1)
-    c = ws_sig.cell(3, gc, g["label"])
-    sc(c, BW, F_TITLE, CTR, BRD); sr(ws_sig, 3, 3, gc, gc+GRP_W-1, fill=F_TITLE, border=BRD)
+def cbc(i):
+    return 2 + i * STRIDE
 
-# Row 4: card sub-headers (Общий / Черновая / Чистовая, merged 2 cols each)
-for gi in range(N_GRP):
-    for ci, ct in enumerate(CTYPES):
-        cc = sc_(gi, ci, 0)
-        ws_sig.merge_cells(start_row=4, start_column=cc, end_row=4, end_column=cc+1)
-        c = ws_sig.cell(4, cc, ct); sc(c, BOLD, F_HDR, CTR, BRD)
-        sc(ws_sig.cell(4, cc+1), fill=F_HDR, border=BRD)
+# Row 3: group headers (merged across group's 3 cards + gaps)
+for g in range(N_GRP):
+    gc = cbc(g*3); ge = cbc(g*3+2) + 2
+    ws_sig.merge_cells(start_row=3, start_column=gc, end_row=3, end_column=ge)
+    c = ws_sig.cell(3, gc, grp_meta[g][0])
+    sc(c, BW, F_TITLE, CTR, BRD); sr(ws_sig, 3, 3, gc, ge, fill=F_TITLE, border=BRD)
 
-# Rows 5-16: config fields (names in col A, values across card columns)
+# Row 4: card sub-headers (Общий/Черновая/Чистовая, merged 3 cols each)
+for i in range(N_CARDS):
+    bc = cbc(i)
+    ws_sig.merge_cells(start_row=4, start_column=bc, end_row=4, end_column=bc+2)
+    c = ws_sig.cell(4, bc, CTYPES[i % 3])
+    sc(c, BOLD, F_HDR, CTR, BRD); sr(ws_sig, 4, 4, bc, bc+2, fill=F_HDR, border=BRD)
+
+# Rows 5-16: config (each card has its own key-value block)
 CFG_R = 5
 SIG_CFG = [("Заголовок","План-факт по объемам"),("Статус",True),("Url изображения",""),
            ("Тип","planFact2"),("",""),("Дата","=$B$1"),("Гистограмма",False),
            ("По месяцам",False),("Всего",None),("Тип",None),("Ед. изм.","м2"),
            ("Учитывать дату карточки",False)]
 
-for fi, (fld, fv) in enumerate(SIG_CFG):
-    r = CFG_R + fi
-    if fld:
-        ws_sig.cell(r, 1, fld); sc(ws_sig.cell(r, 1), BOLD, F_CFG, LW, BRD)
-    for gi, g in enumerate(grps):
-        for ci, ct in enumerate(CTYPES):
-            cc = sc_(gi, ci, 0)
-            if fld == "Всего":
-                ws_sig.cell(r, cc, g["pa"])
-            elif fld == "Тип" and fi == 9:
-                ws_sig.cell(r, cc, f"{g['label']}: {ct}")
-            elif fld == "Дата":
-                ws_sig.cell(r, cc, "=$B$1")
-                sc(ws_sig.cell(r, cc), nf="DD.MM.YYYY")
-            elif fld:
-                ws_sig.cell(r, cc, fv)
-            sc(ws_sig.cell(r, cc), border=BRD)
-            sc(ws_sig.cell(r, cc+1), border=BRD)
-    if fld in CFG_COMMENTS:
-        ws_sig.cell(r, 1).comment = Comment(CFG_COMMENTS[fld], "SIGNAL")
+for i in range(N_CARDS):
+    bc = cbc(i)
+    for fi, (fld, fv) in enumerate(SIG_CFG):
+        r = CFG_R + fi
+        if fld:
+            ws_sig.cell(r, bc, fld); sc(ws_sig.cell(r, bc), BOLD, F_CFG, LW, BRD)
+        if fld == "Всего":
+            ws_sig.cell(r, bc+1, card_pa[i])
+        elif fld == "Тип" and fi == 9:
+            ws_sig.cell(r, bc+1, card_names[i])
+        elif fld == "Дата":
+            ws_sig.cell(r, bc+1, "=$B$1")
+            sc(ws_sig.cell(r, bc+1), nf="DD.MM.YYYY")
+        elif fld:
+            ws_sig.cell(r, bc+1, fv)
+        sc(ws_sig.cell(r, bc+1), border=BRD)
+        if fld in CFG_COMMENTS and i == 0:
+            ws_sig.cell(r, bc).comment = Comment(CFG_COMMENTS[fld], "SIGNAL")
 
-# Row 17: data headers
+# Row 17: data headers per card
 HDR_R = CFG_R + len(SIG_CFG)
-ws_sig.cell(HDR_R, 1, "Дата"); sc(ws_sig.cell(HDR_R, 1), BOLD, F_HDR, CTR, BRD)
-for gi in range(N_GRP):
-    for ci in range(3):
-        pc = sc_(gi, ci, 0); fc = sc_(gi, ci, 1)
-        ws_sig.cell(HDR_R, pc, "План"); sc(ws_sig.cell(HDR_R, pc), BOLD, F_HDR, CTR, BRD)
-        ws_sig.cell(HDR_R, fc, "Факт"); sc(ws_sig.cell(HDR_R, fc), BOLD, F_HDR, CTR, BRD)
+for i in range(N_CARDS):
+    bc = cbc(i)
+    ws_sig.cell(HDR_R, bc, "Дата"); sc(ws_sig.cell(HDR_R, bc), BOLD, F_HDR, CTR, BRD)
+    ws_sig.cell(HDR_R, bc+1, "План"); sc(ws_sig.cell(HDR_R, bc+1), BOLD, F_HDR, CTR, BRD)
+    ws_sig.cell(HDR_R, bc+2, "Факт"); sc(ws_sig.cell(HDR_R, bc+2), BOLD, F_HDR, CTR, BRD)
 
 # Rows 18+: weekly data
 DATA_R = HDR_R + 1
-gi_82 = 1 + N_BLDG
-gi_all = 2 + N_BLDG
 
 for di in range(N_WEEKS):
     r = DATA_R + di
     fr = DR + di
-    dc = f"$A{r}"
-    if di == 0:
-        ws_sig.cell(r, 1, dates[0])
-    else:
-        ws_sig.cell(r, 1, f"=A{r-1}+7")
-    sc(ws_sig.cell(r, 1), border=BRD, nf="DD.MM.YYYY")
 
-    # 8.1 underground rough
+    # Dates for all cards
+    for i in range(N_CARDS):
+        bc = cbc(i)
+        if di == 0: ws_sig.cell(r, bc, dates[0])
+        else: ws_sig.cell(r, bc, f"={cl(bc)}{r-1}+7")
+        sc(ws_sig.cell(r, bc), border=BRD, nf="DD.MM.YYYY")
+
+    # --- 8.1 rough (card 1) ---
+    bc = cbc(1); dc = f"${cl(bc)}{r}"
     rp = []; rf = []
     for cat in UNDERGROUND:
         rr_ = rref(cat); _, _, prsc = ug_prc[cat["code"]]; _, _, rsc = ug_rc[cat["code"]]
@@ -649,12 +654,11 @@ for di in range(N_WEEKS):
             rp.append(f"'ПЛАН ЧЕРН ПОДЗЕМ'!{cl(prsc[si])}{fr}*{REF}!${cl(8+si)}${rr_}")
             vv = vsum(SURFS[si], cat["code"], "Черновая", "ВВОД ПОДЗЕМ", VL_UG, dc)
             rf.append(f"('ФАКТ ЧЕРН ПОДЗЕМ'!{cl(rsc[si])}{fr}+{vv})*{REF}!${cl(8+si)}${rr_}")
-    ws_sig.cell(r, sc_(0,1,0), "="+"+".join(rp))
-    sc(ws_sig.cell(r, sc_(0,1,0)), border=BRD, fill=F_PLAN, nf='#,##0.00')
-    ws_sig.cell(r, sc_(0,1,1), "="+"+".join(rf))
-    sc(ws_sig.cell(r, sc_(0,1,1)), border=BRD, fill=F_FORM, nf='#,##0.00')
+    ws_sig.cell(r, bc+1, "="+"+".join(rp)); sc(ws_sig.cell(r, bc+1), border=BRD, fill=F_PLAN, nf='#,##0.00')
+    ws_sig.cell(r, bc+2, "="+"+".join(rf)); sc(ws_sig.cell(r, bc+2), border=BRD, fill=F_FORM, nf='#,##0.00')
 
-    # 8.1 underground finish
+    # --- 8.1 finish (card 2) ---
+    bc = cbc(2); dc = f"${cl(bc)}{r}"
     fp = []; ff = []
     for cat in UNDERGROUND:
         rr_ = rref(cat); _, _, pfsc = ug_pfc[cat["code"]]; _, _, fsc = ug_fc[cat["code"]]
@@ -664,23 +668,25 @@ for di in range(N_WEEKS):
             fp.append(f"'ПЛАН ЧИСТ ПОДЗЕМ'!{cl(pfsc[si])}{fr}*{REF}!${cl(12+si)}${rr_}")
             vv = vsum(sn[si], cat["code"], "Чистовая", "ВВОД ПОДЗЕМ", VL_UG, dc)
             ff.append(f"('ФАКТ ЧИСТ ПОДЗЕМ'!{cl(fsc[si])}{fr}+{vv})*{REF}!${cl(12+si)}${rr_}")
-    ws_sig.cell(r, sc_(0,2,0), "="+"+".join(fp))
-    sc(ws_sig.cell(r, sc_(0,2,0)), border=BRD, fill=F_PLAN, nf='#,##0.00')
-    ws_sig.cell(r, sc_(0,2,1), "="+"+".join(ff))
-    sc(ws_sig.cell(r, sc_(0,2,1)), border=BRD, fill=F_FORM, nf='#,##0.00')
+    ws_sig.cell(r, bc+1, "="+"+".join(fp)); sc(ws_sig.cell(r, bc+1), border=BRD, fill=F_PLAN, nf='#,##0.00')
+    ws_sig.cell(r, bc+2, "="+"+".join(ff)); sc(ws_sig.cell(r, bc+2), border=BRD, fill=F_FORM, nf='#,##0.00')
 
-    # 8.1 total = rough + finish
-    ws_sig.cell(r, sc_(0,0,0), f"={cl(sc_(0,1,0))}{r}+{cl(sc_(0,2,0))}{r}")
-    sc(ws_sig.cell(r, sc_(0,0,0)), border=BRD, fill=F_PLAN, nf='#,##0.00')
-    ws_sig.cell(r, sc_(0,0,1), f"={cl(sc_(0,1,1))}{r}+{cl(sc_(0,2,1))}{r}")
-    sc(ws_sig.cell(r, sc_(0,0,1)), border=BRD, fill=F_FORM, nf='#,##0.00')
+    # --- 8.1 total (card 0) = rough + finish ---
+    bc = cbc(0)
+    ws_sig.cell(r, bc+1, f"={cl(cbc(1)+1)}{r}+{cl(cbc(2)+1)}{r}")
+    sc(ws_sig.cell(r, bc+1), border=BRD, fill=F_PLAN, nf='#,##0.00')
+    ws_sig.cell(r, bc+2, f"={cl(cbc(1)+2)}{r}+{cl(cbc(2)+2)}{r}")
+    sc(ws_sig.cell(r, bc+2), border=BRD, fill=F_FORM, nf='#,##0.00')
 
-    # Per-building 8.2
+    # --- Per-building 8.2 (groups 1..N_BLDG) ---
     for bi, bn in enumerate(BUILDINGS):
-        gi = 1 + bi
+        g = 1 + bi
         prsh = f"ПЛАН ЧЕРН {bn}"; pfsh = f"ПЛАН ЧИСТ {bn}"
         frsh = f"ФАКТ ЧЕРН {bn}"; ffsh = f"ФАКТ ЧИСТ {bn}"
         vsh = f"ВВОД {bn}"
+
+        # Rough (card g*3+1)
+        bc = cbc(g*3+1); dc = f"${cl(bc)}{r}"
         rp = []; rf = []
         for cat in ABOVEGROUND:
             rr_ = rref(cat)
@@ -689,10 +695,11 @@ for di in range(N_WEEKS):
                 rp.append(f"'{prsh}'!{cl(prsc[si])}{fr}*{REF}!${cl(8+si)}${rr_}")
                 vv = vsum(SURFS[si], cat["code"], "Черновая", vsh, VL_AG, dc)
                 rf.append(f"('{frsh}'!{cl(rsc[si])}{fr}+{vv})*{REF}!${cl(8+si)}${rr_}")
-        ws_sig.cell(r, sc_(gi,1,0), "="+"+".join(rp))
-        sc(ws_sig.cell(r, sc_(gi,1,0)), border=BRD, fill=F_PLAN, nf='#,##0.00')
-        ws_sig.cell(r, sc_(gi,1,1), "="+"+".join(rf))
-        sc(ws_sig.cell(r, sc_(gi,1,1)), border=BRD, fill=F_FORM, nf='#,##0.00')
+        ws_sig.cell(r, bc+1, "="+"+".join(rp)); sc(ws_sig.cell(r, bc+1), border=BRD, fill=F_PLAN, nf='#,##0.00')
+        ws_sig.cell(r, bc+2, "="+"+".join(rf)); sc(ws_sig.cell(r, bc+2), border=BRD, fill=F_FORM, nf='#,##0.00')
+
+        # Finish (card g*3+2)
+        bc = cbc(g*3+2); dc = f"${cl(bc)}{r}"
         fp = []; ff = []
         for cat in ABOVEGROUND:
             rr_ = rref(cat)
@@ -703,40 +710,50 @@ for di in range(N_WEEKS):
                 fp.append(f"'{pfsh}'!{cl(pfsc[si])}{fr}*{REF}!${cl(12+si)}${rr_}")
                 vv = vsum(sn[si], cat["code"], "Чистовая", vsh, VL_AG, dc)
                 ff.append(f"('{ffsh}'!{cl(fsc[si])}{fr}+{vv})*{REF}!${cl(12+si)}${rr_}")
-        ws_sig.cell(r, sc_(gi,2,0), "="+"+".join(fp))
-        sc(ws_sig.cell(r, sc_(gi,2,0)), border=BRD, fill=F_PLAN, nf='#,##0.00')
-        ws_sig.cell(r, sc_(gi,2,1), "="+"+".join(ff))
-        sc(ws_sig.cell(r, sc_(gi,2,1)), border=BRD, fill=F_FORM, nf='#,##0.00')
-        ws_sig.cell(r, sc_(gi,0,0), f"={cl(sc_(gi,1,0))}{r}+{cl(sc_(gi,2,0))}{r}")
-        sc(ws_sig.cell(r, sc_(gi,0,0)), border=BRD, fill=F_PLAN, nf='#,##0.00')
-        ws_sig.cell(r, sc_(gi,0,1), f"={cl(sc_(gi,1,1))}{r}+{cl(sc_(gi,2,1))}{r}")
-        sc(ws_sig.cell(r, sc_(gi,0,1)), border=BRD, fill=F_FORM, nf='#,##0.00')
+        ws_sig.cell(r, bc+1, "="+"+".join(fp)); sc(ws_sig.cell(r, bc+1), border=BRD, fill=F_PLAN, nf='#,##0.00')
+        ws_sig.cell(r, bc+2, "="+"+".join(ff)); sc(ws_sig.cell(r, bc+2), border=BRD, fill=F_FORM, nf='#,##0.00')
 
-    # 8.2 total = sum of buildings
+        # Total (card g*3) = rough + finish
+        bc = cbc(g*3)
+        ws_sig.cell(r, bc+1, f"={cl(cbc(g*3+1)+1)}{r}+{cl(cbc(g*3+2)+1)}{r}")
+        sc(ws_sig.cell(r, bc+1), border=BRD, fill=F_PLAN, nf='#,##0.00')
+        ws_sig.cell(r, bc+2, f"={cl(cbc(g*3+1)+2)}{r}+{cl(cbc(g*3+2)+2)}{r}")
+        sc(ws_sig.cell(r, bc+2), border=BRD, fill=F_FORM, nf='#,##0.00')
+
+    # --- 8.2 total (cards 12,13,14) = sum of buildings ---
     for ci in range(3):
-        pp = "+".join([f"{cl(sc_(1+bi,ci,0))}{r}" for bi in range(N_BLDG)])
-        ws_sig.cell(r, sc_(gi_82,ci,0), f"={pp}")
-        sc(ws_sig.cell(r, sc_(gi_82,ci,0)), border=BRD, fill=F_PLAN, nf='#,##0.00')
-        fp_ = "+".join([f"{cl(sc_(1+bi,ci,1))}{r}" for bi in range(N_BLDG)])
-        ws_sig.cell(r, sc_(gi_82,ci,1), f"={fp_}")
-        sc(ws_sig.cell(r, sc_(gi_82,ci,1)), border=BRD, fill=F_FORM, nf='#,##0.00')
+        card = 12 + ci; bc = cbc(card)
+        bld_cards = [(1+bi)*3+ci for bi in range(N_BLDG)]
+        pp = "+".join([f"{cl(cbc(c)+1)}{r}" for c in bld_cards])
+        ws_sig.cell(r, bc+1, f"={pp}"); sc(ws_sig.cell(r, bc+1), border=BRD, fill=F_PLAN, nf='#,##0.00')
+        fp_ = "+".join([f"{cl(cbc(c)+2)}{r}" for c in bld_cards])
+        ws_sig.cell(r, bc+2, f"={fp_}"); sc(ws_sig.cell(r, bc+2), border=BRD, fill=F_FORM, nf='#,##0.00')
 
-    # 8. overall = 8.1 + 8.2
+    # --- 8. overall (cards 15,16,17) = 8.1 + 8.2 total ---
     for ci in range(3):
-        ws_sig.cell(r, sc_(gi_all,ci,0), f"={cl(sc_(0,ci,0))}{r}+{cl(sc_(gi_82,ci,0))}{r}")
-        sc(ws_sig.cell(r, sc_(gi_all,ci,0)), border=BRD, fill=F_PLAN, nf='#,##0.00')
-        ws_sig.cell(r, sc_(gi_all,ci,1), f"={cl(sc_(0,ci,1))}{r}+{cl(sc_(gi_82,ci,1))}{r}")
-        sc(ws_sig.cell(r, sc_(gi_all,ci,1)), border=BRD, fill=F_FORM, nf='#,##0.00')
+        card = 15 + ci; bc = cbc(card)
+        c1 = ci; c2 = 12 + ci
+        ws_sig.cell(r, bc+1, f"={cl(cbc(c1)+1)}{r}+{cl(cbc(c2)+1)}{r}")
+        sc(ws_sig.cell(r, bc+1), border=BRD, fill=F_PLAN, nf='#,##0.00')
+        ws_sig.cell(r, bc+2, f"={cl(cbc(c1)+2)}{r}+{cl(cbc(c2)+2)}{r}")
+        sc(ws_sig.cell(r, bc+2), border=BRD, fill=F_FORM, nf='#,##0.00')
 
-last_col = sc_(N_GRP-1, 2, 1)
-ws_sig.column_dimensions["A"].width = 22
-for ci in range(2, last_col+1):
-    ws_sig.column_dimensions[cl(ci)].width = 12
+# Column widths: card cols = 14, gap cols = 2
+for i in range(N_CARDS):
+    bc = cbc(i)
+    for offset in range(CARD_W):
+        ws_sig.column_dimensions[cl(bc+offset)].width = 14
+    if i < N_CARDS - 1:
+        for offset in range(GAP_W):
+            ws_sig.column_dimensions[cl(bc+CARD_W+offset)].width = 2
+
+ws_sig.column_dimensions["A"].width = 4
 ws_sig.freeze_panes = ws_sig.cell(DATA_R, 2)
-ws_sig.conditional_formatting.add(f"A{DATA_R}:A{DATA_R+N_WEEKS-1}",
-    FormulaRule(formula=[f"AND($A{DATA_R}<=TODAY(),$A{DATA_R}+6>=TODAY())"],
+ws_sig.conditional_formatting.add(
+    f"{cl(cbc(0))}{DATA_R}:{cl(cbc(0))}{DATA_R+N_WEEKS-1}",
+    FormulaRule(formula=[f"AND({cl(cbc(0))}{DATA_R}<=TODAY(),{cl(cbc(0))}{DATA_R}+6>=TODAY())"],
                fill=PatternFill("solid",fgColor="FFFF99")))
-print(f"  SIGNAL: {DATA_R+N_WEEKS-1}r x {last_col}c ({N_GRP} groups x 3 cards)")
+print(f"  SIGNAL: {DATA_R+N_WEEKS-1}r x {cbc(N_CARDS-1)+2}c ({N_CARDS} cards, {N_GRP} groups)")
 
 
 # ═══════════════════════════════════════════════════════════
