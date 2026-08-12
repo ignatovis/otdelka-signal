@@ -1,0 +1,615 @@
+<title>Генератор «Отделка для SIGNAL»</title>
+<style>
+:root{--ac:#4472C4;--ach:#3860A8;--bg:#F4F4F6;--card:#fff;--tx:#202020;--mt:#707070;--bd:#D8D8D8;--warn:#C83200}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:580px;margin:0 auto;padding:40px 20px 60px}
+h1{font-size:21px;font-weight:600;letter-spacing:-.01em}
+.sub{color:var(--mt);font-size:13px;margin-top:3px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:24px;margin-top:20px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--mt);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+input[type=number],input[type=text],input[type=date]{width:100%;padding:7px 9px;border:1px solid var(--bd);border-radius:4px;font-size:14px;font-family:inherit;color:var(--tx);background:#FAFAFA}
+input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 2px rgba(68,114,196,.15)}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.kg{display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));margin-top:6px}
+.kg label{font-size:11px;text-transform:none;letter-spacing:0;font-weight:400;color:var(--mt);margin-bottom:1px}
+.btn{display:block;width:100%;padding:11px;background:var(--ac);color:#fff;border:none;border-radius:5px;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;margin-top:18px;transition:background .15s}
+.btn:hover{background:var(--ach)}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.btn:disabled{opacity:.5;cursor:default;transform:none}
+.info{margin-top:14px;font-size:12px;color:var(--mt);line-height:1.6;font-variant-numeric:tabular-nums}
+.info b{color:var(--tx);font-weight:500}
+.sl{margin-top:6px;font-size:11px;font-family:'Cascadia Code','SF Mono','Consolas',monospace;max-height:180px;overflow-y:auto;background:#F8F8F8;border:1px solid var(--bd);border-radius:4px;padding:6px 10px;line-height:1.5}
+.sl div{white-space:nowrap}
+.tg{background:none;border:none;color:var(--ac);cursor:pointer;font-size:12px;font-family:inherit;padding:0;margin-top:4px}
+.tg:hover{text-decoration:underline}
+.done{margin-top:10px;font-size:13px;color:#1a7f37}
+</style>
+
+<div class="wrap">
+  <h1>Отделка для SIGNAL</h1>
+  <p class="sub">Генератор загрузочного файла Excel</p>
+
+  <div class="card">
+    <div class="field">
+      <label for="nk">Количество корпусов</label>
+      <input type="number" id="nk" value="3" min="1" max="20">
+    </div>
+    <div id="kl" class="kg"></div>
+
+    <div class="row" style="margin-top:14px">
+      <div class="field"><label for="sd">Дата начала</label><input type="date" id="sd" value="2026-06-01"></div>
+      <div class="field"><label for="rd">Дата отчёта</label><input type="date" id="rd" value="2026-06-29"></div>
+      <div class="field"><label for="wk">Недель</label><input type="number" id="wk" value="48" min="1" max="104"></div>
+    </div>
+
+    <button class="btn" id="go" type="button">Скачать файл Excel</button>
+
+    <div class="info" id="info"></div>
+    <div id="sheets-box" style="display:none">
+      <button class="tg" id="tg">Показать листы</button>
+      <div class="sl" id="sl" style="display:none"></div>
+    </div>
+    <div class="done" id="done" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ===== CATEGORY DATA ===== */
+const PODZEM=[
+  {c:'8.1.1',n:'Отделка паркинг и рампы',p:6600,wc:.5,wh:.5,cw:[.65,.34,.01],hw:[.70,.20,.10,0]},
+  {c:'8.1.2',n:'Отделка эвакуац. лестн. клетки подзем.',p:2530,wc:.4,wh:.6,cw:[.30,.69,.01],hw:[.20,.60,.20,0]},
+  {c:'8.1.3',n:'Лифт. холлы, тамбур-шлюзы подзем.',p:1800,wc:.4,wh:.6,cw:[.55,.44,.01],hw:[.20,.60,.20,0]},
+  {c:'8.1.4',n:'Технич. помещения подзем.',p:3200,wc:.4,wh:.6,cw:[.55,.44,.01],hw:[.20,.60,.20,0]},
+  {c:'8.1.5',n:'Прочие помещения подзем.',p:2000,wc:.5,wh:.5,cw:[.20,.60,.20],hw:[.20,.60,.20,0]},
+  {c:'8.1.6',n:'Коммерч. помещения подзем.',p:2500,wc:.5,wh:.5,cw:[.30,.69,.01],hw:[.20,.60,.20,0]},
+];
+const NADZEM=[
+  {c:'8.2.1',n:'Отделка лобби/гранд-лобби',p:0,wc:.4,wh:.6,cw:[.55,.44,.01],hw:[.15,.45,.15,.25]},
+  {c:'8.2.2',n:'Отделка эвакуац. лестн. клетки надзем.',p:0,wc:.4,wh:.6,cw:[.30,.69,.01],hw:[.20,.60,.20,0]},
+  {c:'8.2.3',n:'Лифт. холлы, тамбур-шлюзы надзем.',p:0,wc:.4,wh:.6,cw:[.55,.44,.01],hw:[.20,.60,.20,0]},
+  {c:'8.2.4',n:'Технич. помещения надзем.',p:0,wc:.4,wh:.6,cw:[.55,.44,.01],hw:[.20,.60,.20,0]},
+  {c:'8.2.5',n:'Прочие помещения надзем.',p:0,wc:.5,wh:.5,cw:[.20,.60,.20],hw:[.20,.60,.20,0]},
+  {c:'8.2.6',n:'Коммерч. помещения надзем.',p:0,wc:.5,wh:.5,cw:[.30,.69,.01],hw:[.20,.60,.20,0]},
+  {c:'8.2.7',n:'Паркинг и рампы надзем.',p:0,wc:.5,wh:.5,cw:[.30,.69,.01],hw:[.20,.60,.20,0]},
+];
+const DEF_AREAS=[1500,2000,2500,4430,4000,5000,1500];
+
+/* ===== ZIP ===== */
+const CT=new Uint32Array(256);
+{let i,j,c;for(i=0;i<256;i++){c=i;for(j=0;j<8;j++)c=c&1?0xEDB88320^(c>>>1):c>>>1;CT[i]=c>>>0}}
+function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CT[(c^b[i])&0xFF]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+
+function makeZip(files){
+  const enc=new TextEncoder();
+  const E=files.map(f=>{const nm=enc.encode(f.name),dt=enc.encode(f.content);return{nm,dt,cr:crc32(dt)}});
+  let sz=22;for(const e of E)sz+=76+e.nm.length*2+e.dt.length;
+  const buf=new Uint8Array(sz),v=new DataView(buf.buffer);
+  let p=0;const off=[];
+  for(const e of E){
+    off.push(p);
+    v.setUint32(p,0x04034b50,!0);p+=4;
+    v.setUint16(p,20,!0);p+=2;v.setUint16(p,0x0800,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+    v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+    v.setUint32(p,e.cr,!0);p+=4;v.setUint32(p,e.dt.length,!0);p+=4;v.setUint32(p,e.dt.length,!0);p+=4;
+    v.setUint16(p,e.nm.length,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+    buf.set(e.nm,p);p+=e.nm.length;buf.set(e.dt,p);p+=e.dt.length;
+  }
+  const cs=p;
+  for(let i=0;i<E.length;i++){
+    const e=E[i];
+    v.setUint32(p,0x02014b50,!0);p+=4;
+    v.setUint16(p,20,!0);p+=2;v.setUint16(p,20,!0);p+=2;v.setUint16(p,0x0800,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+    v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+    v.setUint32(p,e.cr,!0);p+=4;v.setUint32(p,e.dt.length,!0);p+=4;v.setUint32(p,e.dt.length,!0);p+=4;
+    v.setUint16(p,e.nm.length,!0);p+=2;v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+    v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;v.setUint32(p,0,!0);p+=4;
+    v.setUint32(p,off[i],!0);p+=4;buf.set(e.nm,p);p+=e.nm.length;
+  }
+  const cdsz=p-cs;
+  v.setUint32(p,0x06054b50,!0);p+=4;v.setUint32(p,0,!0);p+=4;
+  v.setUint16(p,E.length,!0);p+=2;v.setUint16(p,E.length,!0);p+=2;
+  v.setUint32(p,cdsz,!0);p+=4;v.setUint32(p,cs,!0);p+=4;v.setUint16(p,0,!0);
+  return buf.slice(0,p+2);
+}
+
+/* ===== XML UTILS ===== */
+function X(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function CL(n){let s='';while(n>0){n--;s=String.fromCharCode(65+n%26)+s;n=Math.floor(n/26)}return s}
+function DS(d){const[y,m,dd]=d.split('-').map(Number);return Math.round((new Date(y,m-1,dd)-new Date(1899,11,30))/864e5)}
+
+/* ===== SHARED STRINGS ===== */
+class SharedStr{
+  constructor(){this.a=[];this.m=new Map()}
+  add(s){s=String(s);if(this.m.has(s))return this.m.get(s);const i=this.a.length;this.a.push(s);this.m.set(s,i);return i}
+  xml(){
+    let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
+    x+=`<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${this.a.length}" uniqueCount="${this.a.length}">`;
+    for(const s of this.a){const pr=s!==s.trim()?' xml:space="preserve"':'';x+=`<si><t${pr}>${X(s)}</t></si>`}
+    return x+'</sst>';
+  }
+}
+
+/* ===== SHEET BUILDER ===== */
+class Sh{
+  constructor(name,sst){this.name=name;this.sst=sst;this.c={};this.cw={}}
+  _s(r,c,cell){if(!this.c[r])this.c[r]={};this.c[r][c]=cell}
+  str(r,c,v,s){this._s(r,c,{t:'s',v:this.sst.add(v),s})}
+  num(r,c,v,s){this._s(r,c,{t:'n',v,s})}
+  fm(r,c,f,s){if(typeof f==='string'&&f.startsWith('='))f=f.substring(1);this._s(r,c,{t:'f',f,s})}
+  fd(r,c,f){this.fm(r,c,f,2)}
+  fp(r,c,f){this.fm(r,c,f,3)}
+  dv(r,c,ser){this.num(r,c,ser,2)}
+  cell(r,c,v,s){
+    if(v===''||v==null)return;
+    if(typeof v==='string'&&v.startsWith('='))this.fm(r,c,v,s);
+    else if(typeof v==='number')this.num(r,c,v,s);
+    else this.str(r,c,String(v),s);
+  }
+  w(c,w){this.cw[c]=w}
+  xml(){
+    let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
+    const ck=Object.keys(this.cw);
+    if(ck.length){x+='<cols>';for(const c of ck)x+=`<col min="${c}" max="${c}" width="${this.cw[c]}" customWidth="1"/>`;x+='</cols>'}
+    x+='<sheetData>';
+    const rows=Object.keys(this.c).map(Number).sort((a,b)=>a-b);
+    for(const r of rows){
+      x+=`<row r="${r}">`;
+      const cs=Object.keys(this.c[r]).map(Number).sort((a,b)=>a-b);
+      for(const c of cs){
+        const cl=this.c[r][c],rf=CL(c)+r,sa=cl.s!=null?` s="${cl.s}"`:'';
+        if(cl.t==='s')x+=`<c r="${rf}"${sa} t="s"><v>${cl.v}</v></c>`;
+        else if(cl.t==='n')x+=`<c r="${rf}"${sa}><v>${cl.v}</v></c>`;
+        else if(cl.t==='f')x+=`<c r="${rf}"${sa}><f>${X(cl.f)}</f></c>`;
+      }
+      x+='</row>';
+    }
+    return x+'</sheetData></worksheet>';
+  }
+}
+
+/* ===== XLSX PARTS ===== */
+function ctXml(n){
+  let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">';
+  x+='<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>';
+  x+='<Default Extension="xml" ContentType="application/xml"/>';
+  x+='<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>';
+  x+='<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
+  x+='<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>';
+  for(let i=1;i<=n;i++)x+=`<Override PartName="/xl/worksheets/sheet${i}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`;
+  return x+'</Types>';
+}
+function relsXml(){
+  return'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
+}
+function wbXml(sheets,nr){
+  let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>';
+  for(let i=0;i<sheets.length;i++)x+=`<sheet name="${X(sheets[i])}" sheetId="${i+1}" r:id="rId${i+1}"/>`;
+  x+='</sheets>';
+  if(nr.length){x+='<definedNames>';for(const r of nr)x+=`<definedName name="${X(r.name)}">${X(r.ref)}</definedName>`;x+='</definedNames>'}
+  return x+'<calcPr calcId="152511" fullCalcOnLoad="1"/></workbook>';
+}
+function wbRelsXml(n){
+  let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+  for(let i=1;i<=n;i++)x+=`<Relationship Id="rId${i}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i}.xml"/>`;
+  x+=`<Relationship Id="rId${n+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>`;
+  x+=`<Relationship Id="rId${n+2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>`;
+  return x+'</Relationships>';
+}
+function styXml(){
+  return`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<numFmts count="2"><numFmt numFmtId="164" formatCode="DD.MM.YYYY"/><numFmt numFmtId="165" formatCode="0.0%"/></numFmts>
+<fonts count="4"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><i/><sz val="11"/><color rgb="FFFF0000"/><name val="Calibri"/></font></fonts>
+<fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF4472C4"/></patternFill></fill></fills>
+<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellXfs count="6">
+<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/>
+<xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>
+<xf numFmtId="165" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>
+<xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/>
+<xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/>
+</cellXfs>
+<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
+</styleSheet>`;
+}
+
+/* ===== LAYOUT ===== */
+function compS(NP,NN,NK){
+  const p0=3,pN=p0+NP-1,n0=pN+1,nN=n0+NN-1;
+  const ah=nN+2,a81=ah+1,a82=a81+1;
+  const c0=a82+2,c3=c0+3;
+  const kh=c3+2,kc=kh+1,k0=kc+1,kN=k0+NK-1;
+  const kk=kN+2,dr=kk+3;
+  return{title:1,hdr:2,p0,pN,n0,nN,ah,a81,a82,c0,c3,kh,kc,k0,kN,kk,dr};
+}
+
+/* ===== HELPERS ===== */
+function fCL(ci,si){return CL(2+ci*3+si)}
+function cwC(si){return CL(8+si)}
+function ciC(si){return CL(12+si)}
+function sCR(ci,nd,S){return(nd?S.n0:S.p0)+ci}
+
+/* ===== СПРАВОЧНИК ===== */
+function gSprav(sst,cfg){
+  const sh=new Sh('СПРАВОЧНИК',sst),{KOR,KA,S,NP,NN,NK}=cfg;
+  sh.str(1,1,'СПРАВОЧНИК КАТЕГОРИЙ ОТДЕЛКИ',1);
+  const hd=['Код','Часть','Название','План м²','Вес черн.','Вес чист.','∑ весов','Черн:Пол','Черн:Стены','Черн:Потолок','∑ черн.','Чист:Пол','Чист:Стены','Чист:Потолок','Чист:Мебл.','∑ чист.','Начало','Окончание','Длит.(дни)','Труд-proxy','Вес ур.3 (авто)','Вес ур.3','Глоб. вес'];
+  for(let i=0;i<hd.length;i++)sh.str(S.hdr,i+1,hd[i],4);
+  function wCat(r,code,part,name,plan,wc,wh,cw_,hw_){
+    sh.str(r,1,code);sh.str(r,2,part);sh.str(r,3,name);
+    if(typeof plan==='string'&&plan.startsWith('='))sh.fm(r,4,plan);else sh.num(r,4,plan);
+    sh.num(r,5,wc);sh.num(r,6,wh);sh.fm(r,7,`=E${r}+F${r}`);
+    for(let i=0;i<cw_.length;i++)sh.num(r,8+i,cw_[i]);
+    sh.fm(r,11,`=SUM(H${r}:J${r})`);
+    for(let i=0;i<hw_.length;i++)sh.num(r,12+i,hw_[i]);
+    sh.fm(r,16,`=SUM(L${r}:O${r})`);
+    sh.fm(r,19,`=IF(OR(Q${r}="",R${r}=""),0,R${r}-Q${r})`);
+    sh.fm(r,20,`=S${r}*D${r}`);
+    sh.fm(r,21,`=IFERROR(T${r}/SUMIF($B$3:$B$${S.nN},$B${r},$T$3:$T$${S.nN}),0)`);
+    sh.fm(r,22,`=U${r}`);
+    sh.fm(r,23,`=V${r}*IF($B${r}="Подзем.",$V$${S.a81},$V$${S.a82})`);
+  }
+  for(let i=0;i<NP;i++){const c=PODZEM[i];wCat(S.p0+i,c.c,'Подзем.',c.n,c.p,c.wc,c.wh,c.cw,c.hw)}
+  for(let i=0;i<NN;i++){
+    const c=NADZEM[i],ac=CL(2+i);
+    const pf='='+Array.from({length:NK},(_,k)=>`${ac}${S.k0+k}`).join('+');
+    wCat(S.n0+i,c.c,'Надзем.',c.n,pf,c.wc,c.wh,c.cw,c.hw);
+  }
+  sh.str(S.ah,1,'АГРЕГАЦИЯ ПО УРОВНЯМ (ур.3 → ур.2 → ур.1)',1);
+  for(const[tag,ar,rs,re]of[['8.1',S.a81,S.p0,S.pN],['8.2',S.a82,S.n0,S.nN]]){
+    sh.str(ar,1,tag);sh.str(ar,3,tag==='8.1'?'Подземная часть':'Надземная часть');
+    sh.fm(ar,4,`=SUM(D${rs}:D${re})`);sh.fm(ar,17,`=MIN(Q${rs}:Q${re})`);sh.fm(ar,18,`=MAX(R${rs}:R${re})`);
+    sh.fm(ar,19,`=IF(OR(Q${ar}=0,R${ar}=0),0,R${ar}-Q${ar})`);sh.fm(ar,20,`=SUM(T${rs}:T${re})`);
+    sh.fm(ar,21,`=IFERROR(T${ar}/(T${S.a81}+T${S.a82}),0)`);sh.fm(ar,22,`=U${ar}`);sh.fm(ar,23,`=V${ar}`);
+  }
+  sh.str(S.c0,3,'✓ ∑ вес ур.3 подзем.');sh.fm(S.c0,22,`=SUM(V${S.p0}:V${S.pN})`);
+  sh.str(S.c0+1,3,'✓ ∑ вес ур.3 надзем.');sh.fm(S.c0+1,22,`=SUM(V${S.n0}:V${S.nN})`);
+  sh.str(S.c0+2,3,'✓ ∑ вес ур.2');sh.fm(S.c0+2,22,`=V${S.a81}+V${S.a82}`);
+  sh.str(S.c3,3,'✓ ∑ глоб. вес');sh.fm(S.c3,23,`=SUM(W${S.p0}:W${S.nN})`);
+  sh.str(S.kh,1,'РАСПРЕДЕЛЕНИЕ НАДЗЕМНОЙ ЧАСТИ ПО КОРПУСАМ',1);
+  const khd=['Корпус',...NADZEM.map(c=>c.c),'Σ план','Вес корп.(авто)','Вес корп.'];
+  for(let i=0;i<khd.length;i++)sh.str(S.kc,i+1,khd[i],1);
+  const sc=2+NN,sr_=Array.from({length:NK},(_,k)=>`${CL(sc)}${S.k0+k}`).join('+');
+  for(let ki=0;ki<NK;ki++){
+    const r=S.k0+ki;sh.str(r,1,KOR[ki]);
+    const areas=KA[KOR[ki]]||DEF_AREAS;
+    for(let ci=0;ci<Math.min(areas.length,NN);ci++)sh.num(r,2+ci,areas[ci]);
+    sh.fm(r,sc,`=SUM(B${r}:${CL(2+NN-1)}${r})`);
+    sh.fm(r,sc+1,`=IFERROR(${CL(sc)}${r}/(${sr_}),0)`);
+    sh.fm(r,sc+2,`=${CL(sc+1)}${r}`);
+  }
+  sh.str(S.kk,1,'✓ ∑ вес корп.');
+  sh.fm(S.kk,sc+2,'='+Array.from({length:NK},(_,k)=>`${CL(sc+2)}${S.k0+k}`).join('+'));
+  sh.str(S.dr,1,'Дата начала проекта');sh.dv(S.dr,2,cfg.sdSer);
+  sh.w(3,40);sh.w(1,8);
+  return sh;
+}
+
+/* ===== ВВОД ===== */
+function gVvod(sst,cfg,suf,cats){
+  const sn='ВВОД '+suf,sh=new Sh(sn,sst),{W,S}=cfg;
+  sh.str(1,1,'ВВОД ДАННЫХ — '+sn,1);
+  sh.str(2,1,'Вводите м². Серые столбцы A-D не редактируйте.',5);
+  const hd=['Дата','Тип','Код','Категория','Пол','Стены','Потолок','Мебл.','✓'];
+  for(let i=0;i<hd.length;i++)sh.str(3,i+1,hd[i],1);
+  const rpw=cats.length*2;
+  for(let w=0;w<W;w++){
+    const ws0=4+w*rpw;
+    for(let ti=0;ti<2;ti++){
+      const tn=ti===0?'Черновая':'Чистовая';
+      for(let ci=0;ci<cats.length;ci++){
+        const r=ws0+ti*cats.length+ci;
+        if(w===0&&ti===0&&ci===0)sh.fd(r,1,`=СПРАВОЧНИК!$B$${S.dr}`);
+        else if(ti===0&&ci===0)sh.fd(r,1,`=A${4+(w-1)*rpw}+7`);
+        else sh.fd(r,1,`=A${ws0}`);
+        sh.str(r,2,tn);sh.str(r,3,cats[ci].c);sh.str(r,4,cats[ci].n);
+        sh.fm(r,9,`=COUNTA(E${r}:G${r})&"/3"`);
+      }
+    }
+  }
+  sh.w(4,40);return sh;
+}
+
+/* ===== ПЛАН/ФАКТ ===== */
+function gPF(sst,cfg,kind,cc,psuf,cats,mebl){
+  const sn=`${kind} ${cc} ${psuf}`,sh=new Sh(sn,sst),{W,S}=cfg;
+  const nc=cats.length,gc=2+nc*3,ts=gc+1,nt=mebl?4:3;
+  const tl=['Пол','Стены','Потолок'].concat(mebl?['Мебл.']:[]);
+  sh.str(1,1,sn,1);sh.str(1,ts,'Итого '+psuf.toLowerCase());
+  sh.str(2,1,'Дата');sh.str(2,2,cats[0].c.startsWith('8.1')?'Подземная часть':'Надземная часть',1);
+  for(let ci=0;ci<nc;ci++)sh.str(3,2+ci*3,`${cats[ci].c} ${cats[ci].n}`,1);
+  for(let ci=0;ci<nc;ci++)for(let si=0;si<3;si++)sh.str(4,2+ci*3+si,['Пол','Стены','Потолок'][si]);
+  for(let ti=0;ti<tl.length;ti++)sh.str(3,ts+ti,tl[ti],1);
+  for(let w=0;w<W;w++){
+    const r=5+w;
+    sh.fd(r,1,w===0?`=СПРАВОЧНИК!$B$${S.dr}`:`=A${r-1}+7`);
+    for(let si=0;si<Math.min(3,nt);si++){
+      const src=Array.from({length:nc},(_,ci)=>`${CL(2+ci*3+si)}${r}`).join('+');
+      sh.fm(r,ts+si,'='+src);
+    }
+  }
+  sh.w(1,12);return sh;
+}
+
+/* ===== ОТЧЁТ ===== */
+function gOtchet(sst,cfg){
+  const sh=new Sh('ОТЧЕТ',sst),{KOR,S,W,NP,NN,NK}=cfg;
+  sh.str(1,1,'ОТЧЁТ ПО ОТДЕЛОЧНЫМ РАБОТАМ',1);
+  sh.str(2,1,'⚠ Автоматический. Не вносите данные напрямую.',5);
+  const hd=['Код','Название','Тип','Вес ур.4','Вес ур.5','План м²','Факт м²','Факт %','Взвеш. %'];
+  let r=4;
+  function wSec(r,title,cats,nd,fp,pfn){
+    sh.str(r,1,title,1);r++;
+    for(let i=0;i<hd.length;i++)sh.str(r,i+1,hd[i],1);r++;
+    for(let ci=0;ci<cats.length;ci++){
+      const sr=sCR(ci,nd,S),m=r;
+      sh.str(r,1,cats[ci].c);sh.fm(r,2,`=СПРАВОЧНИК!C${sr}`);sh.str(r,3,'Главная');
+      sh.fm(r,6,pfn(ci));sh.fm(r,7,`=G${r+1}*D${r+1}+G${r+5}*D${r+5}`);
+      sh.fp(r,8,`=IF(F${r}=0,0,G${r}/F${r})`);sh.fp(r,9,`=I${r+1}+I${r+5}`);r++;
+      sh.str(r,2,'Черновая');sh.fm(r,4,`=СПРАВОЧНИК!E${sr}`);sh.fm(r,6,`=F${m}`);
+      sh.fm(r,7,`=G${r+1}*E${r+1}+G${r+2}*E${r+2}+G${r+3}*E${r+3}`);
+      sh.fp(r,8,`=IF(F${r}=0,0,G${r}/F${r})`);sh.fp(r,9,`=H${r}*D${r}`);r++;
+      const fsc='ФАКТ ЧЕРН '+fp;
+      for(let si=0;si<3;si++){
+        const fc=fCL(ci,si);
+        sh.str(r,2,'   '+['Пол','Стены','Потолок'][si]);sh.str(r,3,'Вид');
+        sh.fm(r,5,`=СПРАВОЧНИК!${cwC(si)}${sr}`);sh.fm(r,6,`=F${m}`);
+        sh.fm(r,7,`=SUM('${fsc}'!${fc}5:${fc}${4+W})`);
+        sh.fp(r,8,`=IF(F${r}=0,0,G${r}/F${r})`);sh.fp(r,9,`=H${r}*E${r}`);r++;
+      }
+      const cr=r;
+      sh.str(r,2,'Чистовая');sh.fm(r,4,`=СПРАВОЧНИК!F${sr}`);sh.fm(r,6,`=F${m}`);
+      sh.fm(r,7,`=G${r+1}*E${r+1}+G${r+2}*E${r+2}+G${r+3}*E${r+3}`);
+      sh.fp(r,8,`=IF(F${r}=0,0,G${r}/F${r})`);sh.fp(r,9,`=H${r}*D${r}`);r++;
+      const fsi='ФАКТ ЧИСТ '+fp;
+      for(let si=0;si<3;si++){
+        const fc=fCL(ci,si);
+        sh.str(r,2,'   '+['Пол','Стены','Потолок'][si]);sh.str(r,3,'Вид');
+        sh.fm(r,5,`=СПРАВОЧНИК!${ciC(si)}${sr}`);sh.fm(r,6,`=F${m}`);
+        sh.fm(r,7,`=SUM('${fsi}'!${fc}5:${fc}${4+W})`);
+        sh.fp(r,8,`=IF(F${r}=0,0,G${r}/F${r})`);sh.fp(r,9,`=H${r}*E${r}`);r++;
+      }
+      sh.str(r,2,'✓ Сумма весов ур.4');sh.fm(r,4,`=D${m+1}+D${cr}`);r+=2;
+    }
+    return r;
+  }
+  r=wSec(r,'ПОДЗЕМНАЯ ЧАСТЬ',PODZEM,false,'ПОДЗЕМ',ci=>`=СПРАВОЧНИК!D${sCR(ci,false,S)}`);
+  for(let ki=0;ki<NK;ki++){
+    const kr=S.k0+ki;
+    r=wSec(r,'КОРПУС '+KOR[ki],NADZEM,true,KOR[ki],ci=>`=СПРАВОЧНИК!${CL(2+ci)}${kr}`);
+  }
+  sh.w(2,40);sh.w(1,8);return sh;
+}
+
+/* ===== SIGNAL ===== */
+function sigName(b,kor){
+  const l=b.label;
+  for(const k of kor){if(l.includes(k)){
+    if(l.includes('Общий'))return k+'_Общий_8_2';
+    if(l.includes('Черновая'))return k+'_Черновая_8_2';
+    if(l.includes('Чистовая'))return k+'_Чистовая_8_2';
+  }}
+  if(l.includes('8.1')){
+    if(l.includes('Общий'))return'Общий_8_1';if(l.includes('Черновая'))return'Черновая_8_1';if(l.includes('Чистовая'))return'Чистовая_8_1';
+  }
+  if(l.includes('8.2')&&l.includes('Надземная')){
+    if(l.includes('Общий'))return'Общий_8_2';if(l.includes('Черновая'))return'Черновая_8_2';if(l.includes('Чистовая'))return'Чистовая_8_2';
+  }
+  if(l.includes('Отделка общий')){
+    if(l.includes('Общий'))return'Общая';if(l.includes('Черновая'))return'Черновая';if(l.includes('Чистовая'))return'Чистовая';
+  }
+  return l.replace(/ /g,'_').replace(/:/g,'').replace(/\./g,'_');
+}
+
+function gSignal(sst,cfg){
+  const sh=new Sh('SIGNAL',sst),{KOR,S,W,NN,NK}=cfg;
+  const bl=[];
+  function ab(label,type,ex){const i=bl.length;const b={i,base:2+i*6,label,type,...(ex||{})};bl.push(b);return b}
+
+  const bpo=ab('8.1 Подземная часть: Общий','combined');
+  const bpc=ab('8.1 Подземная часть: Черновая','weighted',{sh_:'ПЛАН ЧЕРН ПОДЗЕМ',fsh:'ФАКТ ЧЕРН ПОДЗЕМ',cats:PODZEM,nd:false,wt:'chern'});
+  const bpi=ab('8.1 Подземная часть: Чистовая','weighted',{sh_:'ПЛАН ЧИСТ ПОДЗЕМ',fsh:'ФАКТ ЧИСТ ПОДЗЕМ',cats:PODZEM,nd:false,wt:'chist'});
+  bpo.ch=bpc;bpo.ci=bpi;bpo.vs=`=СПРАВОЧНИК!D${S.a81}`;
+
+  const kol=[],kcl=[],kil=[];
+  for(let ki=0;ki<NK;ki++){
+    const kn=KOR[ki];
+    const bko=ab(`8.2 ${kn}: Общий`,'combined');
+    const bkc=ab(`8.2 ${kn}: Черновая`,'weighted',{sh_:`ПЛАН ЧЕРН ${kn}`,fsh:`ФАКТ ЧЕРН ${kn}`,cats:NADZEM,nd:true,wt:'chern'});
+    const bki=ab(`8.2 ${kn}: Чистовая`,'weighted',{sh_:`ПЛАН ЧИСТ ${kn}`,fsh:`ФАКТ ЧИСТ ${kn}`,cats:NADZEM,nd:true,wt:'chist'});
+    bko.ch=bkc;bko.ci=bki;
+    bko.vs=`=СПРАВОЧНИК!${CL(2+NN)}${S.k0+ki}`;
+    kol.push(bko);kcl.push(bkc);kil.push(bki);
+  }
+
+  const bno=ab('8.2 Надземная часть: Общий','sum_blocks',{src:kol});
+  const bnc=ab('8.2 Надземная часть: Черновая','sum_blocks',{src:kcl});
+  const bni=ab('8.2 Надземная часть: Чистовая','sum_blocks',{src:kil});
+  for(const b of[bno,bnc,bni])b.vs=`=СПРАВОЧНИК!D${S.a82}`;
+
+  const bto=ab('8. Отделка общий: Общий','sum_two',{a:bpo,b:bno});
+  const btc=ab('8. Отделка общий: Черновая','sum_two',{a:bpc,b:bnc});
+  const bti=ab('8. Отделка общий: Чистовая','sum_two',{a:bpi,b:bni});
+  for(const b of[bto,btc,bti])b.vs=`=СПРАВОЧНИК!D${S.a81}+СПРАВОЧНИК!D${S.a82}`;
+
+  sh.str(1,1,'Дата отчета');sh.dv(2,1,cfg.rdSer);
+
+  for(const b of bl){
+    const bc=b.base,dc=bc+1,pc=bc+2,fc=bc+3;
+    sh.str(1,bc,'Заголовок');sh.str(1,dc,'План-факт по объемам');
+    sh.str(2,bc,'Статус');sh.str(2,dc,'true');
+    sh.str(3,bc,'Url изображения');
+    sh.str(4,bc,'Тип');sh.str(4,dc,'planFact2');
+    sh.str(6,bc,'Дата');sh.fm(6,dc,'=$A$2');
+    sh.str(7,bc,'Гистограмма');sh.str(7,dc,'false');
+    sh.str(8,bc,'По месяцам');sh.str(8,dc,'false');
+    sh.str(9,bc,'Всего');if(b.vs)sh.cell(9,dc,b.vs);
+    sh.str(10,bc,'Тип');sh.str(10,dc,b.label);
+    sh.str(11,bc,'Ед. изм.');sh.str(11,dc,'м2');
+    sh.str(12,bc,'Учитывать дату карточки');sh.str(12,dc,'true');
+    sh.str(13,bc,'Данные');
+
+    for(let w=0;w<W;w++){
+      const r=14+w,pr=5+w;
+      if(w===0)sh.fd(r,dc,`=СПРАВОЧНИК!$B$${S.dr}`);
+      else sh.fd(r,dc,`=${CL(dc)}${r-1}+7`);
+
+      if(b.type==='weighted'){
+        const nc=b.cats.length,wcF=b.wt==='chist'?ciC:cwC;
+        const pt=[],ft=[];
+        for(let ci=0;ci<nc;ci++){const sr=sCR(ci,b.nd,S);
+          for(let si=0;si<3;si++){const pcl=fCL(ci,si),wc=wcF(si);
+            pt.push(`'${b.sh_}'!${pcl}${pr}*СПРАВОЧНИК!$${wc}$${sr}`);
+            ft.push(`'${b.fsh}'!${pcl}${pr}*СПРАВОЧНИК!$${wc}$${sr}`);
+          }
+        }
+        sh.fm(r,pc,'='+pt.join('+'));sh.fm(r,fc,'='+ft.join('+'));
+      }else if(b.type==='combined'){
+        sh.fm(r,pc,`=${CL(b.ch.base+2)}${r}+${CL(b.ci.base+2)}${r}`);
+        sh.fm(r,fc,`=${CL(b.ch.base+3)}${r}+${CL(b.ci.base+3)}${r}`);
+      }else if(b.type==='sum_blocks'){
+        sh.fm(r,pc,'='+b.src.map(s=>`${CL(s.base+2)}${r}`).join('+'));
+        sh.fm(r,fc,'='+b.src.map(s=>`${CL(s.base+3)}${r}`).join('+'));
+      }else if(b.type==='sum_two'){
+        sh.fm(r,pc,`=${CL(b.a.base+2)}${r}+${CL(b.b.base+2)}${r}`);
+        sh.fm(r,fc,`=${CL(b.a.base+3)}${r}+${CL(b.b.base+3)}${r}`);
+      }
+    }
+  }
+
+  const nr=bl.map(b=>({name:sigName(b,KOR),ref:`'SIGNAL'!$${CL(b.base)}:$${CL(b.base+3)}`}));
+  return{sheet:sh,nr};
+}
+
+/* ===== BUILD ===== */
+function buildXLSX(korNames,startDate,reportDate,weeks){
+  const sst=new SharedStr();
+  const NK=korNames.length,NP=PODZEM.length,NN=NADZEM.length;
+  const S=compS(NP,NN,NK);
+  const KA={};for(const k of korNames)KA[k]=DEF_AREAS.slice();
+  const cfg={KOR:korNames,KA,S,W:weeks,NP,NN,NK,sdSer:DS(startDate),rdSer:DS(reportDate)};
+
+  const sheets=[];
+  sheets.push(gSprav(sst,cfg));
+  sheets.push(gVvod(sst,cfg,'ПОДЗЕМ',PODZEM));
+  for(const k of korNames)sheets.push(gVvod(sst,cfg,k,NADZEM));
+
+  const parts=[['ПОДЗЕМ',PODZEM,false],...korNames.map(k=>[k,NADZEM,true])];
+  for(const[suf,cats,nd]of parts){
+    for(const kind of['ПЛАН','ФАКТ']){
+      sheets.push(gPF(sst,cfg,kind,'ЧЕРН',suf,cats,false));
+      sheets.push(gPF(sst,cfg,kind,'ЧИСТ',suf,cats,nd));
+    }
+  }
+
+  sheets.push(gOtchet(sst,cfg));
+  const sig=gSignal(sst,cfg);
+  sheets.push(sig.sheet);
+  sheets.push(new Sh('Лист2',sst));
+
+  const names=sheets.map(s=>s.name);
+  const n=sheets.length;
+
+  const files=[
+    {name:'[Content_Types].xml',content:ctXml(n)},
+    {name:'_rels/.rels',content:relsXml()},
+    {name:'xl/workbook.xml',content:wbXml(names,sig.nr)},
+    {name:'xl/_rels/workbook.xml.rels',content:wbRelsXml(n)},
+    {name:'xl/styles.xml',content:styXml()},
+    {name:'xl/sharedStrings.xml',content:sst.xml()},
+    ...sheets.map((s,i)=>({name:`xl/worksheets/sheet${i+1}.xml`,content:s.xml()}))
+  ];
+
+  return{zip:makeZip(files),sheetCount:n,rangeCount:sig.nr.length,names};
+}
+
+/* ===== UI ===== */
+function updateUI(){
+  const n=Math.max(1,Math.min(20,parseInt(document.getElementById('nk').value)||3));
+  const list=document.getElementById('kl');
+  const old=[...list.querySelectorAll('input')].map(i=>i.value);
+  list.innerHTML='';
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');
+    const lb=document.createElement('label');lb.textContent=`Корпус ${i+1}`;
+    const inp=document.createElement('input');inp.type='text';inp.value=old[i]||('К'+(i+1));inp.className='kn';
+    d.appendChild(lb);d.appendChild(inp);list.appendChild(d);
+  }
+  const sc=9+5*n,rc=9+3*n;
+  document.getElementById('info').innerHTML=`Файл будет содержать <b>${sc}</b> листов и <b>${rc}</b> именованных диапазонов`;
+  document.getElementById('sheets-box').style.display='block';
+  document.getElementById('sl').style.display='none';
+  document.getElementById('tg').textContent='Показать листы';
+  document.getElementById('done').style.display='none';
+  updateSheetList(n);
+}
+
+function updateSheetList(nk){
+  const kor=getKorNames(nk);
+  const names=['СПРАВОЧНИК','ВВОД ПОДЗЕМ',...kor.map(k=>'ВВОД '+k)];
+  const parts=['ПОДЗЕМ',...kor];
+  for(const s of parts)for(const k of['ПЛАН','ФАКТ']){names.push(`${k} ЧЕРН ${s}`);names.push(`${k} ЧИСТ ${s}`)}
+  names.push('ОТЧЕТ','SIGNAL','Лист2');
+  const sl=document.getElementById('sl');
+  sl.innerHTML=names.map((n,i)=>`<div>${(i+1).toString().padStart(2,' ')}) ${n}</div>`).join('');
+}
+
+function getKorNames(nk){
+  const inputs=document.getElementById('kl').querySelectorAll('input');
+  const r=[];for(let i=0;i<Math.min(nk,inputs.length);i++)r.push(inputs[i].value||('К'+(i+1)));
+  while(r.length<nk)r.push('К'+(r.length+1));
+  return r;
+}
+
+function generate(){
+  const btn=document.getElementById('go');
+  btn.disabled=true;btn.textContent='Генерация…';
+  document.getElementById('done').style.display='none';
+
+  setTimeout(()=>{
+    try{
+      const nk=Math.max(1,Math.min(20,parseInt(document.getElementById('nk').value)||3));
+      const kor=getKorNames(nk);
+      const sd=document.getElementById('sd').value||'2026-06-01';
+      const rd=document.getElementById('rd').value||'2026-06-29';
+      const wk=Math.max(1,Math.min(104,parseInt(document.getElementById('wk').value)||48));
+
+      const t0=performance.now();
+      const res=buildXLSX(kor,sd,rd,wk);
+      const dt=((performance.now()-t0)/1000).toFixed(1);
+
+      const blob=new Blob([res.zip],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;a.download=`Отделка для SIGNAL (${nk} корп).xlsx`;
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      const sz=(blob.size/1024).toFixed(0);
+      document.getElementById('done').textContent=`✓ ${res.sheetCount} листов, ${res.rangeCount} диапазонов, ${sz} КБ, ${dt} сек`;
+      document.getElementById('done').style.display='block';
+    }catch(e){
+      alert('Ошибка генерации: '+e.message);
+      console.error(e);
+    }
+    btn.disabled=false;btn.textContent='Скачать файл Excel';
+  },50);
+}
+
+document.getElementById('nk').addEventListener('input',updateUI);
+document.getElementById('go').addEventListener('click',generate);
+document.getElementById('tg').addEventListener('click',function(){
+  const sl=document.getElementById('sl');
+  if(sl.style.display==='none'){sl.style.display='block';this.textContent='Скрыть листы'}
+  else{sl.style.display='none';this.textContent='Показать листы'}
+});
+
+updateUI();
+</script>

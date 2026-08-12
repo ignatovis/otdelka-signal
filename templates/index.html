@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Отделка для SIGNAL — Генератор</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f2f5;color:#1a1a2e;min-height:100vh;display:flex;justify-content:center;padding:2rem 1rem}
+.container{max-width:720px;width:100%;background:#fff;border-radius:12px;padding:2.5rem;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+h1{font-size:1.5rem;margin-bottom:.25rem;color:#16213e}
+.sub{color:#666;font-size:.875rem;margin-bottom:2rem}
+label{display:block;font-weight:600;margin-bottom:.35rem;font-size:.9rem}
+input,select{width:100%;padding:.55rem .75rem;border:1px solid #d1d5db;border-radius:6px;font-size:.9rem;margin-bottom:1rem}
+input:focus{outline:none;border-color:#4361ee;box-shadow:0 0 0 3px rgba(67,97,238,.15)}
+.row{display:flex;gap:1rem}
+.row>div{flex:1}
+.korpus-list{margin-bottom:1rem}
+.korpus-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem}
+.korpus-row input{margin-bottom:0;flex:1}
+.korpus-row .areas{display:flex;gap:.25rem;flex:3}
+.korpus-row .areas input{width:70px;text-align:center;font-size:.8rem;padding:.4rem}
+.btn-sm{padding:.4rem .75rem;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;font-size:.8rem}
+.btn-sm:hover{background:#f8f9fa}
+.btn-add{color:#4361ee;border-color:#4361ee}
+.btn-rm{color:#e63946;border-color:#e63946;padding:.4rem .55rem}
+.areas-hdr{display:flex;gap:.25rem;flex:3;margin-bottom:.25rem;font-size:.7rem;color:#888;text-align:center}
+.areas-hdr span{width:70px;text-align:center}
+.spacer{width:36px}
+.generate{width:100%;padding:.75rem;background:#4361ee;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:1rem;transition:background .2s}
+.generate:hover{background:#3a56d4}
+.generate:disabled{background:#a0aec0;cursor:wait}
+.status{text-align:center;margin-top:.75rem;font-size:.85rem;color:#666}
+.status.err{color:#e63946}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Отделка для SIGNAL</h1>
+  <p class="sub">Генератор загрузочного файла Excel</p>
+
+  <div class="row">
+    <div><label>Дата начала</label><input type="date" id="startDate" value="2026-06-01"></div>
+    <div><label>Дата отчета</label><input type="date" id="reportDate" value="2026-06-29"></div>
+    <div><label>Недель</label><input type="number" id="weeks" value="48" min="1" max="104"></div>
+  </div>
+
+  <label>Корпуса (надземная часть)</label>
+  <div style="display:flex;gap:.25rem;margin-bottom:.25rem">
+    <div style="flex:1;font-size:.7rem;color:#888;padding-left:4px">Имя</div>
+    <div class="areas-hdr">
+      <span>Лобби</span><span>Лестн.</span><span>Лифт.х.</span><span>Техн.</span><span>Прочие</span><span>Комм.</span><span>Парк.</span>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  <div id="korpusList" class="korpus-list"></div>
+  <button class="btn-sm btn-add" onclick="addKorpus()">+ Добавить корпус</button>
+
+  <button class="generate" id="genBtn" onclick="doGenerate()">Сгенерировать XLSX</button>
+  <div id="status" class="status"></div>
+</div>
+
+<script>
+const defAreas = [1500,2000,2500,4430,4000,5000,1500];
+let korpusCount = 0;
+
+function addKorpus(name, areas) {
+  korpusCount++;
+  const n = name || 'К' + korpusCount;
+  const a = areas || [...defAreas];
+  const list = document.getElementById('korpusList');
+  const row = document.createElement('div');
+  row.className = 'korpus-row';
+  row.innerHTML = '<input class="k-name" value="' + n + '" placeholder="Имя корпуса">' +
+    '<div class="areas">' + a.map(v => '<input class="k-area" type="number" value="' + v + '">').join('') + '</div>' +
+    '<button class="btn-sm btn-rm" onclick="this.parentElement.remove()">x</button>';
+  list.appendChild(row);
+}
+
+addKorpus('К1'); addKorpus('К2'); addKorpus('К3');
+
+async function doGenerate() {
+  const btn = document.getElementById('genBtn');
+  const st = document.getElementById('status');
+  btn.disabled = true; st.className = 'status'; st.textContent = 'Генерация...';
+
+  const rows = document.querySelectorAll('.korpus-row');
+  const korpus = [];
+  const areas = {};
+  rows.forEach(r => {
+    const name = r.querySelector('.k-name').value.trim();
+    if (!name) return;
+    korpus.push(name);
+    areas[name] = Array.from(r.querySelectorAll('.k-area')).map(i => parseFloat(i.value) || 0);
+  });
+
+  if (!korpus.length) { st.textContent = 'Добавьте хотя бы один корпус'; st.className = 'status err'; btn.disabled = false; return; }
+
+  const body = {
+    korpus,
+    areas,
+    startDate: document.getElementById('startDate').value,
+    reportDate: document.getElementById('reportDate').value,
+    weeks: parseInt(document.getElementById('weeks').value) || 48
+  };
+
+  try {
+    const resp = await fetch('/generate', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    if (!resp.ok) throw new Error('Ошибка сервера: ' + resp.status);
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const cd = resp.headers.get('content-disposition') || '';
+    const m = cd.match(/filename\*?=(?:UTF-8''|"?)([^";]+)/i);
+    a.download = m ? decodeURIComponent(m[1]) : 'Отделка_SIGNAL.xlsx';
+    a.href = url; a.click(); URL.revokeObjectURL(url);
+    st.textContent = 'Готово! Файл скачан.';
+  } catch(e) {
+    st.textContent = e.message; st.className = 'status err';
+  }
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>
