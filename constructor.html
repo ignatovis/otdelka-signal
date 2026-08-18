@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Конструктор «Отделка для SIGNAL»</title>
+<style>
+:root {
+  --ac:#4472C4; --ach:#3860A8; --bg:#F0F2F5; --card:#fff; --tx:#1a1a2e;
+  --mt:#6b7280; --bd:#e0e0e0; --ok:#16a34a; --warn:#dc2626;
+  --ug:#D9E2F3; --ag:#E2EFDA; --hdr:#4472C4; --hdr-tx:#fff;
+  --rad:8px; --shadow:0 1px 3px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5}
+.app{max-width:1240px;margin:0 auto;padding:16px}
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 0;margin-bottom:6px}
+.header h1{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.header .sub{font-size:12px;color:var(--mt)}
+.btn-export{padding:8px 20px;background:var(--ac);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-export:hover{background:var(--ach)}
+.tabs{display:flex;gap:2px;border-bottom:2px solid var(--bd);margin-bottom:14px}
+.tab{padding:9px 18px;font-size:13px;font-weight:500;color:var(--mt);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.tab:hover{color:var(--tx)}
+.tab.active{color:var(--ac);border-bottom-color:var(--ac);font-weight:600}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:var(--rad);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card-title{font-size:14px;font-weight:600;margin-bottom:10px}
+.card-sub{font-size:11px;color:var(--mt);margin-bottom:10px}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--mt);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+input[type=number],input[type=text],input[type=date],select{width:100%;padding:6px 8px;border:1px solid var(--bd);border-radius:5px;font-size:13px;font-family:inherit;color:var(--tx);background:#FAFAFA}
+input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 2px rgba(68,114,196,.12)}
+.row{display:grid;gap:10px}.row-3{grid-template-columns:1fr 1fr 1fr}
+.korpus-row{display:flex;gap:6px;align-items:center;margin-bottom:5px;padding:5px 7px;background:#f8f9fa;border-radius:5px}
+.korpus-row input{flex:1;min-width:50px}
+.korpus-row .areas{display:flex;gap:3px}
+.korpus-row .areas input{width:62px;text-align:center;font-size:11px;padding:4px 3px}
+.btn-sm{padding:4px 10px;border:1px solid var(--bd);border-radius:4px;background:#fff;cursor:pointer;font-size:12px;font-family:inherit}
+.btn-sm:hover{background:#f0f0f0}
+.btn-add{color:var(--ac);border-color:var(--ac)}
+.btn-rm{color:var(--warn);border-color:#fca5a5;padding:4px 7px}
+.areas-hdr{display:flex;gap:3px;font-size:9px;color:var(--mt);margin-bottom:3px;margin-left:64px}
+.areas-hdr span{width:62px;text-align:center}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--bd);border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:4px 6px;border:1px solid var(--bd);text-align:center;white-space:nowrap}
+th{background:var(--hdr);color:var(--hdr-tx);font-weight:600;font-size:10px;position:sticky;top:0;z-index:1}
+td{background:#fff}
+td.ug{background:var(--ug)} td.ag{background:var(--ag)}
+td.sum-ok{background:#dcfce7} td.sum-bad{background:#fee2e2;color:var(--warn);font-weight:600}
+td.left{text-align:left}
+td input{width:100%;border:none;background:transparent;text-align:center;font-size:11px;font-family:inherit;padding:0}
+td input:focus{outline:none}
+.selector-bar{display:flex;gap:10px;align-items:flex-end;margin-bottom:12px;flex-wrap:wrap}
+.selector-bar select{width:auto;min-width:150px}
+.selector-bar label{font-size:10px;color:var(--mt);font-weight:600;text-transform:uppercase}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:14px}
+.dash-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--rad);padding:14px;box-shadow:var(--shadow)}
+.dash-card .label{font-size:10px;color:var(--mt);text-transform:uppercase;font-weight:600}
+.dash-card .value{font-size:26px;font-weight:700;margin:3px 0}
+.dash-card .detail{font-size:11px;color:var(--mt)}
+.pbar{height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden;margin-top:6px}
+.pfill{height:100%;border-radius:3px;transition:width .3s}
+.pfill.ok{background:var(--ok)}.pfill.mid{background:#f59e0b}.pfill.low{background:var(--warn)}
+.chart-box{background:var(--card);border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:14px;box-shadow:var(--shadow)}
+.chart-title{font-size:13px;font-weight:600;margin-bottom:10px}
+svg.chart{width:100%;height:250px}
+.info-bar{padding:8px 12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;font-size:11px;color:#1e40af;margin-bottom:12px;line-height:1.6}
+.save-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px}
+.save-dot.saved{background:var(--ok)}.save-dot.unsaved{background:#f59e0b}
+.section-hdr td{background:#f1f5f9!important;font-weight:600;text-align:left;padding:6px 8px;font-size:11px}
+@media(max-width:768px){.row-3{grid-template-columns:1fr 1fr}.tab{padding:7px 10px;font-size:11px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div><h1>Отделка для SIGNAL</h1><span class="sub"><span class="save-dot saved" id="saveDot"></span>Конструктор v11</span></div>
+    <button class="btn-export" id="btnExport" onclick="doExport()">Скачать Excel</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-tab="settings">Настройки</button>
+    <button class="tab" data-tab="reference">Справочник</button>
+    <button class="tab" data-tab="data">Ввод данных</button>
+    <button class="tab" data-tab="dashboard">Дашборд</button>
+  </div>
+
+  <div class="panel active" id="panel-settings">
+    <div class="card">
+      <div class="card-title">Параметры проекта</div>
+      <div class="row row-3">
+        <div class="field"><label>Дата начала</label><input type="date" id="startDate" value="2026-06-01"></div>
+        <div class="field"><label>Дата отчёта</label><input type="date" id="reportDate" value="2026-06-29"></div>
+        <div class="field"><label>Кол-во недель</label><input type="number" id="weeks" value="48" min="1" max="104"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Подземная часть — площади (м²)</div>
+      <div id="ugAreas"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Корпуса (надземная часть)</div>
+      <div class="card-sub">Имя корпуса + площади по 7 категориям надземной части</div>
+      <div class="areas-hdr" id="areasHdr"></div>
+      <div id="korpusList"></div>
+      <button class="btn-sm btn-add" onclick="addKorpus()" style="margin-top:6px">+ Корпус</button>
+    </div>
+    <div class="info-bar" id="sheetInfo"></div>
+  </div>
+
+  <div class="panel" id="panel-reference">
+    <div class="card">
+      <div class="card-title">Справочник категорий отделки</div>
+      <div class="card-sub">Черновая: 3 поверхности (Пол/Стены/Потолок). Чистовая: 5 поверхностей (Пол/Стены/Потолок/Запол./Мебл.). Суммы = 1.0</div>
+      <div class="tbl-wrap" id="refTable"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-data">
+    <div class="card">
+      <div class="card-title">Ввод данных по неделям</div>
+      <div class="selector-bar">
+        <div><label>Часть / корпус</label><select id="selPart"></select></div>
+        <div><label>Тип отделки</label><select id="selType"><option value="ЧЕРН">Черновая (3 пов.)</option><option value="ЧИСТ">Чистовая (5 пов.)</option></select></div>
+        <div><label>Режим</label><select id="selMode"><option value="ФАКТ">Факт</option><option value="ПЛАН">План</option></select></div>
+      </div>
+      <div class="tbl-wrap" style="max-height:480px;overflow-y:auto" id="dataTable"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-dashboard">
+    <div class="dash-grid" id="dashCards"></div>
+    <div class="chart-box">
+      <div class="chart-title">Прогресс: Факт накопительно (%)</div>
+      <svg class="chart" id="chartSvg"></svg>
+    </div>
+    <div class="card">
+      <div class="card-title">Сводная таблица</div>
+      <div class="tbl-wrap" id="summaryTable"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ═══ CONSTANTS ═══ */
+const CHERN_SURFS = ['Пол','Стены','Потолок'];
+const CHIST_SURFS = ['Пол','Стены','Потолок','Запол.','Мебл.'];
+const NC = 3, NI = 5;
+const NADZEM_SHORT = ['Лобби','Лестн.','Лифт.х.','Техн.','Прочие','Комм.','Парк.'];
+
+const DEF_PODZEM = [
+  {c:'8.1.1',n:'Отделка паркинг и рампы',       p:6600,wc:.45,wh:.55,cw:[.38,.41,.21],hw:[.40,.28,.12,.12,.08]},
+  {c:'8.1.2',n:'Эвакуац. лестн. клетки подзем.', p:2530,wc:.45,wh:.55,cw:[.30,.50,.20],hw:[.25,.45,.15,.15,.00]},
+  {c:'8.1.3',n:'Лифт. холлы, тамбур-шлюзы подзем.',p:1800,wc:.45,wh:.55,cw:[.40,.40,.20],hw:[.35,.35,.15,.15,.00]},
+  {c:'8.1.4',n:'Технич. помещения подзем.',       p:3200,wc:.45,wh:.55,cw:[.40,.40,.20],hw:[.35,.35,.15,.15,.00]},
+  {c:'8.1.5',n:'Прочие помещения подзем.',        p:2000,wc:.50,wh:.50,cw:[.20,.60,.20],hw:[.20,.45,.15,.15,.05]},
+  {c:'8.1.6',n:'Коммерч. помещения подзем.',      p:2500,wc:.45,wh:.55,cw:[.30,.50,.20],hw:[.30,.35,.15,.15,.05]},
+];
+const DEF_NADZEM = [
+  {c:'8.2.1',n:'Отделка лобби/гранд-лобби',       p:1500,wc:.40,wh:.60,cw:[.40,.40,.20],hw:[.15,.30,.10,.20,.25]},
+  {c:'8.2.2',n:'Эвакуац. лестн. клетки надзем.',   p:2000,wc:.45,wh:.55,cw:[.30,.50,.20],hw:[.25,.45,.15,.15,.00]},
+  {c:'8.2.3',n:'Лифт. холлы, тамбур-шлюзы надзем.',p:2500,wc:.45,wh:.55,cw:[.40,.40,.20],hw:[.35,.35,.15,.15,.00]},
+  {c:'8.2.4',n:'Технич. помещения надзем.',         p:4430,wc:.45,wh:.55,cw:[.40,.40,.20],hw:[.35,.35,.15,.15,.00]},
+  {c:'8.2.5',n:'Прочие помещения надзем.',          p:4000,wc:.50,wh:.50,cw:[.20,.60,.20],hw:[.20,.45,.15,.15,.05]},
+  {c:'8.2.6',n:'Коммерч. помещения надзем.',        p:5000,wc:.45,wh:.55,cw:[.30,.50,.20],hw:[.30,.35,.15,.15,.05]},
+  {c:'8.2.7',n:'Паркинг и рампы надзем.',           p:1500,wc:.50,wh:.50,cw:[.30,.50,.20],hw:[.30,.35,.15,.12,.08]},
+];
+const DEF_AREAS = [1500,2000,2500,4430,4000,5000,1500];
+
+/* ═══ STATE ═══ */
+const G = {
+  korpus: ['К1','К2','К3'],
+  ugAreas: DEF_PODZEM.map(c=>c.p),
+  areas: {'К1':[...DEF_AREAS],'К2':[...DEF_AREAS],'К3':[...DEF_AREAS]},
+  startDate:'2026-06-01', reportDate:'2026-06-29', weeks:48,
+  podzem: DEF_PODZEM.map(c=>({...c,cw:[...c.cw],hw:[...c.hw]})),
+  nadzem: DEF_NADZEM.map(c=>({...c,cw:[...c.cw],hw:[...c.hw]})),
+  data: {}
+};
+
+function weekDates(){const d=new Date(G.startDate),a=[];for(let i=0;i<G.weeks;i++){a.push(new Date(d));d.setDate(d.getDate()+7);}return a;}
+function fmtD(d){return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear();}
+function sKey(mode,type,part){return mode+' '+type+' '+part;}
+function getCats(part){return part==='ПОДЗЕМ'?G.podzem:G.nadzem;}
+function nS(type){return type==='ЧЕРН'?NC:NI;}
+function sLabels(type){return type==='ЧЕРН'?CHERN_SURFS:CHIST_SURFS;}
+function allParts(){return['ПОДЗЕМ',...G.korpus];}
+
+function ensureData(key,nCats,ns){
+  if(!G.data[key])G.data[key]=[];
+  while(G.data[key].length<G.weeks)G.data[key].push(Array.from({length:nCats},()=>new Array(ns).fill(0)));
+  return G.data[key];
+}
+
+function save(){try{localStorage.setItem('otdelka_v11',JSON.stringify(G));document.getElementById('saveDot').className='save-dot saved';}catch(e){}}
+function load(){try{const r=localStorage.getItem('otdelka_v11');if(r)Object.assign(G,JSON.parse(r));}catch(e){}}
+function dirty(){document.getElementById('saveDot').className='save-dot unsaved';}
+
+/* ═══ TABS ═══ */
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+  if(t.dataset.tab==='reference')renderRef();
+  if(t.dataset.tab==='data')renderData();
+  if(t.dataset.tab==='dashboard')renderDash();
+}));
+
+/* ═══ TAB 1: SETTINGS ═══ */
+function renderUgAreas(){
+  const el=document.getElementById('ugAreas');
+  let h='<div class="row row-3" style="row-gap:6px">';
+  G.podzem.forEach((c,i)=>{
+    h+=`<div class="field"><label>${c.c} ${c.n.substring(0,22)}</label>
+    <input type="number" value="${G.ugAreas[i]}" min="0" onchange="G.ugAreas[${i}]=+this.value;dirty()"></div>`;
+  });
+  el.innerHTML=h+'</div>';
+}
+
+function renderAreasHdr(){
+  document.getElementById('areasHdr').innerHTML=NADZEM_SHORT.map(l=>`<span>${l}</span>`).join('');
+}
+
+function addKorpus(name){
+  const n=name||'К'+(G.korpus.length+1);
+  if(!name){G.korpus.push(n);G.areas[n]=[...DEF_AREAS];}
+  const list=document.getElementById('korpusList');
+  const row=document.createElement('div');row.className='korpus-row';
+  const a=G.areas[n]||DEF_AREAS;
+  row.innerHTML=`<input type="text" value="${n}" style="max-width:60px" class="kn" placeholder="Имя">`+
+    `<div class="areas">${a.map((v,i)=>`<input type="number" class="ka" value="${v}" data-i="${i}">`).join('')}</div>`+
+    `<button class="btn-sm btn-rm">✕</button>`;
+  list.appendChild(row);
+  row.querySelector('.btn-rm').onclick=()=>{const k=row.querySelector('.kn').value;G.korpus=G.korpus.filter(x=>x!==k);delete G.areas[k];row.remove();updInfo();dirty();};
+  row.querySelector('.kn').onchange=function(){const old=n,nw=this.value.trim()||old,idx=G.korpus.indexOf(old);if(idx>=0){G.korpus[idx]=nw;G.areas[nw]=G.areas[old];if(nw!==old)delete G.areas[old];}dirty();};
+  row.querySelectorAll('.ka').forEach(inp=>{inp.onchange=function(){const k=row.querySelector('.kn').value;if(!G.areas[k])G.areas[k]=[...DEF_AREAS];G.areas[k][+this.dataset.i]=+this.value;dirty();};});
+  updInfo();
+}
+
+function updInfo(){
+  const nk=G.korpus.length,sc=2+nk+(1+nk)*4,rc=9+3*nk;
+  const names=['ИНСТРУКЦИЯ','СПРАВОЧНИК','ПЛАН ЧЕРН ПОДЗЕМ','ПЛАН ЧИСТ ПОДЗЕМ'];
+  G.korpus.forEach(k=>{names.push('ПЛАН ЧЕРН '+k,'ПЛАН ЧИСТ '+k);});
+  names.push('ФАКТ ЧЕРН ПОДЗЕМ','ФАКТ ЧИСТ ПОДЗЕМ');
+  G.korpus.forEach(k=>{names.push('ФАКТ ЧЕРН '+k,'ФАКТ ЧИСТ '+k);});
+  names.push('ОТЧЕТ','SIGNAL');
+  document.getElementById('sheetInfo').innerHTML=`<b>${names.length}</b> листов, <b>${rc}</b> именованных диапазонов: `+
+    names.map((n,i)=>`<span style="color:var(--mt)">${i+1})${n}</span>`).join(', ');
+}
+
+function initSettings(){
+  renderUgAreas();renderAreasHdr();
+  document.getElementById('korpusList').innerHTML='';
+  G.korpus.forEach(k=>addKorpus(k));
+  document.getElementById('startDate').value=G.startDate;
+  document.getElementById('reportDate').value=G.reportDate;
+  document.getElementById('weeks').value=G.weeks;
+  ['startDate','reportDate','weeks'].forEach(id=>{
+    document.getElementById(id).onchange=function(){G[id]=id==='weeks'?+this.value:this.value;dirty();};
+  });
+  updInfo();
+}
+
+/* ═══ TAB 2: REFERENCE ═══ */
+function renderRef(){
+  const el=document.getElementById('refTable');
+  const hdrs=['Код','Название','План м²','Вес черн.','Вес чист.','∑',
+    'Ч:Пол','Ч:Стены','Ч:Пот.','∑ч',
+    'Ф:Пол','Ф:Стены','Ф:Пот.','Ф:Запол.','Ф:Мебл.','∑ф'];
+  let h='<table><thead><tr>';hdrs.forEach(x=>h+=`<th>${x}</th>`);h+='</tr></thead><tbody>';
+
+  function rows(cats,cls,key){
+    cats.forEach((c,i)=>{
+      const cwS=c.cw.reduce((a,b)=>a+b,0),hwS=c.hw.reduce((a,b)=>a+b,0),wS=c.wc+c.wh;
+      h+=`<tr><td class="${cls}">${c.c}</td><td class="${cls} left">${c.n}</td>`;
+      h+=`<td><input type="number" value="${c.p}" min="0" onchange="G.${key}[${i}].p=+this.value;dirty()"></td>`;
+      h+=`<td><input type="number" value="${c.wc}" min="0" max="1" step=".05" onchange="G.${key}[${i}].wc=+this.value;renderRef()"></td>`;
+      h+=`<td><input type="number" value="${c.wh}" min="0" max="1" step=".05" onchange="G.${key}[${i}].wh=+this.value;renderRef()"></td>`;
+      h+=`<td class="${Math.abs(wS-1)<.01?'sum-ok':'sum-bad'}">${wS.toFixed(2)}</td>`;
+      for(let s=0;s<3;s++)h+=`<td><input type="number" value="${c.cw[s]}" min="0" max="1" step=".01" onchange="G.${key}[${i}].cw[${s}]=+this.value;renderRef()"></td>`;
+      h+=`<td class="${Math.abs(cwS-1)<.01?'sum-ok':'sum-bad'}">${cwS.toFixed(2)}</td>`;
+      for(let s=0;s<5;s++)h+=`<td><input type="number" value="${c.hw[s]}" min="0" max="1" step=".01" onchange="G.${key}[${i}].hw[${s}]=+this.value;renderRef()"></td>`;
+      h+=`<td class="${Math.abs(hwS-1)<.01?'sum-ok':'sum-bad'}">${hwS.toFixed(2)}</td></tr>`;
+    });
+  }
+
+  h+='<tr><td colspan="16" class="section-hdr" style="background:var(--ug)">8.1 Подземная часть</td></tr>';
+  rows(G.podzem,'ug','podzem');
+  h+='<tr><td colspan="16" class="section-hdr" style="background:var(--ag)">8.2 Надземная часть</td></tr>';
+  rows(G.nadzem,'ag','nadzem');
+  el.innerHTML=h+'</tbody></table>';
+}
+
+/* ═══ TAB 3: DATA ENTRY ═══ */
+function updPartSel(){
+  const sel=document.getElementById('selPart');sel.innerHTML='';
+  allParts().forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p==='ПОДЗЕМ'?'Подземная часть':'Надзем: '+p;sel.appendChild(o);});
+}
+
+function renderData(){updPartSel();buildDT();}
+
+function buildDT(){
+  const part=document.getElementById('selPart').value;
+  const type=document.getElementById('selType').value;
+  const mode=document.getElementById('selMode').value;
+  const cats=getCats(part),ns=nS(type),sl=sLabels(type);
+  const key=sKey(mode,type,part);
+  const data=ensureData(key,cats.length,ns);
+  const dates=weekDates();
+
+  let h='<table><thead><tr><th rowspan="2">#</th><th rowspan="2">Дата</th>';
+  cats.forEach(c=>{h+=`<th colspan="${ns}">${c.c}</th>`;});
+  h+='</tr><tr>';
+  cats.forEach(()=>{sl.forEach(s=>h+=`<th style="font-size:9px">${s}</th>`);});
+  h+='</tr></thead><tbody>';
+
+  const nw=Math.min(G.weeks,dates.length);
+  for(let w=0;w<nw;w++){
+    h+=`<tr><td style="color:var(--mt);font-size:10px">${w+1}</td><td style="font-size:10px">${fmtD(dates[w])}</td>`;
+    for(let ci=0;ci<cats.length;ci++){
+      for(let si=0;si<ns;si++){
+        const val=data[w]&&data[w][ci]?(data[w][ci][si]||0):0;
+        h+=`<td><input type="number" value="${val||''}" min="0" step="1"
+          data-w="${w}" data-ci="${ci}" data-si="${si}" data-key="${key}"
+          onchange="onDI(this)"></td>`;
+      }
+    }
+    h+='</tr>';
+  }
+  document.getElementById('dataTable').innerHTML=h+'</tbody></table>';
+}
+
+function onDI(inp){
+  const w=+inp.dataset.w,ci=+inp.dataset.ci,si=+inp.dataset.si,key=inp.dataset.key;
+  if(G.data[key]&&G.data[key][w]&&G.data[key][w][ci])G.data[key][w][ci][si]=+inp.value||0;
+  dirty();
+}
+
+['selPart','selType','selMode'].forEach(id=>document.getElementById(id).addEventListener('change',buildDT));
+
+/* ═══ TAB 4: DASHBOARD ═══ */
+function calcProg(part){
+  const cats=getCats(part);let plan=0,done=0;
+  for(const type of['ЧЕРН','ЧИСТ']){
+    const ns=nS(type),sw_key=type==='ЧЕРН'?'cw':'hw';
+    const fk=sKey('ФАКТ',type,part),fd=G.data[fk];
+    for(let ci=0;ci<cats.length;ci++){
+      const c=cats[ci],w=type==='ЧЕРН'?c.wc:c.wh,sws=c[sw_key];
+      for(let si=0;si<ns;si++){
+        const sw=si<sws.length?sws[si]:0;
+        plan+=c.p*w*sw;
+        if(fd)for(let wk=0;wk<fd.length;wk++)if(fd[wk]&&fd[wk][ci])done+=(fd[wk][ci][si]||0)*w*sw;
+      }
+    }
+  }
+  return{plan,done,pct:plan>0?done/plan*100:0};
+}
+
+function renderDash(){
+  const parts=allParts();let tp=0,td=0;const pd=[];
+  parts.forEach(p=>{const r=calcProg(p);pd.push({part:p,...r});tp+=r.plan;td+=r.done;});
+  const op=tp>0?td/tp*100:0;
+
+  let ch='';
+  ch+=`<div class="dash-card"><div class="label">Общий прогресс</div><div class="value">${op.toFixed(1)}%</div>
+    <div class="detail">План: ${(tp/1000).toFixed(0)}k м² | Факт: ${(td/1000).toFixed(0)}k м²</div>
+    <div class="pbar"><div class="pfill ${op>70?'ok':op>30?'mid':'low'}" style="width:${Math.min(op,100)}%"></div></div></div>`;
+  pd.forEach(d=>{
+    ch+=`<div class="dash-card"><div class="label">${d.part==='ПОДЗЕМ'?'8.1 Подземная':'8.2 '+d.part}</div>
+      <div class="value">${d.pct.toFixed(1)}%</div>
+      <div class="detail">План: ${d.plan.toFixed(0)} | Факт: ${d.done.toFixed(0)}</div>
+      <div class="pbar"><div class="pfill ${d.pct>70?'ok':d.pct>30?'mid':'low'}" style="width:${Math.min(d.pct,100)}%"></div></div></div>`;
+  });
+  document.getElementById('dashCards').innerHTML=ch;
+  renderChart(parts,pd);
+  renderSummary(parts);
+}
+
+function renderChart(parts,pd){
+  const svg=document.getElementById('chartSvg');
+  const W=800,H=230,pad={l:45,r:15,t:18,b:35};
+  const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+  const dates=weekDates(),nw=dates.length;
+  if(nw<2){svg.innerHTML='<text x="50%" y="50%" text-anchor="middle" fill="#999" font-size="12">Нет данных</text>';return;}
+
+  let s=`<svg viewBox="0 0 ${W} ${H}">`;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+ph-ph*i/4;
+    s+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#eee"/>`;
+    s+=`<text x="${pad.l-4}" y="${y+3}" text-anchor="end" fill="#999" font-size="9">${i*25}%</text>`;
+  }
+  const step=Math.max(1,Math.floor(nw/8));
+  for(let i=0;i<nw;i+=step){
+    const x=pad.l+pw*i/(nw-1);
+    s+=`<text x="${x}" y="${H-4}" text-anchor="middle" fill="#999" font-size="8">${fmtD(dates[i]).substring(0,5)}</text>`;
+  }
+
+  const colors=['#4472C4','#ED7D31','#70AD47','#FFC000','#5B9BD5','#44546A','#C55A11','#7030A0'];
+  parts.forEach((part,pi)=>{
+    const cats=getCats(part);let totWP=0;
+    for(const type of['ЧЕРН','ЧИСТ']){
+      const ns=nS(type),sk=type==='ЧЕРН'?'cw':'hw';
+      for(let ci=0;ci<cats.length;ci++){const c=cats[ci],w=type==='ЧЕРН'?c.wc:c.wh;for(let si=0;si<ns;si++)totWP+=c.p*w*(si<c[sk].length?c[sk][si]:0);}
+    }
+    if(totWP===0)return;
+
+    const cum=[];
+    for(let w=0;w<nw;w++){
+      let v=0;
+      for(const type of['ЧЕРН','ЧИСТ']){
+        const ns=nS(type),sk=type==='ЧЕРН'?'cw':'hw',fk=sKey('ФАКТ',type,part),fd=G.data[fk];
+        if(!fd)continue;
+        for(let ci=0;ci<cats.length;ci++){const c=cats[ci],wt=type==='ЧЕРН'?c.wc:c.wh;
+          for(let si=0;si<ns;si++){const sw=si<c[sk].length?c[sk][si]:0;for(let ww=0;ww<=w;ww++)if(fd[ww]&&fd[ww][ci])v+=(fd[ww][ci][si]||0)*wt*sw;}}
+      }
+      cum.push(v/totWP*100);
+    }
+    if(cum.every(v=>v===0))return;
+    let path='';
+    cum.forEach((v,i)=>{const x=pad.l+pw*i/(nw-1),y=pad.t+ph-ph*Math.min(v,100)/100;path+=(i?'L':'M')+x.toFixed(1)+','+y.toFixed(1);});
+    s+=`<path d="${path}" fill="none" stroke="${colors[pi%colors.length]}" stroke-width="2"/>`;
+  });
+
+  parts.forEach((p,i)=>{
+    const x=pad.l+i*100;
+    s+=`<rect x="${x}" y="${pad.t-13}" width="8" height="8" fill="${colors[i%colors.length]}" rx="1"/>`;
+    s+=`<text x="${x+12}" y="${pad.t-5}" fill="#333" font-size="9">${p}</text>`;
+  });
+  svg.innerHTML=s+'</svg>';
+}
+
+function renderSummary(parts){
+  let h='<table><thead><tr><th>Часть</th><th>Категория</th><th>План м²</th><th>Факт черн.</th><th>Факт чист.</th><th>% черн.</th><th>% чист.</th></tr></thead><tbody>';
+  parts.forEach(part=>{
+    const cats=getCats(part);
+    cats.forEach((c,ci)=>{
+      let fc=0,fi=0;
+      const dc=G.data[sKey('ФАКТ','ЧЕРН',part)],di=G.data[sKey('ФАКТ','ЧИСТ',part)];
+      if(dc)for(let w=0;w<dc.length;w++)if(dc[w]&&dc[w][ci])dc[w][ci].forEach(v=>fc+=v||0);
+      if(di)for(let w=0;w<di.length;w++)if(di[w]&&di[w][ci])di[w][ci].forEach(v=>fi+=v||0);
+      const pc=c.p>0?(fc/c.p*100).toFixed(1):'—';
+      const pi_=c.p>0?(fi/c.p*100).toFixed(1):'—';
+      h+=`<tr><td class="${part==='ПОДЗЕМ'?'ug':'ag'}">${part}</td><td class="left">${c.c} ${c.n}</td>
+        <td>${c.p.toLocaleString()}</td><td>${fc.toLocaleString()}</td><td>${fi.toLocaleString()}</td>
+        <td>${pc}%</td><td>${pi_}%</td></tr>`;
+    });
+  });
+  document.getElementById('summaryTable').innerHTML=h+'</tbody></table>';
+}
+
+/* ═══════════════════════════════════════════════════
+   EXCEL GENERATION ENGINE
+   ═══════════════════════════════════════════════════ */
+const CRC_T=new Uint32Array(256);
+{let i,j,c;for(i=0;i<256;i++){c=i;for(j=0;j<8;j++)c=c&1?0xEDB88320^(c>>>1):c>>>1;CRC_T[i]=c>>>0;}}
+function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC_T[(c^b[i])&0xFF]^(c>>>8);return(c^0xFFFFFFFF)>>>0;}
+function makeZip(files){
+  const enc=new TextEncoder();
+  const E=files.map(f=>{const nm=enc.encode(f.name),dt=enc.encode(f.content);return{nm,dt,cr:crc32(dt)};});
+  let sz=22;for(const e of E)sz+=76+e.nm.length*2+e.dt.length;
+  const buf=new Uint8Array(sz),v=new DataView(buf.buffer);let p=0;const off=[];
+  for(const e of E){
+    off.push(p);v.setUint32(p,0x04034b50,!0);p+=4;v.setUint16(p,20,!0);p+=2;v.setUint16(p,0x0800,!0);p+=2;v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+    v.setUint32(p,e.cr,!0);p+=4;v.setUint32(p,e.dt.length,!0);p+=4;v.setUint32(p,e.dt.length,!0);p+=4;v.setUint16(p,e.nm.length,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+    buf.set(e.nm,p);p+=e.nm.length;buf.set(e.dt,p);p+=e.dt.length;
+  }
+  const cdOff=p;
+  for(let i=0;i<E.length;i++){
+    const e=E[i];v.setUint32(p,0x02014b50,!0);p+=4;v.setUint16(p,20,!0);p+=2;v.setUint16(p,20,!0);p+=2;v.setUint16(p,0x0800,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+    v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;v.setUint32(p,e.cr,!0);p+=4;v.setUint32(p,e.dt.length,!0);p+=4;v.setUint32(p,e.dt.length,!0);p+=4;
+    v.setUint16(p,e.nm.length,!0);p+=2;v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+    v.setUint32(p,0,!0);p+=4;v.setUint32(p,off[i],!0);p+=4;buf.set(e.nm,p);p+=e.nm.length;
+  }
+  const cdSz=p-cdOff;v.setUint32(p,0x06054b50,!0);p+=4;v.setUint16(p,0,!0);p+=2;v.setUint16(p,0,!0);p+=2;
+  v.setUint16(p,E.length,!0);p+=2;v.setUint16(p,E.length,!0);p+=2;v.setUint32(p,cdSz,!0);p+=4;v.setUint32(p,cdOff,!0);p+=4;v.setUint16(p,0,!0);
+  return buf;
+}
+
+function X(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function CL(c){let s='';while(c>0){c--;s=String.fromCharCode(65+c%26)+s;c=Math.floor(c/26);}return s;}
+function DS(d){const dt=new Date(d),ep=new Date(1899,11,30);return Math.round((dt-ep)/86400000);}
+
+class SST{constructor(){this.m=new Map();this.a=[];}
+  add(s){if(this.m.has(s))return this.m.get(s);const i=this.a.length;this.m.set(s,i);this.a.push(s);return i;}
+  xml(){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+this.a.length+'" uniqueCount="'+this.a.length+'">';for(const s of this.a)x+='<si><t>'+X(s)+'</t></si>';return x+'</sst>';}
+}
+
+class WS{
+  constructor(name,sst){this.name=name;this.sst=sst;this.R=[];this.merges=[];this.cols=[];}
+  sv(r,c,v,st){if(!this.R[r])this.R[r]=[];this.R[r][c]={v,st};}
+  ss(r,c,s,st){this.sv(r,c,{s:this.sst.add(s)},st);}
+  sf(r,c,f,st){this.sv(r,c,{f},st);}
+  sn(r,c,n,st){this.sv(r,c,{n},st);}
+  mg(r1,c1,r2,c2){this.merges.push(`${CL(c1)}${r1}:${CL(c2)}${r2}`);}
+  cw(c,w){this.cols.push({c,w});}
+  xml(){
+    let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
+    if(this.cols.length){x+='<cols>';for(const c of this.cols)x+=`<col min="${c.c}" max="${c.c}" width="${c.w}" customWidth="1"/>`;x+='</cols>';}
+    x+='<sheetData>';
+    for(let r=1;r<this.R.length;r++){
+      if(!this.R[r])continue;x+=`<row r="${r}">`;
+      for(let c=1;c<this.R[r].length;c++){
+        if(!this.R[r][c])continue;const cl=this.R[r][c],ref=CL(c)+r,st=cl.st!=null?` s="${cl.st}"`:'',v=cl.v;
+        if(v==null)x+=`<c r="${ref}"${st}/>`;
+        else if(typeof v==='object'&&v.s!=null)x+=`<c r="${ref}"${st} t="s"><v>${v.s}</v></c>`;
+        else if(typeof v==='object'&&v.f!=null)x+=`<c r="${ref}"${st}><f>${X(v.f)}</f></c>`;
+        else if(typeof v==='object'&&v.n!=null)x+=`<c r="${ref}"${st}><v>${v.n}</v></c>`;
+        else if(typeof v==='number')x+=`<c r="${ref}"${st}><v>${v}</v></c>`;
+        else x+=`<c r="${ref}"${st} t="inlineStr"><is><t>${X(String(v))}</t></is></c>`;
+      }
+      x+='</row>';
+    }
+    x+='</sheetData>';
+    if(this.merges.length){x+='<mergeCells>';for(const m of this.merges)x+=`<mergeCell ref="${m}"/>`;x+='</mergeCells>';}
+    return x+'</worksheet>';
+  }
+}
+
+// Styles: 0=def, 1=bold+brd, 2=hdr(white/blue), 3=title, 4=ug, 5=ag, 6=total, 7=brd, 8=date, 9=pct
+function styXml(){
+  return`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<numFmts count="2"><numFmt numFmtId="164" formatCode="DD.MM.YYYY"/><numFmt numFmtId="165" formatCode="0.0%"/></numFmts>
+<fonts count="4"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="14"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font></fonts>
+<fills count="6"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF4472C4"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD9E2F3"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE2EFDA"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFF2CC"/></patternFill></fill></fills>
+<borders count="2"><border/><border><left style="thin"><color auto="1"/></left><right style="thin"><color auto="1"/></right><top style="thin"><color auto="1"/></top><bottom style="thin"><color auto="1"/></bottom></border></borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellXfs count="10"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="1" applyBorder="1" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="2" borderId="1" applyBorder="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="3" fillId="2" borderId="0" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="3" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="4" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="5" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="0" borderId="1" applyBorder="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/><xf numFmtId="165" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/></cellXfs></styleSheet>`;
+}
+function ctXml(n){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>';for(let i=1;i<=n;i++)x+=`<Override PartName="/xl/worksheets/sheet${i}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`;return x+'</Types>';}
+function relsXml(){return'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';}
+function wbXml(sheets,nr){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>';for(let i=0;i<sheets.length;i++)x+=`<sheet name="${X(sheets[i])}" sheetId="${i+1}" r:id="rId${i+1}"/>`;x+='</sheets>';if(nr&&nr.length){x+='<definedNames>';for(const r of nr)x+=`<definedName name="${X(r.name)}">${X(r.ref)}</definedName>`;x+='</definedNames>';}return x+'<calcPr calcId="152511" fullCalcOnLoad="1"/></workbook>';}
+function wbRelsXml(n){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';for(let i=1;i<=n;i++)x+=`<Relationship Id="rId${i}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i}.xml"/>`;x+=`<Relationship Id="rId${n+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>`;x+=`<Relationship Id="rId${n+2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>`;return x+'</Relationships>';}
+
+/* ═══ LAYOUT ═══ */
+function compL(NP,NN,NK){
+  const p0=3,pN=p0+NP-1,n0=pN+1,nN=n0+NN-1;
+  const ah=nN+2,a81=ah+1,a82=a81+1;
+  const c0=a82+2,c3=c0+3;
+  const kh=c3+2,kc=kh+1,k0=kc+1,kN=k0+NK-1;
+  const kk=kN+2,dr=kk+3;
+  return{p0,pN,n0,nN,ah,a81,a82,c0,c3,kh,kc,k0,kN,kk,dr};
+}
+function factCL(ci,ns,si){return CL(2+ci*ns+si);}
+function cwCol(si){return CL(8+si);}   // СПРАВОЧНИК черн weight columns 8,9,10
+function hwCol(si){return CL(12+si);}  // СПРАВОЧНИК чист weight columns 12,13,14,15,16
+function sCR(ci,nd,L){return(nd?L.n0:L.p0)+ci;}
+
+/* ═══ SHEET GENERATORS ═══ */
+function gInstr(sst){
+  const ws=new WS('ИНСТРУКЦИЯ',sst);
+  ws.ss(1,1,'ИНСТРУКЦИЯ ПО ЗАПОЛНЕНИЮ',3);
+  ws.ss(3,1,'Файл сгенерирован конструктором Отделка для SIGNAL v11',0);
+  ws.ss(4,1,'Черновая отделка: 3 поверхности (Пол, Стены, Потолок)',0);
+  ws.ss(5,1,'Чистовая отделка: 5 поверхностей (Пол, Стены, Потолок, Заполнение проёмов, Меблировка)',0);
+  ws.ss(7,1,'Справочник — веса и распределения по поверхностям',0);
+  ws.ss(8,1,'ПЛАН/ФАКТ листы — ввод м² по неделям',0);
+  ws.ss(9,1,'ОТЧЕТ — сводка',0);
+  ws.ss(10,1,'SIGNAL — данные для визуализации',0);
+  ws.cw(1,80);
+  return ws;
+}
+
+function gSprav(sst,cfg){
+  const ws=new WS('СПРАВОЧНИК',sst);
+  const{L,NP,NN,NK,KOR,KA}=cfg;
+  ws.ss(1,1,'СПРАВОЧНИК КАТЕГОРИЙ ОТДЕЛКИ',3);ws.mg(1,1,1,17);
+  const hdrs=['Код','Часть','Название','План м²','Вес черн.','Вес чист.','∑ весов',
+    'Черн:Пол','Черн:Стены','Черн:Потолок','∑ черн.',
+    'Чист:Пол','Чист:Стены','Чист:Потолок','Чист:Запол.','Чист:Мебл.','∑ чист.'];
+  for(let i=0;i<hdrs.length;i++)ws.ss(2,i+1,hdrs[i],2);
+
+  const ALL=[...G.podzem,...G.nadzem];
+  ALL.forEach((c,idx)=>{
+    const r=3+idx,part=c.c.startsWith('8.1')?'Подзем.':'Надзем.',st=c.c.startsWith('8.1')?4:5;
+    ws.ss(r,1,c.c,st);ws.ss(r,2,part,st);ws.ss(r,3,c.n,st);
+    ws.sn(r,4,c.p,7);ws.sn(r,5,c.wc,7);ws.sn(r,6,c.wh,7);
+    ws.sf(r,7,`E${r}+F${r}`,7);
+    for(let s=0;s<3;s++)ws.sn(r,8+s,c.cw[s],7);
+    ws.sf(r,11,`SUM(H${r}:J${r})`,7);
+    for(let s=0;s<5;s++)ws.sn(r,12+s,c.hw[s],7);
+    ws.sf(r,17,`SUM(L${r}:P${r})`,7);
+  });
+
+  ws.ss(L.ah,1,'ПЛОЩАДИ ИТОГО',1);ws.ss(L.ah,5,'Вес',2);
+  ws.ss(L.a81,1,'8.1 Подзем.',1);ws.sn(L.a81,4,G.ugAreas.reduce((a,b)=>a+b,0),6);
+  let agT=0;for(const k of KOR)for(let i=0;i<NN;i++)agT+=((KA[k]||DEF_AREAS)[i]||0);
+  ws.ss(L.a82,1,'8.2 Надзем.',1);ws.sn(L.a82,4,agT,6);
+  ws.sf(L.a81,5,`IFERROR(D${L.a81}/(D${L.a81}+D${L.a82}),0)`,7);
+  ws.sf(L.a82,5,`IFERROR(D${L.a82}/(D${L.a81}+D${L.a82}),0)`,7);
+
+  ws.ss(L.kh,1,'КОРПУСА',1);ws.ss(L.kc,1,'Имя',2);
+  for(let i=0;i<NN;i++)ws.ss(L.kc,2+i,G.nadzem[i].c,2);
+  ws.ss(L.kc,2+NN,'Итого',2);ws.ss(L.kc,3+NN,'Вес',2);
+  const tKC=CL(2+NN);
+  KOR.forEach((k,ki)=>{
+    const r=L.k0+ki;ws.ss(r,1,k,7);
+    for(let i=0;i<NN;i++)ws.sn(r,2+i,(KA[k]||DEF_AREAS)[i]||0,7);
+    ws.sf(r,2+NN,`SUM(B${r}:${CL(1+NN)}${r})`,6);
+    ws.sf(r,3+NN,`IFERROR(${tKC}${r}/SUM(${tKC}${L.k0}:${tKC}${L.kN}),0)`,7);
+  });
+
+  ws.ss(L.c0,1,'НАСТРОЙКИ',1);
+  ws.ss(L.c0+1,1,'Дата начала',7);ws.sn(L.c0+1,2,cfg.sdSer,8);
+  ws.ss(L.c0+2,1,'Дата отчёта',7);ws.sn(L.c0+2,2,cfg.rdSer,8);
+  ws.ss(L.c0+3,1,'Недель',7);ws.sn(L.c0+3,2,cfg.W,7);
+
+  ws.ss(L.dr,1,'Даты',1);ws.sn(L.dr,2,cfg.sdSer,8);
+  for(let w=1;w<cfg.W;w++)ws.sf(L.dr,2+w,`${CL(1+w)}${L.dr}+7`,8);
+
+  ws.cw(1,10);ws.cw(2,10);ws.cw(3,42);ws.cw(4,12);
+  for(let i=5;i<=17;i++)ws.cw(i,11);
+  return ws;
+}
+
+function gPF(sst,cfg,kind,type,suf,cats){
+  const name=`${kind} ${type} ${suf}`;
+  const ws=new WS(name,sst);
+  const ns=type==='ЧЕРН'?NC:NI;
+  const sl=type==='ЧЕРН'?CHERN_SURFS:CHIST_SURFS;
+  const{W}=cfg;
+  const isPod=suf==='ПОДЗЕМ';
+  const partKey=isPod?'ПОДЗЕМ':suf;
+  const dataKey=sKey(kind,type,partKey);
+  const dd=G.data[dataKey];
+  const totalCols=1+cats.length*ns;
+
+  ws.ss(1,1,name,3);ws.mg(1,1,1,totalCols);
+  ws.ss(2,1,'Дата',2);
+  ws.ss(3,1,'',2);
+  for(let ci=0;ci<cats.length;ci++){
+    const cc=2+ci*ns;
+    ws.ss(2,cc,isPod?'Подземная часть':'Надземная часть',2);
+    ws.mg(2,cc,2,cc+ns-1);
+    ws.ss(3,cc,cats[ci].c+' '+cats[ci].n,2);
+    if(ns>1)ws.mg(3,cc,3,cc+ns-1);
+    for(let si=0;si<ns;si++)ws.ss(4,cc+si,sl[si],2);
+  }
+
+  for(let w=0;w<W;w++){
+    const r=5+w;
+    if(w===0)ws.sn(r,1,cfg.sdSer,8);else ws.sf(r,1,`A${r-1}+7`,8);
+    for(let ci=0;ci<cats.length;ci++){
+      for(let si=0;si<ns;si++){
+        const val=dd&&dd[w]&&dd[w][ci]?(dd[w][ci][si]||0):0;
+        if(val>0)ws.sn(r,2+ci*ns+si,val,7);else ws.sv(r,2+ci*ns+si,null,7);
+      }
+    }
+  }
+
+  ws.cw(1,14);for(let i=2;i<=totalCols;i++)ws.cw(i,10);
+  return ws;
+}
+
+function gOtchet(sst,cfg){
+  const ws=new WS('ОТЧЕТ',sst);
+  const{L,W,NK,NP,NN,KOR}=cfg;
+  ws.ss(1,1,'ОТЧЕТ — Сводка',3);ws.mg(1,1,1,8);
+  ws.ss(3,1,'Дата',2);ws.ss(3,2,'Подзем. черн.',2);ws.ss(3,3,'Подзем. чист.',2);
+  ws.ss(3,4,'Надзем. черн.',2);ws.ss(3,5,'Надзем. чист.',2);ws.ss(3,6,'Итого',2);
+
+  for(let w=0;w<W;w++){
+    const r=4+w;
+    if(w===0)ws.sn(r,1,cfg.sdSer,8);else ws.sf(r,1,`A${r-1}+7`,8);
+    const fr=5+w; // data row in ПЛАН/ФАКТ sheets (starts at 5)
+    const pcEnd=CL(1+NP*NC),piEnd=CL(1+NP*NI);
+    ws.sf(r,2,`SUM('ФАКТ ЧЕРН ПОДЗЕМ'!B${fr}:'ФАКТ ЧЕРН ПОДЗЕМ'!${pcEnd}${fr})`,7);
+    ws.sf(r,3,`SUM('ФАКТ ЧИСТ ПОДЗЕМ'!B${fr}:'ФАКТ ЧИСТ ПОДЗЕМ'!${piEnd}${fr})`,7);
+    const acP=[],aiP=[];
+    for(const k of KOR){
+      const kcEnd=CL(1+NN*NC),kiEnd=CL(1+NN*NI);
+      acP.push(`SUM('ФАКТ ЧЕРН ${k}'!B${fr}:'ФАКТ ЧЕРН ${k}'!${kcEnd}${fr})`);
+      aiP.push(`SUM('ФАКТ ЧИСТ ${k}'!B${fr}:'ФАКТ ЧИСТ ${k}'!${kiEnd}${fr})`);
+    }
+    ws.sf(r,4,acP.join('+')||'0',7);
+    ws.sf(r,5,aiP.join('+')||'0',7);
+    ws.sf(r,6,`B${r}+C${r}+D${r}+E${r}`,6);
+  }
+  ws.cw(1,14);for(let i=2;i<=6;i++)ws.cw(i,16);
+  return ws;
+}
+
+function cleanN(s){return s.replace(/[^A-Za-z0-9А-Яа-яёЁ_]/g,'_').substring(0,30);}
+
+function gSignal(sst,cfg){
+  const ws=new WS('SIGNAL',sst);
+  const{L,W,NN,KOR}=cfg;const nr=[];
+  ws.ss(1,1,'Дата отчета',7);ws.sn(2,1,cfg.rdSer,8);
+
+  const blocks=[];let col_=1;
+  function ab(label,type,opts){const base=col_;col_+=4;const b={label,type,base,...opts};blocks.push(b);return{base};}
+
+  const bpc=ab('8.1 Подземная: Черновая','weighted',{sheet:'ПЛАН ЧЕРН ПОДЗЕМ',fsheet:'ФАКТ ЧЕРН ПОДЗЕМ',cats:G.podzem,isNdz:false,wtype:'chern'});
+  const bpi=ab('8.1 Подземная: Чистовая','weighted',{sheet:'ПЛАН ЧИСТ ПОДЗЕМ',fsheet:'ФАКТ ЧИСТ ПОДЗЕМ',cats:G.podzem,isNdz:false,wtype:'chist'});
+  const bpo=ab('8.1 Подземная: Общий','combined',{cs:'ПЛАН ЧЕРН ПОДЗЕМ',fs:'ФАКТ ЧЕРН ПОДЗЕМ',is:'ПЛАН ЧИСТ ПОДЗЕМ',fis:'ФАКТ ЧИСТ ПОДЗЕМ',cats:G.podzem,isNdz:false});
+
+  const koL=[],kcL=[],kiL=[];
+  for(const k of KOR){
+    const kc=ab(`8.2 ${k}: Черновая`,'weighted',{sheet:`ПЛАН ЧЕРН ${k}`,fsheet:`ФАКТ ЧЕРН ${k}`,cats:G.nadzem,isNdz:true,wtype:'chern'});
+    const ki=ab(`8.2 ${k}: Чистовая`,'weighted',{sheet:`ПЛАН ЧИСТ ${k}`,fsheet:`ФАКТ ЧИСТ ${k}`,cats:G.nadzem,isNdz:true,wtype:'chist'});
+    const ko=ab(`8.2 ${k}: Общий`,'combined',{cs:`ПЛАН ЧЕРН ${k}`,fs:`ФАКТ ЧЕРН ${k}`,is:`ПЛАН ЧИСТ ${k}`,fis:`ФАКТ ЧИСТ ${k}`,cats:G.nadzem,isNdz:true});
+    koL.push(ko);kcL.push(kc);kiL.push(ki);
+  }
+
+  const kwc=3+NN;
+  const bnc=ab('8.2 Надземная: Черновая','sum_blocks',{sources:kcL,kwc,kw0:L.k0});
+  const bni=ab('8.2 Надземная: Чистовая','sum_blocks',{sources:kiL,kwc,kw0:L.k0});
+  const bno=ab('8.2 Надземная: Общий','sum_blocks',{sources:koL,kwc,kw0:L.k0});
+  const wPod=`СПРАВОЧНИК!$E$${L.a81}`,wNad=`СПРАВОЧНИК!$E$${L.a82}`;
+  const btc=ab('8. Общий: Черновая','sum_two',{a:bpc,b:bnc,wA:wPod,wB:wNad});
+  const bti=ab('8. Общий: Чистовая','sum_two',{a:bpi,b:bni,wA:wPod,wB:wNad});
+  const bto=ab('8. Общий: Общий','sum_two',{a:bpo,b:bno,wA:wPod,wB:wNad});
+
+  for(const b of blocks){
+    const bc=b.base,dc=bc+1,pc=bc+2,fc=bc+3;
+    ws.ss(4,bc,'Тип',2);ws.ss(4,dc,b.label,2);
+    ws.ss(5,bc,'Ед.изм.',7);ws.ss(5,dc,'м2',7);
+    ws.ss(6,bc,'Дата',2);ws.ss(6,dc,'План',2);ws.ss(6,pc,'Факт',2);
+
+    for(let w=0;w<W;w++){
+      const r=7+w;
+      if(w===0)ws.sf(r,bc,'=$A$2',8);else ws.sf(r,bc,`${CL(bc)}${r-1}+7`,8);
+      const pr=5+w; // plan/fact data row
+
+      if(b.type==='weighted'){
+        const nc=b.cats.length,ns=b.wtype==='chist'?NI:NC;
+        const wcf=b.wtype==='chist'?hwCol:cwCol;
+        const pP=[],fP=[];
+        for(let ci=0;ci<nc;ci++){
+          const sr=sCR(ci,b.isNdz,L);
+          for(let si=0;si<ns;si++){
+            const pcl=factCL(ci,ns,si),wc=wcf(si);
+            pP.push(`'${b.sheet}'!${pcl}${pr}*СПРАВОЧНИК!$${wc}$${sr}`);
+            fP.push(`'${b.fsheet}'!${pcl}${pr}*СПРАВОЧНИК!$${wc}$${sr}`);
+          }
+        }
+        ws.sf(r,pc,pP.join('+'),7);
+        ws.sf(r,fc,fP.join('+'),7);
+      }else if(b.type==='combined'){
+        const nc=b.cats.length;
+        const pP=[],fP=[];
+        for(let ci=0;ci<nc;ci++){
+          const sr=sCR(ci,b.isNdz,L);
+          const wc=`СПРАВОЧНИК!$E$${sr}`,wh=`СПРАВОЧНИК!$F$${sr}`;
+          const cp=[],cf=[],ip=[],iff=[];
+          for(let si=0;si<NC;si++){
+            const dc=factCL(ci,NC,si),sw=cwCol(si);
+            cp.push(`'${b.cs}'!${dc}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
+            cf.push(`'${b.fs}'!${dc}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
+          }
+          for(let si=0;si<NI;si++){
+            const dc=factCL(ci,NI,si),sw=hwCol(si);
+            ip.push(`'${b.is}'!${dc}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
+            iff.push(`'${b.fis}'!${dc}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
+          }
+          pP.push(`${wc}*(${cp.join('+')})+${wh}*(${ip.join('+')})`);
+          fP.push(`${wc}*(${cf.join('+')})+${wh}*(${iff.join('+')})`);
+        }
+        ws.sf(r,pc,pP.join('+'),7);
+        ws.sf(r,fc,fP.join('+'),7);
+      }else if(b.type==='sum_blocks'){
+        const wl=CL(b.kwc);
+        ws.sf(r,pc,b.sources.map((s,i)=>`${CL(s.base+2)}${r}*СПРАВОЧНИК!$${wl}$${b.kw0+i}`).join('+')||'0',7);
+        ws.sf(r,fc,b.sources.map((s,i)=>`${CL(s.base+3)}${r}*СПРАВОЧНИК!$${wl}$${b.kw0+i}`).join('+')||'0',7);
+      }else if(b.type==='sum_two'){
+        ws.sf(r,pc,`${CL(b.a.base+2)}${r}*${b.wA}+${CL(b.b.base+2)}${r}*${b.wB}`,7);
+        ws.sf(r,fc,`${CL(b.a.base+3)}${r}*${b.wA}+${CL(b.b.base+3)}${r}*${b.wB}`,7);
+      }
+    }
+    const c1=CL(bc),c2=CL(bc+3);
+    nr.push({name:cleanN(b.label),ref:`'SIGNAL'!$${c1}:$${c2}`});
+  }
+  return{sheet:ws,nr};
+}
+
+/* ═══ EXPORT ═══ */
+function doExport(){
+  const btn=document.getElementById('btnExport');
+  btn.disabled=true;btn.textContent='Генерация...';
+  setTimeout(()=>{
+    try{
+      save();
+      const sst=new SST();
+      const NK=G.korpus.length,NP=G.podzem.length,NN=G.nadzem.length;
+      const L=compL(NP,NN,NK);
+      const KA={};for(const k of G.korpus)KA[k]=G.areas[k]||[...DEF_AREAS];
+      const cfg={KOR:G.korpus,KA,L,W:G.weeks,NP,NN,NK,sdSer:DS(G.startDate),rdSer:DS(G.reportDate)};
+
+      const sheets=[];
+      sheets.push(gInstr(sst));
+      sheets.push(gSprav(sst,cfg));
+
+      sheets.push(gPF(sst,cfg,'ПЛАН','ЧЕРН','ПОДЗЕМ',G.podzem));
+      sheets.push(gPF(sst,cfg,'ПЛАН','ЧИСТ','ПОДЗЕМ',G.podzem));
+      for(const k of G.korpus){
+        sheets.push(gPF(sst,cfg,'ПЛАН','ЧЕРН',k,G.nadzem));
+        sheets.push(gPF(sst,cfg,'ПЛАН','ЧИСТ',k,G.nadzem));
+      }
+      sheets.push(gPF(sst,cfg,'ФАКТ','ЧЕРН','ПОДЗЕМ',G.podzem));
+      sheets.push(gPF(sst,cfg,'ФАКТ','ЧИСТ','ПОДЗЕМ',G.podzem));
+      for(const k of G.korpus){
+        sheets.push(gPF(sst,cfg,'ФАКТ','ЧЕРН',k,G.nadzem));
+        sheets.push(gPF(sst,cfg,'ФАКТ','ЧИСТ',k,G.nadzem));
+      }
+
+      sheets.push(gOtchet(sst,cfg));
+      const sig=gSignal(sst,cfg);
+      sheets.push(sig.sheet);
+
+      const names=sheets.map(s=>s.name);const n=sheets.length;
+      const files=[
+        {name:'[Content_Types].xml',content:ctXml(n)},
+        {name:'_rels/.rels',content:relsXml()},
+        {name:'xl/workbook.xml',content:wbXml(names,sig.nr)},
+        {name:'xl/_rels/workbook.xml.rels',content:wbRelsXml(n)},
+        {name:'xl/styles.xml',content:styXml()},
+        {name:'xl/sharedStrings.xml',content:sst.xml()},
+        ...sheets.map((s,i)=>({name:`xl/worksheets/sheet${i+1}.xml`,content:s.xml()}))
+      ];
+      const zip=makeZip(files);
+      const blob=new Blob([zip],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download=`Отделка для SIGNAL (${NK} корп).xlsx`;
+      document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+      const sz=(blob.size/1024).toFixed(0);
+      btn.textContent=`Готово: ${n} листов, ${sz} КБ`;
+      setTimeout(()=>{btn.textContent='Скачать Excel';btn.disabled=false;},3000);
+    }catch(e){alert('Ошибка: '+e.message);console.error(e);btn.textContent='Скачать Excel';btn.disabled=false;}
+  },50);
+}
+
+/* ═══ INIT ═══ */
+load();
+initSettings();
+</script>
+</body>
+</html>
