@@ -1,0 +1,10 @@
+.git
+*.xlsx
+*.py
+*.pyc
+__pycache__
+templates/
+generator.html
+requirements.txt
+README.md
+~$*
