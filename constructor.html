@@ -52,20 +52,6 @@ td.sum-ok{background:#dcfce7} td.sum-bad{background:#fee2e2;color:var(--warn);fo
 td.left{text-align:left}
 td input{width:100%;border:none;background:transparent;text-align:center;font-size:11px;font-family:inherit;padding:0}
 td input:focus{outline:none}
-.selector-bar{display:flex;gap:10px;align-items:flex-end;margin-bottom:12px;flex-wrap:wrap}
-.selector-bar select{width:auto;min-width:150px}
-.selector-bar label{font-size:10px;color:var(--mt);font-weight:600;text-transform:uppercase}
-.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:14px}
-.dash-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--rad);padding:14px;box-shadow:var(--shadow)}
-.dash-card .label{font-size:10px;color:var(--mt);text-transform:uppercase;font-weight:600}
-.dash-card .value{font-size:26px;font-weight:700;margin:3px 0}
-.dash-card .detail{font-size:11px;color:var(--mt)}
-.pbar{height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden;margin-top:6px}
-.pfill{height:100%;border-radius:3px;transition:width .3s}
-.pfill.ok{background:var(--ok)}.pfill.mid{background:#f59e0b}.pfill.low{background:var(--warn)}
-.chart-box{background:var(--card);border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:14px;box-shadow:var(--shadow)}
-.chart-title{font-size:13px;font-weight:600;margin-bottom:10px}
-svg.chart{width:100%;height:250px}
 .info-bar{padding:8px 12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;font-size:11px;color:#1e40af;margin-bottom:12px;line-height:1.6}
 .save-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px}
 .save-dot.saved{background:var(--ok)}.save-dot.unsaved{background:#f59e0b}
@@ -82,8 +68,6 @@ svg.chart{width:100%;height:250px}
   <div class="tabs">
     <button class="tab active" data-tab="settings">Настройки</button>
     <button class="tab" data-tab="reference">Справочник</button>
-    <button class="tab" data-tab="data">Ввод данных</button>
-    <button class="tab" data-tab="dashboard">Дашборд</button>
   </div>
 
   <div class="panel active" id="panel-settings">
@@ -117,29 +101,6 @@ svg.chart{width:100%;height:250px}
     </div>
   </div>
 
-  <div class="panel" id="panel-data">
-    <div class="card">
-      <div class="card-title">Ввод данных по неделям</div>
-      <div class="selector-bar">
-        <div><label>Часть / корпус</label><select id="selPart"></select></div>
-        <div><label>Тип отделки</label><select id="selType"><option value="ЧЕРН">Черновая (3 пов.)</option><option value="ЧИСТ">Чистовая (5 пов.)</option></select></div>
-        <div><label>Режим</label><select id="selMode"><option value="ФАКТ">Факт</option><option value="ПЛАН">План</option></select></div>
-      </div>
-      <div class="tbl-wrap" style="max-height:480px;overflow-y:auto" id="dataTable"></div>
-    </div>
-  </div>
-
-  <div class="panel" id="panel-dashboard">
-    <div class="dash-grid" id="dashCards"></div>
-    <div class="chart-box">
-      <div class="chart-title">Прогресс: Факт накопительно (%)</div>
-      <svg class="chart" id="chartSvg"></svg>
-    </div>
-    <div class="card">
-      <div class="card-title">Сводная таблица</div>
-      <div class="tbl-wrap" id="summaryTable"></div>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -172,28 +133,17 @@ const DEF_AREAS = [1500,2000,2500,4430,4000,5000,1500];
 
 /* ═══ STATE ═══ */
 const G = {
-  korpus: ['К1','К2','К3'],
+  korpus: ['К1'],
   ugAreas: DEF_PODZEM.map(c=>c.p),
-  areas: {'К1':[...DEF_AREAS],'К2':[...DEF_AREAS],'К3':[...DEF_AREAS]},
+  areas: {'К1':[...DEF_AREAS]},
   startDate:'2026-06-01', reportDate:'2026-06-29', weeks:48,
   podzem: DEF_PODZEM.map(c=>({...c,cw:[...c.cw],hw:[...c.hw]})),
   nadzem: DEF_NADZEM.map(c=>({...c,cw:[...c.cw],hw:[...c.hw]})),
   data: {}
 };
 
-function weekDates(){const d=new Date(G.startDate),a=[];for(let i=0;i<G.weeks;i++){a.push(new Date(d));d.setDate(d.getDate()+7);}return a;}
-function fmtD(d){return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear();}
 function sKey(mode,type,part){return mode+' '+type+' '+part;}
-function getCats(part){return part==='ПОДЗЕМ'?G.podzem:G.nadzem;}
-function nS(type){return type==='ЧЕРН'?NC:NI;}
-function sLabels(type){return type==='ЧЕРН'?CHERN_SURFS:CHIST_SURFS;}
-function allParts(){return['ПОДЗЕМ',...G.korpus];}
 
-function ensureData(key,nCats,ns){
-  if(!G.data[key])G.data[key]=[];
-  while(G.data[key].length<G.weeks)G.data[key].push(Array.from({length:nCats},()=>new Array(ns).fill(0)));
-  return G.data[key];
-}
 
 function save(){try{localStorage.setItem('otdelka_v11',JSON.stringify(G));document.getElementById('saveDot').className='save-dot saved';}catch(e){}}
 function load(){try{const r=localStorage.getItem('otdelka_v11');if(r)Object.assign(G,JSON.parse(r));}catch(e){}}
@@ -206,8 +156,6 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   t.classList.add('active');
   document.getElementById('panel-'+t.dataset.tab).classList.add('active');
   if(t.dataset.tab==='reference')renderRef();
-  if(t.dataset.tab==='data')renderData();
-  if(t.dataset.tab==='dashboard')renderDash();
 }));
 
 /* ═══ TAB 1: SETTINGS ═══ */
@@ -295,162 +243,8 @@ function renderRef(){
   el.innerHTML=h+'</tbody></table>';
 }
 
-/* ═══ TAB 3: DATA ENTRY ═══ */
-function updPartSel(){
-  const sel=document.getElementById('selPart');sel.innerHTML='';
-  allParts().forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p==='ПОДЗЕМ'?'Подземная часть':'Надзем: '+p;sel.appendChild(o);});
-}
 
-function renderData(){updPartSel();buildDT();}
 
-function buildDT(){
-  const part=document.getElementById('selPart').value;
-  const type=document.getElementById('selType').value;
-  const mode=document.getElementById('selMode').value;
-  const cats=getCats(part),ns=nS(type),sl=sLabels(type);
-  const key=sKey(mode,type,part);
-  const data=ensureData(key,cats.length,ns);
-  const dates=weekDates();
-
-  let h='<table><thead><tr><th rowspan="2">#</th><th rowspan="2">Дата</th>';
-  cats.forEach(c=>{h+=`<th colspan="${ns}">${c.c}</th>`;});
-  h+='</tr><tr>';
-  cats.forEach(()=>{sl.forEach(s=>h+=`<th style="font-size:9px">${s}</th>`);});
-  h+='</tr></thead><tbody>';
-
-  const nw=Math.min(G.weeks,dates.length);
-  for(let w=0;w<nw;w++){
-    h+=`<tr><td style="color:var(--mt);font-size:10px">${w+1}</td><td style="font-size:10px">${fmtD(dates[w])}</td>`;
-    for(let ci=0;ci<cats.length;ci++){
-      for(let si=0;si<ns;si++){
-        const val=data[w]&&data[w][ci]?(data[w][ci][si]||0):0;
-        h+=`<td><input type="number" value="${val||''}" min="0" step="1"
-          data-w="${w}" data-ci="${ci}" data-si="${si}" data-key="${key}"
-          onchange="onDI(this)"></td>`;
-      }
-    }
-    h+='</tr>';
-  }
-  document.getElementById('dataTable').innerHTML=h+'</tbody></table>';
-}
-
-function onDI(inp){
-  const w=+inp.dataset.w,ci=+inp.dataset.ci,si=+inp.dataset.si,key=inp.dataset.key;
-  if(G.data[key]&&G.data[key][w]&&G.data[key][w][ci])G.data[key][w][ci][si]=+inp.value||0;
-  dirty();
-}
-
-['selPart','selType','selMode'].forEach(id=>document.getElementById(id).addEventListener('change',buildDT));
-
-/* ═══ TAB 4: DASHBOARD ═══ */
-function calcProg(part){
-  const cats=getCats(part);let plan=0,done=0;
-  for(const type of['ЧЕРН','ЧИСТ']){
-    const ns=nS(type),sw_key=type==='ЧЕРН'?'cw':'hw';
-    const fk=sKey('ФАКТ',type,part),fd=G.data[fk];
-    for(let ci=0;ci<cats.length;ci++){
-      const c=cats[ci],w=type==='ЧЕРН'?c.wc:c.wh,sws=c[sw_key];
-      for(let si=0;si<ns;si++){
-        const sw=si<sws.length?sws[si]:0;
-        plan+=c.p*w*sw;
-        if(fd)for(let wk=0;wk<fd.length;wk++)if(fd[wk]&&fd[wk][ci])done+=(fd[wk][ci][si]||0)*w*sw;
-      }
-    }
-  }
-  return{plan,done,pct:plan>0?done/plan*100:0};
-}
-
-function renderDash(){
-  const parts=allParts();let tp=0,td=0;const pd=[];
-  parts.forEach(p=>{const r=calcProg(p);pd.push({part:p,...r});tp+=r.plan;td+=r.done;});
-  const op=tp>0?td/tp*100:0;
-
-  let ch='';
-  ch+=`<div class="dash-card"><div class="label">Общий прогресс</div><div class="value">${op.toFixed(1)}%</div>
-    <div class="detail">План: ${(tp/1000).toFixed(0)}k м² | Факт: ${(td/1000).toFixed(0)}k м²</div>
-    <div class="pbar"><div class="pfill ${op>70?'ok':op>30?'mid':'low'}" style="width:${Math.min(op,100)}%"></div></div></div>`;
-  pd.forEach(d=>{
-    ch+=`<div class="dash-card"><div class="label">${d.part==='ПОДЗЕМ'?'8.1 Подземная':'8.2 '+d.part}</div>
-      <div class="value">${d.pct.toFixed(1)}%</div>
-      <div class="detail">План: ${d.plan.toFixed(0)} | Факт: ${d.done.toFixed(0)}</div>
-      <div class="pbar"><div class="pfill ${d.pct>70?'ok':d.pct>30?'mid':'low'}" style="width:${Math.min(d.pct,100)}%"></div></div></div>`;
-  });
-  document.getElementById('dashCards').innerHTML=ch;
-  renderChart(parts,pd);
-  renderSummary(parts);
-}
-
-function renderChart(parts,pd){
-  const svg=document.getElementById('chartSvg');
-  const W=800,H=230,pad={l:45,r:15,t:18,b:35};
-  const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
-  const dates=weekDates(),nw=dates.length;
-  if(nw<2){svg.innerHTML='<text x="50%" y="50%" text-anchor="middle" fill="#999" font-size="12">Нет данных</text>';return;}
-
-  let s=`<svg viewBox="0 0 ${W} ${H}">`;
-  for(let i=0;i<=4;i++){
-    const y=pad.t+ph-ph*i/4;
-    s+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#eee"/>`;
-    s+=`<text x="${pad.l-4}" y="${y+3}" text-anchor="end" fill="#999" font-size="9">${i*25}%</text>`;
-  }
-  const step=Math.max(1,Math.floor(nw/8));
-  for(let i=0;i<nw;i+=step){
-    const x=pad.l+pw*i/(nw-1);
-    s+=`<text x="${x}" y="${H-4}" text-anchor="middle" fill="#999" font-size="8">${fmtD(dates[i]).substring(0,5)}</text>`;
-  }
-
-  const colors=['#4472C4','#ED7D31','#70AD47','#FFC000','#5B9BD5','#44546A','#C55A11','#7030A0'];
-  parts.forEach((part,pi)=>{
-    const cats=getCats(part);let totWP=0;
-    for(const type of['ЧЕРН','ЧИСТ']){
-      const ns=nS(type),sk=type==='ЧЕРН'?'cw':'hw';
-      for(let ci=0;ci<cats.length;ci++){const c=cats[ci],w=type==='ЧЕРН'?c.wc:c.wh;for(let si=0;si<ns;si++)totWP+=c.p*w*(si<c[sk].length?c[sk][si]:0);}
-    }
-    if(totWP===0)return;
-
-    const cum=[];
-    for(let w=0;w<nw;w++){
-      let v=0;
-      for(const type of['ЧЕРН','ЧИСТ']){
-        const ns=nS(type),sk=type==='ЧЕРН'?'cw':'hw',fk=sKey('ФАКТ',type,part),fd=G.data[fk];
-        if(!fd)continue;
-        for(let ci=0;ci<cats.length;ci++){const c=cats[ci],wt=type==='ЧЕРН'?c.wc:c.wh;
-          for(let si=0;si<ns;si++){const sw=si<c[sk].length?c[sk][si]:0;for(let ww=0;ww<=w;ww++)if(fd[ww]&&fd[ww][ci])v+=(fd[ww][ci][si]||0)*wt*sw;}}
-      }
-      cum.push(v/totWP*100);
-    }
-    if(cum.every(v=>v===0))return;
-    let path='';
-    cum.forEach((v,i)=>{const x=pad.l+pw*i/(nw-1),y=pad.t+ph-ph*Math.min(v,100)/100;path+=(i?'L':'M')+x.toFixed(1)+','+y.toFixed(1);});
-    s+=`<path d="${path}" fill="none" stroke="${colors[pi%colors.length]}" stroke-width="2"/>`;
-  });
-
-  parts.forEach((p,i)=>{
-    const x=pad.l+i*100;
-    s+=`<rect x="${x}" y="${pad.t-13}" width="8" height="8" fill="${colors[i%colors.length]}" rx="1"/>`;
-    s+=`<text x="${x+12}" y="${pad.t-5}" fill="#333" font-size="9">${p}</text>`;
-  });
-  svg.innerHTML=s+'</svg>';
-}
-
-function renderSummary(parts){
-  let h='<table><thead><tr><th>Часть</th><th>Категория</th><th>План м²</th><th>Факт черн.</th><th>Факт чист.</th><th>% черн.</th><th>% чист.</th></tr></thead><tbody>';
-  parts.forEach(part=>{
-    const cats=getCats(part);
-    cats.forEach((c,ci)=>{
-      let fc=0,fi=0;
-      const dc=G.data[sKey('ФАКТ','ЧЕРН',part)],di=G.data[sKey('ФАКТ','ЧИСТ',part)];
-      if(dc)for(let w=0;w<dc.length;w++)if(dc[w]&&dc[w][ci])dc[w][ci].forEach(v=>fc+=v||0);
-      if(di)for(let w=0;w<di.length;w++)if(di[w]&&di[w][ci])di[w][ci].forEach(v=>fi+=v||0);
-      const pc=c.p>0?(fc/c.p*100).toFixed(1):'—';
-      const pi_=c.p>0?(fi/c.p*100).toFixed(1):'—';
-      h+=`<tr><td class="${part==='ПОДЗЕМ'?'ug':'ag'}">${part}</td><td class="left">${c.c} ${c.n}</td>
-        <td>${c.p.toLocaleString()}</td><td>${fc.toLocaleString()}</td><td>${fi.toLocaleString()}</td>
-        <td>${pc}%</td><td>${pi_}%</td></tr>`;
-    });
-  });
-  document.getElementById('summaryTable').innerHTML=h+'</tbody></table>';
-}
 
 /* ═══════════════════════════════════════════════════
    EXCEL GENERATION ENGINE
@@ -557,10 +351,11 @@ function gInstr(sst){
   ws.ss(3,1,'Файл сгенерирован конструктором Отделка для SIGNAL v11',0);
   ws.ss(4,1,'Черновая отделка: 3 поверхности (Пол, Стены, Потолок)',0);
   ws.ss(5,1,'Чистовая отделка: 5 поверхностей (Пол, Стены, Потолок, Заполнение проёмов, Меблировка)',0);
-  ws.ss(7,1,'Справочник — веса и распределения по поверхностям',0);
-  ws.ss(8,1,'ПЛАН/ФАКТ листы — ввод м² по неделям',0);
-  ws.ss(9,1,'ОТЧЕТ — сводка',0);
-  ws.ss(10,1,'SIGNAL — данные для визуализации',0);
+  ws.ss(7,1,'Дата начала — первая дата отчёта в SIGNAL, входящая в период плановых сроков реализации',0);
+  ws.ss(9,1,'Справочник — веса и распределения по поверхностям',0);
+  ws.ss(10,1,'ПЛАН/ФАКТ листы — ввод м² по неделям',0);
+  ws.ss(11,1,'ОТЧЕТ — сводка',0);
+  ws.ss(12,1,'SIGNAL — данные для визуализации',0);
   ws.cw(1,80);
   return ws;
 }
