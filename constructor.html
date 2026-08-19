@@ -479,7 +479,7 @@ function gOtchet(sst,cfg){
   return ws;
 }
 
-function cleanN(s){return s.replace(/[^A-Za-z0-9А-Яа-яёЁ_]/g,'_').substring(0,30);}
+function cleanN(s){let n=s.replace(/[^A-Za-z0-9А-Яа-яёЁ_]/g,'_');if(/^[0-9]/.test(n))n='_'+n;return n.substring(0,31);}
 
 function gSignal(sst,cfg){
   const ws=new WS('SIGNAL',sst);
@@ -487,7 +487,7 @@ function gSignal(sst,cfg){
   ws.ss(1,1,'Дата отчета',7);ws.sn(2,1,cfg.rdSer,8);
 
   const blocks=[];let col_=1;
-  function ab(label,type,opts){const base=col_;col_+=4;const b={label,type,base,...opts};blocks.push(b);return{base};}
+  function ab(label,type,opts){const base=col_;col_+=3;const b={label,type,base,...opts};blocks.push(b);return{base};}
 
   const bpc=ab('8.1 Подземная: Черновая','weighted',{sheet:'ПЛАН ЧЕРН ПОДЗЕМ',fsheet:'ФАКТ ЧЕРН ПОДЗЕМ',cats:G.podzem,isNdz:false,wtype:'chern'});
   const bpi=ab('8.1 Подземная: Чистовая','weighted',{sheet:'ПЛАН ЧИСТ ПОДЗЕМ',fsheet:'ФАКТ ЧИСТ ПОДЗЕМ',cats:G.podzem,isNdz:false,wtype:'chist'});
@@ -511,15 +511,15 @@ function gSignal(sst,cfg){
   const bto=ab('8. Общий: Общий','sum_two',{a:bpo,b:bno,wA:wPod,wB:wNad});
 
   for(const b of blocks){
-    const bc=b.base,dc=bc+1,pc=bc+2,fc=bc+3;
+    const bc=b.base,dc=bc+1,fc=bc+2;
     ws.ss(4,bc,'Тип',2);ws.ss(4,dc,b.label,2);
     ws.ss(5,bc,'Ед.изм.',7);ws.ss(5,dc,'м2',7);
-    ws.ss(6,bc,'Дата',2);ws.ss(6,dc,'План',2);ws.ss(6,pc,'Факт',2);
+    ws.ss(6,bc,'Дата',2);ws.ss(6,dc,'План',2);ws.ss(6,fc,'Факт',2);
 
     for(let w=0;w<W;w++){
       const r=7+w;
       if(w===0)ws.sf(r,bc,'=$A$2',8);else ws.sf(r,bc,`${CL(bc)}${r-1}+7`,8);
-      const pr=5+w; // plan/fact data row
+      const pr=5+w;
 
       if(b.type==='weighted'){
         const nc=b.cats.length,ns=b.wtype==='chist'?NI:NC;
@@ -533,7 +533,7 @@ function gSignal(sst,cfg){
             fP.push(`'${b.fsheet}'!${pcl}${pr}*СПРАВОЧНИК!$${wc}$${sr}`);
           }
         }
-        ws.sf(r,pc,pP.join('+'),7);
+        ws.sf(r,dc,pP.join('+'),7);
         ws.sf(r,fc,fP.join('+'),7);
       }else if(b.type==='combined'){
         const nc=b.cats.length;
@@ -543,30 +543,30 @@ function gSignal(sst,cfg){
           const wc=`СПРАВОЧНИК!$E$${sr}`,wh=`СПРАВОЧНИК!$F$${sr}`;
           const cp=[],cf=[],ip=[],iff=[];
           for(let si=0;si<NC;si++){
-            const dc=factCL(ci,NC,si),sw=cwCol(si);
-            cp.push(`'${b.cs}'!${dc}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
-            cf.push(`'${b.fs}'!${dc}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
+            const dcl=factCL(ci,NC,si),sw=cwCol(si);
+            cp.push(`'${b.cs}'!${dcl}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
+            cf.push(`'${b.fs}'!${dcl}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
           }
           for(let si=0;si<NI;si++){
-            const dc=factCL(ci,NI,si),sw=hwCol(si);
-            ip.push(`'${b.is}'!${dc}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
-            iff.push(`'${b.fis}'!${dc}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
+            const dcl=factCL(ci,NI,si),sw=hwCol(si);
+            ip.push(`'${b.is}'!${dcl}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
+            iff.push(`'${b.fis}'!${dcl}${pr}*СПРАВОЧНИК!$${sw}$${sr}`);
           }
           pP.push(`${wc}*(${cp.join('+')})+${wh}*(${ip.join('+')})`);
           fP.push(`${wc}*(${cf.join('+')})+${wh}*(${iff.join('+')})`);
         }
-        ws.sf(r,pc,pP.join('+'),7);
+        ws.sf(r,dc,pP.join('+'),7);
         ws.sf(r,fc,fP.join('+'),7);
       }else if(b.type==='sum_blocks'){
         const wl=CL(b.kwc);
-        ws.sf(r,pc,b.sources.map((s,i)=>`${CL(s.base+2)}${r}*СПРАВОЧНИК!$${wl}$${b.kw0+i}`).join('+')||'0',7);
-        ws.sf(r,fc,b.sources.map((s,i)=>`${CL(s.base+3)}${r}*СПРАВОЧНИК!$${wl}$${b.kw0+i}`).join('+')||'0',7);
+        ws.sf(r,dc,b.sources.map((s,i)=>`${CL(s.base+1)}${r}*СПРАВОЧНИК!$${wl}$${b.kw0+i}`).join('+')||'0',7);
+        ws.sf(r,fc,b.sources.map((s,i)=>`${CL(s.base+2)}${r}*СПРАВОЧНИК!$${wl}$${b.kw0+i}`).join('+')||'0',7);
       }else if(b.type==='sum_two'){
-        ws.sf(r,pc,`${CL(b.a.base+2)}${r}*${b.wA}+${CL(b.b.base+2)}${r}*${b.wB}`,7);
-        ws.sf(r,fc,`${CL(b.a.base+3)}${r}*${b.wA}+${CL(b.b.base+3)}${r}*${b.wB}`,7);
+        ws.sf(r,dc,`${CL(b.a.base+1)}${r}*${b.wA}+${CL(b.b.base+1)}${r}*${b.wB}`,7);
+        ws.sf(r,fc,`${CL(b.a.base+2)}${r}*${b.wA}+${CL(b.b.base+2)}${r}*${b.wB}`,7);
       }
     }
-    const c1=CL(bc),c2=CL(bc+3);
+    const c1=CL(bc),c2=CL(fc);
     nr.push({name:cleanN(b.label),ref:`'SIGNAL'!$${c1}:$${c2}`});
   }
   return{sheet:ws,nr};
