@@ -218,11 +218,11 @@ function addKorpus(name){
 
 function updInfo(){
   const nk=G.korpus.length,sc=2+nk+(1+nk)*4,rc=9+3*nk;
-  const names=['ИНСТРУКЦИЯ','СПРАВОЧНИК','ПЛАН ЧЕРН ПОДЗЕМ','ПЛАН ЧИСТ ПОДЗЕМ'];
+  const names=['ИНСТРУКЦИЯ','СПРАВОЧНИК','ПЛАН ЧЕРН ПОДЗЕМ','ПЛАН ЧИСТ ПОДЗЕМ','SIGNAL'];
   G.korpus.forEach(k=>{names.push('ПЛАН ЧЕРН '+k,'ПЛАН ЧИСТ '+k);});
   names.push('ФАКТ ЧЕРН ПОДЗЕМ','ФАКТ ЧИСТ ПОДЗЕМ');
   G.korpus.forEach(k=>{names.push('ФАКТ ЧЕРН '+k,'ФАКТ ЧИСТ '+k);});
-  names.push('ОТЧЕТ','SIGNAL');
+  names.push('ОТЧЕТ');
   document.getElementById('sheetInfo').innerHTML=`<b>${names.length}</b> листов, <b>${rc}</b> именованных диапазонов: `+
     names.map((n,i)=>`<span style="color:var(--mt)">${i+1})${n}</span>`).join(', ');
 }
@@ -346,11 +346,11 @@ function styXml(){
   return`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
 <numFmts count="2"><numFmt numFmtId="164" formatCode="DD.MM.YYYY"/><numFmt numFmtId="165" formatCode="0.0%"/></numFmts>
-<fonts count="4"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="14"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font></fonts>
-<fills count="6"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF4472C4"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD9E2F3"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE2EFDA"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFF2CC"/></patternFill></fill></fills>
+<fonts count="7"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="14"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><i/><sz val="11"/><name val="Calibri"/></font><font><b/><i/><sz val="11"/><name val="Calibri"/></font><font><i/><sz val="11"/><color rgb="FFDC2626"/><name val="Calibri"/></font></fonts>
+<fills count="8"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF4472C4"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD9E2F3"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE2EFDA"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFF2CC"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF1F5F9"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFF7ED"/></patternFill></fill></fills>
 <borders count="2"><border/><border><left style="thin"><color auto="1"/></left><right style="thin"><color auto="1"/></right><top style="thin"><color auto="1"/></top><bottom style="thin"><color auto="1"/></bottom></border></borders>
 <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
-<cellXfs count="10"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="1" applyBorder="1" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="2" borderId="1" applyBorder="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="3" fillId="2" borderId="0" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="3" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="4" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="5" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="0" borderId="1" applyBorder="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/><xf numFmtId="165" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/></cellXfs></styleSheet>`;
+<cellXfs count="16"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="1" applyBorder="1" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="2" borderId="1" applyBorder="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="3" fillId="2" borderId="0" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="3" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="4" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="5" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="0" borderId="1" applyBorder="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/><xf numFmtId="165" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/><xf numFmtId="0" fontId="1" fillId="6" borderId="1" applyBorder="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="4" fillId="0" borderId="1" applyBorder="1" applyFont="1"/><xf numFmtId="0" fontId="5" fillId="0" borderId="1" applyBorder="1" applyFont="1"/><xf numFmtId="0" fontId="6" fillId="0" borderId="0" applyFont="1"/><xf numFmtId="165" fontId="0" fillId="6" borderId="1" applyBorder="1" applyFill="1" applyNumberFormat="1"/><xf numFmtId="0" fontId="1" fillId="7" borderId="1" applyBorder="1" applyFont="1" applyFill="1"/></cellXfs></styleSheet>`;
 }
 function ctXml(n){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>';for(let i=1;i<=n;i++)x+=`<Override PartName="/xl/worksheets/sheet${i}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`;return x+'</Types>';}
 function relsXml(){return'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';}
@@ -439,7 +439,7 @@ function gSprav(sst,cfg){
     ws.sf(r,24,`V${r}*IF($B${r}="Подзем.",$V$${L.a81},$V$${L.a82})`,7);
   });
 
-  ws.ss(L.ah,1,'АГРЕГАЦИЯ ПО УРОВНЯМ (ур.3 → ур.2 → ур.1)',1);
+  ws.ss(L.ah,1,'АГРЕГАЦИЯ ПО УРОВНЯМ (ур.3 → ур.2 → ур.1)',15);
   ws.ss(L.a81,1,'8.1',7);ws.ss(L.a81,3,'Подземная часть',7);
   ws.sf(L.a81,4,`SUM(D${L.p0}:D${L.pN})`,6);
   ws.sf(L.a81,18,`MIN(Q${L.p0}:Q${L.pN})`,7);
@@ -463,7 +463,7 @@ function gSprav(sst,cfg){
   ws.ss(23,3,'✓ ∑ вес ур.2',7);ws.sf(23,23,`V${L.a81}+V${L.a82}`,7);
   ws.ss(24,3,'✓ ∑ глоб. вес',7);ws.sf(24,24,`SUM(W${L.p0}:W${L.nN})`,7);
 
-  ws.ss(L.kh,1,'РАСПРЕДЕЛЕНИЕ НАДЗЕМНОЙ ЧАСТИ ПО КОРПУСАМ',1);
+  ws.ss(L.kh,1,'РАСПРЕДЕЛЕНИЕ НАДЗЕМНОЙ ЧАСТИ ПО КОРПУСАМ',15);
   ws.ss(L.kc,1,'Корпус',2);
   for(let i=0;i<NN;i++)ws.ss(L.kc,2+i,G.nadzem[i].c,2);
   ws.ss(L.kc,2+NN,'Σ план',2);ws.ss(L.kc,3+NN,'Вес корп.(авто)',2);ws.ss(L.kc,4+NN,'Вес корп.',2);
@@ -511,6 +511,18 @@ function gPF(sst,cfg,kind,type,suf,cats){
     for(let si=0;si<ns;si++)ws.ss(4,cc+si,sl[si],2);
   }
 
+  const itogoStart = 2 + cats.length * ns + 1;
+  ws.ss(1, itogoStart, 'Итого ' + suf, 1);
+  ws.mg(1, itogoStart, 1, itogoStart + ns - 1);
+  const itSl = type==='ЧЕРН' ? CHERN_SURFS : CHIST_SURFS;
+  if(type==='ЧЕРН'){
+    for(let si=0;si<ns;si++) ws.ss(3, itogoStart+si, itSl[si], 2);
+  }else{
+    ws.ss(3, itogoStart, 'Итого', 2);
+    ws.mg(3, itogoStart, 3, itogoStart+ns-1);
+    for(let si=0;si<ns;si++) ws.ss(4, itogoStart+si, itSl[si], 2);
+  }
+
   for(let w=0;w<W;w++){
     const r=5+w;
     if(w===0)ws.sf(r,1,`СПРАВОЧНИК!$B$${cfg.drRow}`,8);else ws.sf(r,1,`A${r-1}+7`,8);
@@ -520,37 +532,93 @@ function gPF(sst,cfg,kind,type,suf,cats){
         if(val>0)ws.sn(r,2+ci*ns+si,val,7);else ws.sv(r,2+ci*ns+si,null,7);
       }
     }
+    for(let si=0;si<ns;si++){
+      const parts=[];
+      for(let ci=0;ci<cats.length;ci++) parts.push(`${CL(2+ci*ns+si)}${r}`);
+      ws.sf(r, itogoStart+si, parts.join('+'), 6);
+    }
   }
 
   ws.cw(1,14);for(let i=2;i<=totalCols;i++)ws.cw(i,10);
+  for(let si=0;si<ns;si++)ws.cw(itogoStart+si,10);
   return ws;
 }
 
 function gOtchet(sst,cfg){
   const ws=new WS('ОТЧЕТ',sst);
   const{L,W,NK,NP,NN,KOR}=cfg;
-  ws.ss(1,1,'ОТЧЕТ — Сводка',3);ws.mg(1,1,1,8);
-  ws.ss(3,1,'Дата',2);ws.ss(3,2,'Подзем. черн.',2);ws.ss(3,3,'Подзем. чист.',2);
-  ws.ss(3,4,'Надзем. черн.',2);ws.ss(3,5,'Надзем. чист.',2);ws.ss(3,6,'Итого',2);
+  const lastRow=4+W;
+  let r=1;
+  ws.ss(r,1,'ОТЧЁТ ПО ОТДЕЛОЧНЫМ РАБОТАМ',3);ws.mg(r,1,r,9);r++;
+  ws.ss(r,1,'⚠ Автоматический. Не вносите данные напрямую.',13);r+=2;
 
-  for(let w=0;w<W;w++){
-    const r=4+w;
-    if(w===0)ws.sf(r,1,`СПРАВОЧНИК!$B$${cfg.drRow}`,8);else ws.sf(r,1,`A${r-1}+7`,8);
-    const fr=5+w;
-    const pcEnd=CL(1+NP*NC),piEnd=CL(1+NP*NI);
-    ws.sf(r,2,`SUM('ФАКТ ЧЕРН ПОДЗЕМ'!B${fr}:'ФАКТ ЧЕРН ПОДЗЕМ'!${pcEnd}${fr})`,7);
-    ws.sf(r,3,`SUM('ФАКТ ЧИСТ ПОДЗЕМ'!B${fr}:'ФАКТ ЧИСТ ПОДЗЕМ'!${piEnd}${fr})`,7);
-    const acP=[],aiP=[];
-    for(const k of KOR){
-      const kcEnd=CL(1+NN*NC),kiEnd=CL(1+NN*NI);
-      acP.push(`SUM('ФАКТ ЧЕРН ${k}'!B${fr}:'ФАКТ ЧЕРН ${k}'!${kcEnd}${fr})`);
-      aiP.push(`SUM('ФАКТ ЧИСТ ${k}'!B${fr}:'ФАКТ ЧИСТ ${k}'!${kiEnd}${fr})`);
-    }
-    ws.sf(r,4,acP.join('+')||'0',7);
-    ws.sf(r,5,aiP.join('+')||'0',7);
-    ws.sf(r,6,`B${r}+C${r}+D${r}+E${r}`,6);
+  function hdr(title){
+    ws.ss(r,1,title,15);ws.mg(r,1,r,9);r++;
+    const hh=['Код','Название','Тип','Вес ур.4','Вес ур.5','План м²','Факт м²','Факт %','Взвеш. %'];
+    for(let i=0;i<hh.length;i++)ws.ss(r,i+1,hh[i],2);r++;
   }
-  ws.cw(1,14);for(let i=2;i<=6;i++)ws.cw(i,16);
+
+  function sec(cats,isNdz,factSuf,planRef){
+    for(let ci=0;ci<cats.length;ci++){
+      const c=cats[ci],sr=catRow(ci,isNdz,L);
+      const fcs='ФАКТ ЧЕРН '+factSuf, fis='ФАКТ ЧИСТ '+factSuf;
+      const m=r;
+
+      ws.ss(r,1,c.c,1);ws.sf(r,2,`СПРАВОЧНИК!C${sr}`,1);ws.ss(r,3,'Главная',1);
+      ws.sf(r,6,planRef(ci),7);
+      ws.sf(r,7,`G${r+1}*D${r+1}+G${r+5}*D${r+5}`,7);
+      ws.sf(r,8,`IF(F${r}=0,0,G${r}/F${r})`,9);
+      ws.sf(r,9,`I${r+1}+I${r+5}`,9);r++;
+
+      ws.ss(r,2,'  Черновая',10);ws.ss(r,3,'Категория',10);
+      ws.sf(r,4,`СПРАВОЧНИК!E${sr}`,7);ws.sf(r,6,`F${m}`,7);
+      ws.sf(r,7,`G${r+1}*E${r+1}+G${r+2}*E${r+2}+G${r+3}*E${r+3}`,7);
+      ws.sf(r,8,`IF(F${r}=0,0,G${r}/F${r})`,9);
+      ws.sf(r,9,`H${r}*D${r}`,9);r++;
+
+      for(let si=0;si<NC;si++){
+        const scol=CL(2+ci*NC+si);
+        ws.ss(r,2,'   '+CHERN_SURFS[si],11);ws.ss(r,3,'Вид',11);
+        ws.sf(r,5,`СПРАВОЧНИК!$${cwCol(si)}$${sr}`,7);ws.sf(r,6,`F${m}`,7);
+        ws.sf(r,7,`SUM('${fcs}'!${scol}5:${scol}${lastRow})`,7);
+        ws.sf(r,8,`IF(F${r}=0,0,G${r}/F${r})`,9);
+        ws.sf(r,9,`H${r}*E${r}`,9);r++;
+      }
+
+      const cr=r;
+      ws.ss(r,2,'  Чистовая',10);ws.ss(r,3,'Категория',10);
+      ws.sf(r,4,`СПРАВОЧНИК!F${sr}`,7);ws.sf(r,6,`F${m}`,7);
+      const chParts=[];for(let si=0;si<NI;si++)chParts.push(`G${r+1+si}*E${r+1+si}`);
+      ws.sf(r,7,chParts.join('+'),7);
+      ws.sf(r,8,`IF(F${r}=0,0,G${r}/F${r})`,9);
+      ws.sf(r,9,`H${r}*D${r}`,9);r++;
+
+      for(let si=0;si<NI;si++){
+        const scol=CL(2+ci*NI+si);
+        const surfName=CHIST_SURFS[si];
+        const dispName=si===3?'Заполн. проемов':si===4?'Меблировка':surfName;
+        ws.ss(r,2,'   '+dispName,11);ws.ss(r,3,'Вид',11);
+        ws.sf(r,5,`СПРАВОЧНИК!$${hwCol(si)}$${sr}`,7);ws.sf(r,6,`F${m}`,7);
+        ws.sf(r,7,`SUM('${fis}'!${scol}5:${scol}${lastRow})`,7);
+        ws.sf(r,8,`IF(F${r}=0,0,G${r}/F${r})`,9);
+        ws.sf(r,9,`H${r}*E${r}`,9);r++;
+      }
+
+      ws.ss(r,2,'  ✓ Сумма',12);ws.sf(r,4,`D${m+1}+D${cr}`,7);r+=2;
+    }
+  }
+
+  hdr('ПОДЗЕМНАЯ ЧАСТЬ');
+  sec(G.podzem,false,'ПОДЗЕМ',ci=>`СПРАВОЧНИК!D${catRow(ci,false,L)}`);
+
+  for(let ki=0;ki<NK;ki++){
+    const k=KOR[ki];
+    hdr('НАДЗЕМНАЯ ЧАСТЬ — '+k);
+    sec(G.nadzem,true,k,ci=>`СПРАВОЧНИК!D${catRow(ci,true,L)}`);
+  }
+
+  ws.cw(1,8);ws.cw(2,40);ws.cw(3,12);ws.cw(4,10);ws.cw(5,10);
+  ws.cw(6,12);ws.cw(7,12);ws.cw(8,10);ws.cw(9,10);
   return ws;
 }
 
@@ -566,17 +634,17 @@ function gSignal(sst,cfg){
   function ab(label,type,vsego,opts){const base=col_;col_+=6;const b={label,type,vsego,base,...opts};blocks.push(b);return b;}
 
   const vP=`СПРАВОЧНИК!D${L.a81}`,vN=`СПРАВОЧНИК!D${L.a82}`;
-  const bpo=ab('8.1 Подзем.: Общий','combined',vP,{cs:'ПЛАН ЧЕРН ПОДЗЕМ',fs:'ФАКТ ЧЕРН ПОДЗЕМ',is:'ПЛАН ЧИСТ ПОДЗЕМ',fis:'ФАКТ ЧИСТ ПОДЗЕМ',cats:G.podzem,isNdz:false});
-  const bpc=ab('8.1 Подзем.: Черновая','weighted',vP,{sheet:'ПЛАН ЧЕРН ПОДЗЕМ',fsheet:'ФАКТ ЧЕРН ПОДЗЕМ',cats:G.podzem,isNdz:false,wtype:'chern'});
-  const bpi=ab('8.1 Подзем.: Чистовая','weighted',vP,{sheet:'ПЛАН ЧИСТ ПОДЗЕМ',fsheet:'ФАКТ ЧИСТ ПОДЗЕМ',cats:G.podzem,isNdz:false,wtype:'chist'});
+  const bpo=ab('8.1 Подземная часть: Общий','combined',vP,{cs:'ПЛАН ЧЕРН ПОДЗЕМ',fs:'ФАКТ ЧЕРН ПОДЗЕМ',is:'ПЛАН ЧИСТ ПОДЗЕМ',fis:'ФАКТ ЧИСТ ПОДЗЕМ',cats:G.podzem,isNdz:false});
+  const bpc=ab('8.1 Подземная часть: Черновая','weighted',vP,{sheet:'ПЛАН ЧЕРН ПОДЗЕМ',fsheet:'ФАКТ ЧЕРН ПОДЗЕМ',cats:G.podzem,isNdz:false,wtype:'chern'});
+  const bpi=ab('8.1 Подземная часть: Чистовая','weighted',vP,{sheet:'ПЛАН ЧИСТ ПОДЗЕМ',fsheet:'ФАКТ ЧИСТ ПОДЗЕМ',cats:G.podzem,isNdz:false,wtype:'chist'});
 
   const koA=[],kcA=[],kiA=[];
   for(let kx=0;kx<NK;kx++){
     const k=KOR[kx],kRow=L.k0+kx;
     const vK=Array.from({length:NN},(_,i)=>`СПРАВОЧНИК!${CL(2+i)}${kRow}`).join('+');
-    koA.push(ab(`${k}: Общий`,'combined',vK,{cs:`ПЛАН ЧЕРН ${k}`,fs:`ФАКТ ЧЕРН ${k}`,is:`ПЛАН ЧИСТ ${k}`,fis:`ФАКТ ЧИСТ ${k}`,cats:G.nadzem,isNdz:true}));
-    kcA.push(ab(`${k}: Черновая`,'weighted',vK,{sheet:`ПЛАН ЧЕРН ${k}`,fsheet:`ФАКТ ЧЕРН ${k}`,cats:G.nadzem,isNdz:true,wtype:'chern'}));
-    kiA.push(ab(`${k}: Чистовая`,'weighted',vK,{sheet:`ПЛАН ЧИСТ ${k}`,fsheet:`ФАКТ ЧИСТ ${k}`,cats:G.nadzem,isNdz:true,wtype:'chist'}));
+    koA.push(ab(`8.2 Надземная ${k}: Общий`,'combined',vK,{cs:`ПЛАН ЧЕРН ${k}`,fs:`ФАКТ ЧЕРН ${k}`,is:`ПЛАН ЧИСТ ${k}`,fis:`ФАКТ ЧИСТ ${k}`,cats:G.nadzem,isNdz:true}));
+    kcA.push(ab(`8.2 Надземная ${k}: Черновая`,'weighted',vK,{sheet:`ПЛАН ЧЕРН ${k}`,fsheet:`ФАКТ ЧЕРН ${k}`,cats:G.nadzem,isNdz:true,wtype:'chern'}));
+    kiA.push(ab(`8.2 Надземная ${k}: Чистовая`,'weighted',vK,{sheet:`ПЛАН ЧИСТ ${k}`,fsheet:`ФАКТ ЧИСТ ${k}`,cats:G.nadzem,isNdz:true,wtype:'chist'}));
   }
 
   const kwc=CL(4+NN);
@@ -677,6 +745,10 @@ function doExport(){
 
       sheets.push(gPF(sst,cfg,'ПЛАН','ЧЕРН','ПОДЗЕМ',G.podzem));
       sheets.push(gPF(sst,cfg,'ПЛАН','ЧИСТ','ПОДЗЕМ',G.podzem));
+
+      const sig=gSignal(sst,cfg);
+      sheets.push(sig.sheet);
+
       for(const k of G.korpus){
         sheets.push(gPF(sst,cfg,'ПЛАН','ЧЕРН',k,G.nadzem));
         sheets.push(gPF(sst,cfg,'ПЛАН','ЧИСТ',k,G.nadzem));
@@ -689,8 +761,6 @@ function doExport(){
       }
 
       sheets.push(gOtchet(sst,cfg));
-      const sig=gSignal(sst,cfg);
-      sheets.push(sig.sheet);
 
       const names=sheets.map(s=>s.name);const n=sheets.length;
       const files=[
