@@ -5,64 +5,60 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Конструктор «Отделка для SIGNAL»</title>
 <style>
-:root {
-  --ac:#4472C4; --ach:#3860A8; --bg:#F0F2F5; --card:#fff; --tx:#1a1a2e;
-  --mt:#6b7280; --bd:#e0e0e0; --ok:#16a34a; --warn:#dc2626;
-  --ug:#D9E2F3; --ag:#E2EFDA; --hdr:#4472C4; --hdr-tx:#fff;
-  --rad:8px; --shadow:0 1px 3px rgba(0,0,0,.08);
-}
+:root{--ac:#4472C4;--ach:#3860A8;--bg:#F0F2F5;--card:#fff;--tx:#1a1a2e;--mt:#6b7280;--bd:#e0e0e0;--ok:#16a34a;--warn:#dc2626;--ug:#D9E2F3;--ag:#E2EFDA;--rad:8px;--shadow:0 1px 3px rgba(0,0,0,.08)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5}
-.app{max-width:1240px;margin:0 auto;padding:16px}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5}
+.app{max-width:1100px;margin:0 auto;padding:16px}
 .header{display:flex;align-items:center;justify-content:space-between;padding:10px 0;margin-bottom:6px}
-.header h1{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.header h1{font-size:20px;font-weight:700}
 .header .sub{font-size:12px;color:var(--mt)}
 .btn-export{padding:8px 20px;background:var(--ac);color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
 .btn-export:hover{background:var(--ach)}
+.btn-export:disabled{opacity:.5;cursor:default}
 .tabs{display:flex;gap:2px;border-bottom:2px solid var(--bd);margin-bottom:14px}
-.tab{padding:9px 18px;font-size:13px;font-weight:500;color:var(--mt);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.tab{padding:9px 18px;font-size:13px;font-weight:500;color:var(--mt);cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s}
 .tab:hover{color:var(--tx)}
 .tab.active{color:var(--ac);border-bottom-color:var(--ac);font-weight:600}
 .panel{display:none}.panel.active{display:block}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:var(--rad);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
 .card-title{font-size:14px;font-weight:600;margin-bottom:10px}
-.card-sub{font-size:11px;color:var(--mt);margin-bottom:10px}
 .field{margin-bottom:10px}
 .field label{display:block;font-size:11px;font-weight:600;color:var(--mt);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.field .hint{font-size:10px;color:#9ca3af;margin-top:2px;font-weight:400;text-transform:none;letter-spacing:0}
 input[type=number],input[type=text],input[type=date],select{width:100%;padding:6px 8px;border:1px solid var(--bd);border-radius:5px;font-size:13px;font-family:inherit;color:var(--tx);background:#FAFAFA}
 input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 2px rgba(68,114,196,.12)}
-.row{display:grid;gap:10px}.row-3{grid-template-columns:1fr 1fr 1fr}
-.korpus-row{display:flex;gap:6px;align-items:center;margin-bottom:5px;padding:5px 7px;background:#f8f9fa;border-radius:5px}
-.korpus-row input{flex:1;min-width:50px}
-.korpus-row .areas{display:flex;gap:3px}
-.korpus-row .areas input{width:62px;text-align:center;font-size:11px;padding:4px 3px}
-.btn-sm{padding:4px 10px;border:1px solid var(--bd);border-radius:4px;background:#fff;cursor:pointer;font-size:12px;font-family:inherit}
-.btn-sm:hover{background:#f0f0f0}
-.btn-add{color:var(--ac);border-color:var(--ac)}
-.btn-rm{color:var(--warn);border-color:#fca5a5;padding:4px 7px}
-.areas-hdr{display:flex;gap:3px;font-size:9px;color:var(--mt);margin-bottom:3px;margin-left:64px}
-.areas-hdr span{width:62px;text-align:center}
+.row{display:grid;gap:10px}.row-3{grid-template-columns:1fr 1fr 1fr}.row-2{grid-template-columns:1fr 1fr}
+.info-bar{padding:8px 12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;font-size:11px;color:#1e40af;margin-bottom:12px;line-height:1.6}
 .tbl-wrap{overflow-x:auto;border:1px solid var(--bd);border-radius:6px}
 table{width:100%;border-collapse:collapse;font-size:11px}
 th,td{padding:4px 6px;border:1px solid var(--bd);text-align:center;white-space:nowrap}
-th{background:var(--hdr);color:var(--hdr-tx);font-weight:600;font-size:10px;position:sticky;top:0;z-index:1}
+th{background:var(--ac);color:#fff;font-weight:600;font-size:10px;position:sticky;top:0;z-index:1}
 td{background:#fff}
-td.ug{background:var(--ug)} td.ag{background:var(--ag)}
-td.sum-ok{background:#dcfce7} td.sum-bad{background:#fee2e2;color:var(--warn);font-weight:600}
+td.ug{background:var(--ug)}td.ag{background:var(--ag)}
+td.sum-ok{background:#dcfce7}td.sum-bad{background:#fee2e2;color:var(--warn);font-weight:600}
 td.left{text-align:left}
-td input{width:100%;border:none;background:transparent;text-align:center;font-size:11px;font-family:inherit;padding:0}
+td input{width:60px;border:none;background:transparent;text-align:center;font-size:11px;font-family:inherit;padding:0}
 td input:focus{outline:none}
-.info-bar{padding:8px 12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;font-size:11px;color:#1e40af;margin-bottom:12px;line-height:1.6}
-.save-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px}
-.save-dot.saved{background:var(--ok)}.save-dot.unsaved{background:#f59e0b}
-.section-hdr td{background:#f1f5f9!important;font-weight:600;text-align:left;padding:6px 8px;font-size:11px}
-@media(max-width:768px){.row-3{grid-template-columns:1fr 1fr}.tab{padding:7px 10px;font-size:11px}}
+.section-hdr td{background:#f1f5f9!important;font-weight:600;text-align:left;padding:6px 8px}
+.korpus-block{background:#f8f9fa;border:1px solid var(--bd);border-radius:6px;padding:12px;margin-bottom:8px}
+.korpus-block .kb-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.korpus-block .kb-head input{width:80px}
+.korpus-block .kb-head button{padding:3px 8px;border:1px solid #fca5a5;border-radius:4px;background:#fff;color:var(--warn);cursor:pointer;font-size:11px}
+.areas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px}
+.areas-grid .field{margin-bottom:4px}
+.areas-grid .field label{font-size:9px}
+.btn-sm{padding:4px 10px;border:1px solid var(--bd);border-radius:4px;background:#fff;cursor:pointer;font-size:12px;font-family:inherit}
+.btn-sm:hover{background:#f0f0f0}
+.btn-add{color:var(--ac);border-color:var(--ac)}
+.cb-label{font-size:11px;display:flex;align-items:center;gap:5px;margin:8px 0;cursor:pointer}
+.cb-label input{cursor:pointer}
+@media(max-width:768px){.row-3{grid-template-columns:1fr}.areas-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="header">
-    <div><h1>Отделка для SIGNAL</h1><span class="sub"><span class="save-dot saved" id="saveDot"></span>Конструктор v12</span></div>
+    <div><h1>Отделка для SIGNAL</h1><span class="sub">Конструктор v14</span></div>
     <button class="btn-export" id="btnExport" onclick="doExport()">Скачать Excel</button>
   </div>
   <div class="tabs">
@@ -73,59 +69,53 @@ td input:focus{outline:none}
   <div class="panel active" id="panel-settings">
     <div class="info-bar" style="background:#FFF7ED;border-color:#FDBA74;color:#9a3412;line-height:1.7">
       <b>Как пользоваться конструктором</b><br>
-      1. Настройте параметры ниже: даты, площади, корпуса<br>
-      2. Во вкладке «Справочник» проверьте/измените веса категорий и распределение по поверхностям<br>
-      3. Нажмите «Скачать Excel» — файл содержит листы ПЛАН и ФАКТ для каждой части и корпуса<br>
-      4. В Excel заполняйте площади (м²) понедельно на листах ПЛАН/ФАКТ<br>
-      5. Лист SIGNAL автоматически рассчитает взвешенный прогресс для визуализации
+      1. Заполните параметры проекта: даты, кол-во недель, площади<br>
+      2. Вкладка «Справочник» — задайте вес черновой / чистовой отделки для каждой категории<br>
+      3. Нажмите «Скачать Excel» — сгенерируется файл со всеми листами ПЛАН/ФАКТ/ОТЧЕТ/SIGNAL<br>
+      4. В Excel заполняйте площади (м²) понедельно на листах ПЛАН/ФАКТ
     </div>
     <div class="card">
       <div class="card-title">Параметры проекта</div>
-      <div class="info-bar">
-        <b>Дата начала</b> — первая дата отчёта в SIGNAL, входящая в период плановых сроков реализации.<br>
-        <b>Дата отчёта</b> — дата формирования первого отчёта (ячейка A2 листа SIGNAL).<br>
-        <b>Кол-во недель</b> — горизонт планирования (сколько строк-недель на листах ПЛАН/ФАКТ).
-      </div>
       <div class="row row-3">
-        <div class="field"><label>Дата начала</label><input type="date" id="startDate" value="2026-06-01"></div>
-        <div class="field"><label>Дата отчёта</label><input type="date" id="reportDate" value="2026-06-29"></div>
-        <div class="field"><label>Кол-во недель</label><input type="number" id="weeks" value="48" min="1" max="104"></div>
+        <div class="field">
+          <label>Дата начала</label>
+          <input type="date" id="startDate" value="">
+          <div class="hint">Дата начала СМР по отделке согласно ГРП (график реализации проекта)</div>
+        </div>
+        <div class="field">
+          <label>Дата отчёта</label>
+          <input type="date" id="reportDate" value="">
+          <div class="hint">Дата публикации первого отчёта в SIGNAL</div>
+        </div>
+        <div class="field">
+          <label>Кол-во недель</label>
+          <input type="number" id="weeks" value="0" min="0" max="200">
+          <div class="hint">Длительность СМР по отделке в неделях согласно ГРП</div>
+        </div>
       </div>
     </div>
     <div class="card">
       <div class="card-title">Подземная часть — площади (м²)</div>
-      <div class="info-bar">Площади категорий подземной части (8.1). Используются в СПРАВОЧНИК для расчёта весов «подзем/надзем».</div>
+      <div class="info-bar">Общие площади категорий подземной части (8.1.x). Если данные отсутствуют — оставьте 0.</div>
       <div id="ugAreas"></div>
     </div>
     <div class="card">
       <div class="card-title">Корпуса (надземная часть)</div>
-      <div class="info-bar">Каждый корпус получит свои листы ПЛАН ЧЕРН/ЧИСТ и ФАКТ ЧЕРН/ЧИСТ. Площади по 7 категориям надземной части (8.2) определяют веса корпусов.</div>
-      <div class="areas-hdr" id="areasHdr"></div>
+      <div class="info-bar">Каждый корпус получит свои листы ПЛАН/ФАКТ. Укажите площади (м²) по категориям надземной части (8.2.x) для каждого корпуса. Если данные отсутствуют — оставьте 0.</div>
       <div id="korpusList"></div>
-      <button class="btn-sm btn-add" onclick="addKorpus()" style="margin-top:6px">+ Корпус</button>
+      <button class="btn-sm btn-add" onclick="addKorpus()" style="margin-top:6px">+ Добавить корпус</button>
     </div>
     <div class="info-bar" id="sheetInfo"></div>
   </div>
 
   <div class="panel" id="panel-reference">
     <div class="info-bar" style="line-height:1.7">
-      <b>Цепочка весов (4 уровня)</b><br>
-      Поверхности (Пол/Стены/Потолок/...) → Тип отделки (Черн./Чист.) → Корпус → Часть (Подзем/Надзем) → Итого<br>
-      Каждый уровень суммируется в 1.0. Изменяйте веса и распределения в таблице ниже — они запишутся в лист СПРАВОЧНИК.
+      <b>Развесовка черновой / чистовой отделки</b><br>
+      Для каждой категории работ укажите вес черновой и чистовой отделки. Сумма весов должна равняться 1.0.<br>
+      Формула взвешенного процента: <code>Факт% = (Черн_факт/Всего * Вес_черн) + (Чист_факт/Всего * Вес_чист)</code><br>
+      Секция «Подземная часть» — общая для всего объекта. Каждый корпус имеет свою секцию надземной части с индивидуальными весами.
     </div>
-    <div class="card">
-      <div class="card-title">Справочник категорий отделки</div>
-      <div class="card-sub">Черновая: 3 поверхности (Пол/Стены/Потолок). Чистовая: 5 поверхностей (Пол/Стены/Потолок/Запол./Мебл.). Суммы = 1.0</div>
-      <div class="tbl-wrap" id="refTable"></div>
-    </div>
-    <div class="info-bar" style="background:#F0FDF4;border-color:#86EFAC;color:#166534;line-height:1.7">
-      <b>Как заполнять Excel после скачивания</b><br>
-      • Листы ПЛАН ЧЕРН/ЧИСТ — плановые площади (м²) по неделям для каждой категории и поверхности<br>
-      • Листы ФАКТ ЧЕРН/ЧИСТ — фактически выполненные площади (м²) по неделям<br>
-      • Лист ОТЧЕТ — автоматическая сводка по факту<br>
-      • Лист SIGNAL — взвешенный прогресс для визуализации (формулы, не трогать)<br>
-      • Категории с нулевой площадью (План м² = 0) можно не заполнять
-    </div>
+    <div id="refContent"></div>
   </div>
 
 </div>
@@ -133,50 +123,39 @@ td input:focus{outline:none}
 <script>
 'use strict';
 
-/* ═══ CONSTANTS ═══ */
-const CHERN_SURFS = ['Пол','Стены','Потолок'];
-const CHIST_SURFS = ['Пол','Стены','Потолок','Запол.','Мебл.'];
-const NC = 3, NI = 5;
-const NADZEM_SHORT = ['Лобби','Лестн.','Лифт.х.','Техн.','Прочие','Комм.','Парк.'];
-
-const DEF_PODZEM = [
-  {c:'8.1.1',n:'Отделка паркинг и рампы',       p:6600,wc:.45,wh:.55,cw:[.38,.41,.21],hw:[.40,.28,.12,.12,.08]},
-  {c:'8.1.2',n:'Эвакуац. лестн. клетки подзем.', p:2530,wc:.45,wh:.55,cw:[.30,.50,.20],hw:[.25,.45,.15,.15,.00]},
-  {c:'8.1.3',n:'Лифт. холлы, тамбур-шлюзы подзем.',p:1800,wc:.45,wh:.55,cw:[.40,.40,.20],hw:[.35,.35,.15,.15,.00]},
-  {c:'8.1.4',n:'Технич. помещения подзем.',       p:3200,wc:.45,wh:.55,cw:[.40,.40,.20],hw:[.35,.35,.15,.15,.00]},
-  {c:'8.1.5',n:'Прочие помещения подзем.',        p:2000,wc:.50,wh:.50,cw:[.20,.60,.20],hw:[.20,.45,.15,.15,.05]},
-  {c:'8.1.6',n:'Коммерч. помещения подзем.',      p:2500,wc:.45,wh:.55,cw:[.30,.50,.20],hw:[.30,.35,.15,.15,.05]},
+const PODZEM_CODES=[
+  {c:'8.1.1',n:'Отделка паркинг и рампы'},
+  {c:'8.1.2',n:'Отделка эвакуац. лестн. клетки подзем.'},
+  {c:'8.1.3',n:'Лифт. холлы, тамбур-шлюзы подзем.'},
+  {c:'8.1.4',n:'Технич. помещения подзем.'},
+  {c:'8.1.5',n:'Прочие помещения подзем.'},
+  {c:'8.1.6',n:'Коммерч. помещения подзем.'},
 ];
-const DEF_NADZEM = [
-  {c:'8.2.1',n:'Отделка лобби/гранд-лобби',       p:1500,wc:.40,wh:.60,cw:[.40,.40,.20],hw:[.15,.30,.10,.20,.25]},
-  {c:'8.2.2',n:'Эвакуац. лестн. клетки надзем.',   p:2000,wc:.45,wh:.55,cw:[.30,.50,.20],hw:[.25,.45,.15,.15,.00]},
-  {c:'8.2.3',n:'Лифт. холлы, тамбур-шлюзы надзем.',p:2500,wc:.45,wh:.55,cw:[.40,.40,.20],hw:[.35,.35,.15,.15,.00]},
-  {c:'8.2.4',n:'Технич. помещения надзем.',         p:4430,wc:.45,wh:.55,cw:[.40,.40,.20],hw:[.35,.35,.15,.15,.00]},
-  {c:'8.2.5',n:'Прочие помещения надзем.',          p:4000,wc:.50,wh:.50,cw:[.20,.60,.20],hw:[.20,.45,.15,.15,.05]},
-  {c:'8.2.6',n:'Коммерч. помещения надзем.',        p:5000,wc:.45,wh:.55,cw:[.30,.50,.20],hw:[.30,.35,.15,.15,.05]},
-  {c:'8.2.7',n:'Паркинг и рампы надзем.',           p:1500,wc:.50,wh:.50,cw:[.30,.50,.20],hw:[.30,.35,.15,.12,.08]},
+const NADZEM_CODES=[
+  {c:'8.2.1',n:'Отделка лобби/гранд-лобби'},
+  {c:'8.2.2',n:'Отделка эвакуац. лестн. клетки надзем.'},
+  {c:'8.2.3',n:'Лифт. холлы, тамбур-шлюзы надзем.'},
+  {c:'8.2.4',n:'Технич. помещения надзем.'},
+  {c:'8.2.5',n:'Прочие помещения надзем.'},
+  {c:'8.2.6',n:'Коммерч. помещения надзем.'},
+  {c:'8.2.7',n:'Паркинг и рампы надзем.'},
 ];
-const DEF_AREAS = [1500,2000,2500,4430,4000,5000,1500];
+const NP=PODZEM_CODES.length, NN=NADZEM_CODES.length;
+const CHERN_SURFS=['Пол','Стены','Потолок'];
+const CHIST_SURFS=['Пол','Стены','Потолок','Запол.','Мебл.'];
+const NC=3,NI=5;
 
-/* ═══ STATE ═══ */
-const G = {
-  korpus: ['К1'],
-  ugAreas: DEF_PODZEM.map(c=>c.p),
-  areas: {'К1':[...DEF_AREAS]},
-  startDate:'2026-06-01', reportDate:'2026-06-29', weeks:48,
-  podzem: DEF_PODZEM.map(c=>({...c,cw:[...c.cw],hw:[...c.hw]})),
-  nadzem: DEF_NADZEM.map(c=>({...c,cw:[...c.cw],hw:[...c.hw]})),
-  data: {}
+const G={
+  startDate:'', reportDate:'', weeks:0,
+  ugAreas: Array(NP).fill(0),
+  weights: PODZEM_CODES.map(()=>({wc:0,wh:0})).concat(NADZEM_CODES.map(()=>({wc:0,wh:0}))),
+  korpus:[]
 };
 
-function sKey(mode,type,part){return mode+' '+type+' '+part;}
+function save(){try{localStorage.setItem('otdelka_v14',JSON.stringify(G));}catch(e){}}
+function load(){try{const r=localStorage.getItem('otdelka_v14');if(r){const d=JSON.parse(r);Object.assign(G,d);}}catch(e){}}
 
-
-function save(){try{localStorage.setItem('otdelka_v12',JSON.stringify(G));document.getElementById('saveDot').className='save-dot saved';}catch(e){}}
-function load(){try{const r=localStorage.getItem('otdelka_v12');if(r)Object.assign(G,JSON.parse(r));}catch(e){}}
-function dirty(){document.getElementById('saveDot').className='save-dot unsaved';}
-
-/* ═══ TABS ═══ */
+/* TABS */
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
@@ -185,103 +164,116 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   if(t.dataset.tab==='reference')renderRef();
 }));
 
-/* ═══ TAB 1: SETTINGS ═══ */
+/* SETTINGS TAB */
 function renderUgAreas(){
   const el=document.getElementById('ugAreas');
-  let h='<div class="row row-3" style="row-gap:6px">';
-  G.podzem.forEach((c,i)=>{
-    h+=`<div class="field"><label>${c.c} ${c.n.substring(0,22)}</label>
-    <input type="number" value="${G.ugAreas[i]}" min="0" onchange="G.ugAreas[${i}]=+this.value;dirty()"></div>`;
+  let h='<div class="areas-grid">';
+  PODZEM_CODES.forEach((c,i)=>{
+    h+=`<div class="field"><label>${c.c} ${c.n}</label>
+    <input type="number" value="${G.ugAreas[i]}" min="0" onchange="G.ugAreas[${i}]=+this.value;save()"></div>`;
   });
   el.innerHTML=h+'</div>';
 }
 
-function renderAreasHdr(){
-  document.getElementById('areasHdr').innerHTML=NADZEM_SHORT.map(l=>`<span>${l}</span>`).join('');
-}
-
-function addKorpus(name){
-  const n=name||'К'+(G.korpus.length+1);
-  if(!name){G.korpus.push(n);G.areas[n]=[...DEF_AREAS];}
-  const list=document.getElementById('korpusList');
-  const row=document.createElement('div');row.className='korpus-row';
-  const a=G.areas[n]||DEF_AREAS;
-  row.innerHTML=`<input type="text" value="${n}" style="max-width:60px" class="kn" placeholder="Имя">`+
-    `<div class="areas">${a.map((v,i)=>`<input type="number" class="ka" value="${v}" data-i="${i}">`).join('')}</div>`+
-    `<button class="btn-sm btn-rm">✕</button>`;
-  list.appendChild(row);
-  row.querySelector('.btn-rm').onclick=()=>{const k=row.querySelector('.kn').value;G.korpus=G.korpus.filter(x=>x!==k);delete G.areas[k];row.remove();updInfo();dirty();};
-  row.querySelector('.kn').onchange=function(){const old=n,nw=this.value.trim()||old,idx=G.korpus.indexOf(old);if(idx>=0){G.korpus[idx]=nw;G.areas[nw]=G.areas[old];if(nw!==old)delete G.areas[old];}dirty();};
-  row.querySelectorAll('.ka').forEach(inp=>{inp.onchange=function(){const k=row.querySelector('.kn').value;if(!G.areas[k])G.areas[k]=[...DEF_AREAS];G.areas[k][+this.dataset.i]=+this.value;dirty();};});
-  updInfo();
-}
-
-function updInfo(){
-  const nk=G.korpus.length,sc=2+nk+(1+nk)*4,rc=9+3*nk;
-  const names=['ИНСТРУКЦИЯ','СПРАВОЧНИК','ПЛАН ЧЕРН ПОДЗЕМ','ПЛАН ЧИСТ ПОДЗЕМ','SIGNAL'];
-  G.korpus.forEach(k=>{names.push('ПЛАН ЧЕРН '+k,'ПЛАН ЧИСТ '+k);});
-  names.push('ФАКТ ЧЕРН ПОДЗЕМ','ФАКТ ЧИСТ ПОДЗЕМ');
-  G.korpus.forEach(k=>{names.push('ФАКТ ЧЕРН '+k,'ФАКТ ЧИСТ '+k);});
-  names.push('ОТЧЕТ');
-  document.getElementById('sheetInfo').innerHTML=`<b>${names.length}</b> листов, <b>${rc}</b> именованных диапазонов: `+
-    names.map((n,i)=>`<span style="color:var(--mt)">${i+1})${n}</span>`).join(', ');
-}
-
-function initSettings(){
-  renderUgAreas();renderAreasHdr();
-  document.getElementById('korpusList').innerHTML='';
-  G.korpus.forEach(k=>addKorpus(k));
-  document.getElementById('startDate').value=G.startDate;
-  document.getElementById('reportDate').value=G.reportDate;
-  document.getElementById('weeks').value=G.weeks;
-  ['startDate','reportDate','weeks'].forEach(id=>{
-    document.getElementById(id).onchange=function(){G[id]=id==='weeks'?+this.value:this.value;dirty();};
+function renderKorpusList(){
+  const el=document.getElementById('korpusList');
+  el.innerHTML='';
+  G.korpus.forEach((k,ki)=>{
+    const div=document.createElement('div');
+    div.className='korpus-block';
+    let h=`<div class="kb-head">
+      <b>${k.name}</b>
+      <button onclick="removeKorpus(${ki})">Удалить</button>
+    </div>
+    <div class="areas-grid">`;
+    NADZEM_CODES.forEach((c,i)=>{
+      h+=`<div class="field"><label>${c.c} ${c.n}</label>
+      <input type="number" value="${k.areas[i]||0}" min="0" onchange="G.korpus[${ki}].areas[${i}]=+this.value;save()"></div>`;
+    });
+    div.innerHTML=h+'</div>';
+    el.appendChild(div);
   });
   updInfo();
 }
 
-/* ═══ TAB 2: REFERENCE ═══ */
-function renderRef(){
-  const el=document.getElementById('refTable');
-  const hdrs=['Код','Название','План м²','Вес черн.','Вес чист.','∑',
-    'Ч:Пол','Ч:Стены','Ч:Пот.','∑ч',
-    'Ф:Пол','Ф:Стены','Ф:Пот.','Ф:Запол.','Ф:Мебл.','∑ф'];
-  let h='<table><thead><tr>';hdrs.forEach(x=>h+=`<th>${x}</th>`);h+='</tr></thead><tbody>';
-
-  function rows(cats,cls,key){
-    cats.forEach((c,i)=>{
-      const cwS=c.cw.reduce((a,b)=>a+b,0),hwS=c.hw.reduce((a,b)=>a+b,0),wS=c.wc+c.wh;
-      h+=`<tr><td class="${cls}">${c.c}</td><td class="${cls} left">${c.n}</td>`;
-      h+=`<td><input type="number" value="${c.p}" min="0" onchange="G.${key}[${i}].p=+this.value;dirty()"></td>`;
-      h+=`<td><input type="number" value="${c.wc}" min="0" max="1" step=".05" onchange="G.${key}[${i}].wc=+this.value;renderRef()"></td>`;
-      h+=`<td><input type="number" value="${c.wh}" min="0" max="1" step=".05" onchange="G.${key}[${i}].wh=+this.value;renderRef()"></td>`;
-      h+=`<td class="${Math.abs(wS-1)<.01?'sum-ok':'sum-bad'}">${wS.toFixed(2)}</td>`;
-      for(let s=0;s<3;s++)h+=`<td><input type="number" value="${c.cw[s]}" min="0" max="1" step=".01" onchange="G.${key}[${i}].cw[${s}]=+this.value;renderRef()"></td>`;
-      h+=`<td class="${Math.abs(cwS-1)<.01?'sum-ok':'sum-bad'}">${cwS.toFixed(2)}</td>`;
-      for(let s=0;s<5;s++)h+=`<td><input type="number" value="${c.hw[s]}" min="0" max="1" step=".01" onchange="G.${key}[${i}].hw[${s}]=+this.value;renderRef()"></td>`;
-      h+=`<td class="${Math.abs(hwS-1)<.01?'sum-ok':'sum-bad'}">${hwS.toFixed(2)}</td></tr>`;
-    });
-  }
-
-  h+='<tr><td colspan="16" class="section-hdr" style="background:var(--ug)">8.1 Подземная часть</td></tr>';
-  rows(G.podzem,'ug','podzem');
-  h+='<tr><td colspan="16" class="section-hdr" style="background:var(--ag)">8.2 Надземная часть</td></tr>';
-  rows(G.nadzem,'ag','nadzem');
-  el.innerHTML=h+'</tbody></table>';
+function addKorpus(){
+  const n='К'+(G.korpus.length+1);
+  G.korpus.push({
+    name:n,
+    areas:Array(NN).fill(0),
+    weights:Array.from({length:NP+NN},()=>({wc:0,wh:0}))
+  });
+  save();renderKorpusList();
 }
 
+function removeKorpus(ki){
+  G.korpus.splice(ki,1);
+  save();renderKorpusList();
+}
 
+function updInfo(){
+  const names=['СПРАВОЧНИК','SIGNAL','ОТЧЕТ','ПЛАН ЧЕРН ПОДЗЕМ','ФАКТ ЧЕРН ПОДЗЕМ','ПЛАН ЧИСТ ПОДЗЕМ','ФАКТ ЧИСТ ПОДЗЕМ'];
+  G.korpus.forEach(k=>{names.push('ПЛАН ЧЕРН '+k.name,'ФАКТ ЧЕРН '+k.name,'ПЛАН ЧИСТ '+k.name,'ФАКТ ЧИСТ '+k.name);});
+  document.getElementById('sheetInfo').innerHTML=`<b>${names.length}</b> листов: `+
+    names.map(n=>`<span style="color:var(--mt)">${n}</span>`).join(', ');
+}
 
+function initSettings(){
+  document.getElementById('startDate').value=G.startDate;
+  document.getElementById('reportDate').value=G.reportDate;
+  document.getElementById('weeks').value=G.weeks;
+  ['startDate','reportDate','weeks'].forEach(id=>{
+    document.getElementById(id).onchange=function(){G[id]=id==='weeks'?+this.value:this.value;save();};
+  });
+  renderUgAreas();
+  renderKorpusList();
+}
 
-/* ═══════════════════════════════════════════════════
-   EXCEL GENERATION ENGINE
-   ═══════════════════════════════════════════════════ */
+/* REFERENCE TAB */
+function renderRef(){
+  const el=document.getElementById('refContent');
+  let h='';
+
+  h+='<div class="card"><div class="card-title">8.1 Подземная часть (общая)</div>';
+  h+='<div class="tbl-wrap"><table><thead><tr><th>Код</th><th>Название</th><th>План м²</th><th>Вес черн.</th><th>Вес чист.</th><th>∑</th></tr></thead><tbody>';
+  PODZEM_CODES.forEach((c,i)=>{
+    const w=G.weights[i],s=w.wc+w.wh;
+    h+=`<tr><td class="ug">${c.c}</td><td class="ug left">${c.n}</td><td class="ug">${G.ugAreas[i]}</td>`;
+    h+=`<td><input type="number" value="${w.wc}" min="0" max="1" step=".05" onchange="G.weights[${i}].wc=+this.value;save();renderRef()"></td>`;
+    h+=`<td><input type="number" value="${w.wh}" min="0" max="1" step=".05" onchange="G.weights[${i}].wh=+this.value;save();renderRef()"></td>`;
+    h+=`<td class="${Math.abs(s-1)<.01?'sum-ok':'sum-bad'}">${s.toFixed(2)}</td></tr>`;
+  });
+  h+='</tbody></table></div></div>';
+
+  if(!G.korpus.length){
+    h+='<div class="info-bar" style="background:#FFF7ED;border-color:#FDBA74;color:#9a3412">Корпуса ещё не добавлены. Перейдите во вкладку «Настройки» и добавьте корпуса — здесь появятся их секции с индивидуальными весами.</div>';
+  }
+
+  G.korpus.forEach((k,ki)=>{
+    h+=`<div class="card"><div class="card-title">8.2 Надземная часть — ${k.name}</div>`;
+    h+='<div class="tbl-wrap"><table><thead><tr><th>Код</th><th>Название</th><th>План м²</th><th>Вес черн.</th><th>Вес чист.</th><th>∑</th></tr></thead><tbody>';
+    NADZEM_CODES.forEach((c,j)=>{
+      const wIdx=NP+j,w=k.weights[wIdx]||{wc:0,wh:0},s=w.wc+w.wh;
+      h+=`<tr><td class="ag">${c.c}</td><td class="ag left">${c.n}</td><td class="ag">${k.areas[j]||0}</td>`;
+      h+=`<td><input type="number" value="${w.wc}" min="0" max="1" step=".05" onchange="G.korpus[${ki}].weights[${wIdx}].wc=+this.value;save();renderRef()"></td>`;
+      h+=`<td><input type="number" value="${w.wh}" min="0" max="1" step=".05" onchange="G.korpus[${ki}].weights[${wIdx}].wh=+this.value;save();renderRef()"></td>`;
+      h+=`<td class="${Math.abs(s-1)<.01?'sum-ok':'sum-bad'}">${s.toFixed(2)}</td></tr>`;
+    });
+    h+='</tbody></table></div></div>';
+  });
+
+  el.innerHTML=h;
+}
+
+/* =====================================================
+   EXCEL GENERATION ENGINE (OpenXML + ZIP, no CDN)
+   ===================================================== */
 const CRC_T=new Uint32Array(256);
 {let i,j,c;for(i=0;i<256;i++){c=i;for(j=0;j<8;j++)c=c&1?0xEDB88320^(c>>>1):c>>>1;CRC_T[i]=c>>>0;}}
 function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC_T[(c^b[i])&0xFF]^(c>>>8);return(c^0xFFFFFFFF)>>>0;}
 function makeZip(files){
   const enc=new TextEncoder();
-  const E=files.map(f=>{const nm=enc.encode(f.name),dt=enc.encode(f.content);return{nm,dt,cr:crc32(dt)};});
+  const E=files.map(f=>{const nm=enc.encode(f.name),dt=typeof f.content==='string'?enc.encode(f.content):f.content;return{nm,dt,cr:crc32(dt)};});
   let sz=22;for(const e of E)sz+=76+e.nm.length*2+e.dt.length;
   const buf=new Uint8Array(sz),v=new DataView(buf.buffer);let p=0;const off=[];
   for(const e of E){
@@ -301,36 +293,38 @@ function makeZip(files){
   return buf;
 }
 
-function X(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function X(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function CL(c){let s='';while(c>0){c--;s=String.fromCharCode(65+c%26)+s;c=Math.floor(c/26);}return s;}
-function DS(d){const dt=new Date(d),ep=new Date(1899,11,30);return Math.round((dt-ep)/86400000);}
+function DS(d){if(!d)return 0;const dt=new Date(d),ep=new Date(1899,11,30);return Math.round((dt-ep)/86400000);}
 
 class SST{constructor(){this.m=new Map();this.a=[];}
-  add(s){if(this.m.has(s))return this.m.get(s);const i=this.a.length;this.m.set(s,i);this.a.push(s);return i;}
+  add(s){s=String(s);if(this.m.has(s))return this.m.get(s);const i=this.a.length;this.m.set(s,i);this.a.push(s);return i;}
   xml(){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+this.a.length+'" uniqueCount="'+this.a.length+'">';for(const s of this.a)x+='<si><t>'+X(s)+'</t></si>';return x+'</sst>';}
 }
 
 class WS{
-  constructor(name,sst){this.name=name;this.sst=sst;this.R=[];this.merges=[];this.cols=[];}
+  constructor(name,sst){this.name=name;this.sst=sst;this.R=[];this.merges=[];this.cols=[];this.rowH={};}
   sv(r,c,v,st){if(!this.R[r])this.R[r]=[];this.R[r][c]={v,st};}
   ss(r,c,s,st){this.sv(r,c,{s:this.sst.add(s)},st);}
   sf(r,c,f,st){this.sv(r,c,{f},st);}
   sn(r,c,n,st){this.sv(r,c,{n},st);}
   mg(r1,c1,r2,c2){this.merges.push(`${CL(c1)}${r1}:${CL(c2)}${r2}`);}
   cw(c,w){this.cols.push({c,w});}
+  rh(r,h){this.rowH[r]=h;}
   xml(){
     let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
     if(this.cols.length){x+='<cols>';for(const c of this.cols)x+=`<col min="${c.c}" max="${c.c}" width="${c.w}" customWidth="1"/>`;x+='</cols>';}
     x+='<sheetData>';
     for(let r=1;r<this.R.length;r++){
-      if(!this.R[r])continue;x+=`<row r="${r}">`;
+      if(!this.R[r])continue;
+      const ht=this.rowH[r]?` ht="${this.rowH[r]}" customHeight="1"`:'';
+      x+=`<row r="${r}"${ht}>`;
       for(let c=1;c<this.R[r].length;c++){
         if(!this.R[r][c])continue;const cl=this.R[r][c],ref=CL(c)+r,st=cl.st!=null?` s="${cl.st}"`:'',v=cl.v;
         if(v==null)x+=`<c r="${ref}"${st}/>`;
         else if(typeof v==='object'&&v.s!=null)x+=`<c r="${ref}"${st} t="s"><v>${v.s}</v></c>`;
         else if(typeof v==='object'&&v.f!=null)x+=`<c r="${ref}"${st}><f>${X(v.f)}</f></c>`;
         else if(typeof v==='object'&&v.n!=null)x+=`<c r="${ref}"${st}><v>${v.n}</v></c>`;
-        else if(typeof v==='number')x+=`<c r="${ref}"${st}><v>${v}</v></c>`;
         else x+=`<c r="${ref}"${st} t="inlineStr"><is><t>${X(String(v))}</t></is></c>`;
       }
       x+='</row>';
@@ -341,152 +335,125 @@ class WS{
   }
 }
 
-// Styles: 0=def, 1=bold+brd, 2=hdr(white/blue), 3=title, 4=ug, 5=ag, 6=total, 7=brd, 8=date, 9=pct
 function styXml(){
   return`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-<numFmts count="2"><numFmt numFmtId="164" formatCode="DD.MM.YYYY"/><numFmt numFmtId="165" formatCode="0.0%"/></numFmts>
-<fonts count="7"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="14"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><i/><sz val="11"/><name val="Calibri"/></font><font><b/><i/><sz val="11"/><name val="Calibri"/></font><font><i/><sz val="11"/><color rgb="FFDC2626"/><name val="Calibri"/></font></fonts>
-<fills count="8"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF4472C4"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD9E2F3"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE2EFDA"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFF2CC"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF1F5F9"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFF7ED"/></patternFill></fill></fills>
+<numFmts count="3"><numFmt numFmtId="164" formatCode="DD.MM.YYYY"/><numFmt numFmtId="165" formatCode="0.0%"/><numFmt numFmtId="166" formatCode="#,##0.00"/></numFmts>
+<fonts count="8">
+<font><sz val="11"/><name val="Calibri"/></font>
+<font><b/><sz val="11"/><name val="Calibri"/></font>
+<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>
+<font><b/><sz val="14"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>
+<font><i/><sz val="11"/><name val="Calibri"/></font>
+<font><b/><i/><sz val="11"/><name val="Calibri"/></font>
+<font><b/><sz val="11"/><color rgb="FFFF0000"/><name val="Calibri"/></font>
+<font><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>
+</fonts>
+<fills count="10">
+<fill><patternFill patternType="none"/></fill>
+<fill><patternFill patternType="gray125"/></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FF4472C4"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFD9E2F3"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFE2EFDA"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFFFF2CC"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF2F2F2"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFFFC7CE"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FF7030A0"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FF2F5496"/></patternFill></fill>
+</fills>
 <borders count="2"><border/><border><left style="thin"><color auto="1"/></left><right style="thin"><color auto="1"/></right><top style="thin"><color auto="1"/></top><bottom style="thin"><color auto="1"/></bottom></border></borders>
 <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
-<cellXfs count="16"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="1" applyBorder="1" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="2" borderId="1" applyBorder="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="3" fillId="2" borderId="0" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="3" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="4" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="5" borderId="1" applyBorder="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="0" borderId="1" applyBorder="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/><xf numFmtId="165" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/><xf numFmtId="0" fontId="1" fillId="6" borderId="1" applyBorder="1" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="4" fillId="0" borderId="1" applyBorder="1" applyFont="1"/><xf numFmtId="0" fontId="5" fillId="0" borderId="1" applyBorder="1" applyFont="1"/><xf numFmtId="0" fontId="6" fillId="0" borderId="0" applyFont="1"/><xf numFmtId="165" fontId="0" fillId="6" borderId="1" applyBorder="1" applyFill="1" applyNumberFormat="1"/><xf numFmtId="0" fontId="1" fillId="7" borderId="1" applyBorder="1" applyFont="1" applyFill="1"/></cellXfs></styleSheet>`;
+<cellXfs count="17">
+<xf numFmtId="0" fontId="0" fillId="0" borderId="0"/>
+<xf numFmtId="0" fontId="1" fillId="0" borderId="1" applyBorder="1" applyFont="1"/>
+<xf numFmtId="0" fontId="2" fillId="2" borderId="1" applyBorder="1" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="3" fillId="9" borderId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+<xf numFmtId="0" fontId="0" fillId="3" borderId="1" applyBorder="1" applyFill="1"/>
+<xf numFmtId="0" fontId="0" fillId="4" borderId="1" applyBorder="1" applyFill="1"/>
+<xf numFmtId="166" fontId="0" fillId="5" borderId="1" applyBorder="1" applyFill="1" applyNumberFormat="1"/>
+<xf numFmtId="166" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/>
+<xf numFmtId="164" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/>
+<xf numFmtId="165" fontId="0" fillId="0" borderId="1" applyBorder="1" applyNumberFormat="1"/>
+<xf numFmtId="0" fontId="1" fillId="6" borderId="1" applyBorder="1" applyFont="1" applyFill="1"/>
+<xf numFmtId="0" fontId="0" fillId="6" borderId="1" applyBorder="1" applyFill="1"/>
+<xf numFmtId="166" fontId="0" fillId="6" borderId="1" applyBorder="1" applyFill="1" applyNumberFormat="1"/>
+<xf numFmtId="0" fontId="6" fillId="7" borderId="1" applyBorder="1" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center"/></xf>
+<xf numFmtId="165" fontId="0" fillId="6" borderId="1" applyBorder="1" applyFill="1" applyNumberFormat="1"/>
+<xf numFmtId="0" fontId="7" fillId="8" borderId="1" applyBorder="1" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center"/></xf>
+<xf numFmtId="0" fontId="0" fillId="0" borderId="1" applyBorder="1"/>
+</cellXfs></styleSheet>`;
 }
+
 function ctXml(n){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>';for(let i=1;i<=n;i++)x+=`<Override PartName="/xl/worksheets/sheet${i}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`;return x+'</Types>';}
 function relsXml(){return'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';}
-function wbXml(sheets,nr){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>';for(let i=0;i<sheets.length;i++)x+=`<sheet name="${X(sheets[i])}" sheetId="${i+1}" r:id="rId${i+1}"/>`;x+='</sheets>';if(nr&&nr.length){x+='<definedNames>';for(const r of nr)x+=`<definedName name="${X(r.name)}">${X(r.ref)}</definedName>`;x+='</definedNames>';}return x+'<calcPr calcId="152511" fullCalcOnLoad="1"/></workbook>';}
+function wbXml(sheets){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>';for(let i=0;i<sheets.length;i++)x+=`<sheet name="${X(sheets[i])}" sheetId="${i+1}" r:id="rId${i+1}"/>`;return x+'</sheets><calcPr calcId="152511" fullCalcOnLoad="1"/></workbook>';}
 function wbRelsXml(n){let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';for(let i=1;i<=n;i++)x+=`<Relationship Id="rId${i}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i}.xml"/>`;x+=`<Relationship Id="rId${n+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>`;x+=`<Relationship Id="rId${n+2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>`;return x+'</Relationships>';}
 
-/* ═══ LAYOUT (v12: fixed rows for categories, dynamic for korpus) ═══ */
-function compL(NP,NN,NK){
-  const p0=3,pN=p0+NP-1;
-  const n0=pN+1,nN=n0+NN-1;
-  const ah=17,a81=18,a82=19;
-  const kh=26,kc=27,k0=28,kN=k0+NK-1;
-  const kk=kN+2,dr=Math.max(35,kk+3);
-  return{p0,pN,n0,nN,ah,a81,a82,kh,kc,k0,kN,kk,dr};
-}
-function pfCol(ci,ns,si){return CL(2+ci*ns+si);}
-function cwCol(si){return CL(8+si);}
-function hwCol(si){return CL(12+si);}
-function catRow(ci,isNdz,L){return(isNdz?L.n0:L.p0)+ci;}
-
-/* ═══ SHEET GENERATORS ═══ */
-function gInstr(sst){
-  const ws=new WS('ИНСТРУКЦИЯ',sst);
-  let r=1;
-  ws.ss(r,1,'ИНСТРУКЦИЯ ПО ЗАПОЛНЕНИЮ',3);r+=2;
-  ws.ss(r,1,'Файл сгенерирован конструктором «Отделка для SIGNAL» v12',0);r+=2;
-  ws.ss(r,1,'СТРУКТУРА ФАЙЛА',1);r++;
-  ws.ss(r,1,'СПРАВОЧНИК — веса, распределение по поверхностям, площади, сроки, настройки',0);r++;
-  ws.ss(r,1,'ПЛАН ЧЕРН/ЧИСТ — плановые площади (м²) по неделям для каждой категории и поверхности',0);r++;
-  ws.ss(r,1,'ФАКТ ЧЕРН/ЧИСТ — фактически выполненные площади (м²) по неделям',0);r++;
-  ws.ss(r,1,'ОТЧЕТ — автоматическая сводка факта по всем категориям',0);r++;
-  ws.ss(r,1,'SIGNAL — взвешенный прогресс для визуализации в системе SIGNAL (формулы — НЕ РЕДАКТИРОВАТЬ)',0);r+=2;
-  ws.ss(r,1,'ПОРЯДОК ЗАПОЛНЕНИЯ',1);r++;
-  ws.ss(r,1,'ЭТАП 1: Проверьте лист СПРАВОЧНИК',0);r++;
-  ws.ss(r,1,'  — Столбцы A-D: код, часть, название, плановая площадь (м²)',0);r++;
-  ws.ss(r,1,'  — Столбцы E-F: вес черновой и чистовой отделки (сумма = 1.0)',0);r++;
-  ws.ss(r,1,'  — Столбцы H-J: распределение черновой по поверхностям (Пол/Стены/Потолок)',0);r++;
-  ws.ss(r,1,'  — Столбцы L-P: распределение чистовой (Пол/Стены/Потолок/Запол./Мебл.)',0);r++;
-  ws.ss(r,1,'  — Столбцы R-S: плановые сроки начала и завершения работ (даты)',0);r++;
-  ws.ss(r,1,'  — Столбцы T-X: автоматический расчёт длительности, трудоёмкости и весов',0);r++;
-  ws.ss(r,1,'  — Раздел «Корпуса»: площади по категориям для каждого корпуса',0);r+=2;
-  ws.ss(r,1,'ЭТАП 2: Заполняйте листы ПЛАН',0);r++;
-  ws.ss(r,1,'  — Плановые площади (м²) по неделям, черновая: 3 поверхности, чистовая: 5',0);r+=2;
-  ws.ss(r,1,'ЭТАП 3: Еженедельно заполняйте листы ФАКТ',0);r++;
-  ws.ss(r,1,'  — Фактически выполненные площади (м²) по неделям',0);r+=2;
-  ws.ss(r,1,'ЭТАП 4: Автоматический результат',0);r++;
-  ws.ss(r,1,'  — ОТЧЕТ и SIGNAL обновляются автоматически по формулам',0);r+=2;
-  ws.ss(r,1,'ЦЕПОЧКА ВЕСОВ (4 уровня)',1);r++;
-  ws.ss(r,1,'Поверхности → Тип отделки (Черн/Чист) → Корпус → Часть (Подзем/Надзем) → Итого',0);r++;
-  ws.ss(r,1,'Каждый уровень суммируется в 1.0. Веса задаются в СПРАВОЧНИК.',0);r+=2;
-  ws.ss(r,1,'ВАЖНЫЕ ЗАМЕЧАНИЯ',1);r++;
-  ws.ss(r,1,'Категории с нулевой площадью (План м² = 0) можно не заполнять.',0);r++;
-  ws.ss(r,1,'Блоки SIGNAL: 6 столбцов на блок, 13 строк заголовков, данные с строки 14.',0);r++;
-  ws.ss(r,1,'Формулы в SIGNAL ссылаются на СПРАВОЧНИК и ПЛАН/ФАКТ — НЕ ИЗМЕНЯТЬ.',0);
-  ws.cw(1,110);
-  return ws;
+/* LAYOUT HELPERS */
+function spravLayout(NK){
+  const parkingStart=5, parkingEnd=10, parkingAvg=11;
+  const korpus=[];
+  for(let k=0;k<NK;k++){
+    const h=12+k*10;
+    korpus.push({header:h, sub:h+1, dataStart:h+2, dataEnd:h+8, avg:h+9});
+  }
+  return{parkingStart,parkingEnd,parkingAvg,korpus};
 }
 
+function getWeight(catIdx,korpusIdx){
+  if(catIdx>=NP && korpusIdx!=null && G.korpus[korpusIdx]){
+    const kw=G.korpus[korpusIdx].weights[catIdx];
+    if(kw) return kw;
+  }
+  return G.weights[catIdx]||{wc:0,wh:0};
+}
+
+/* SHEET: СПРАВОЧНИК */
 function gSprav(sst,cfg){
   const ws=new WS('СПРАВОЧНИК',sst);
-  const{L,NP,NN,NK,KOR,KA}=cfg;
-  ws.ss(1,1,'СПРАВОЧНИК КАТЕГОРИЙ ОТДЕЛКИ',3);ws.mg(1,1,1,24);
-  const hdrs=['Код','Часть','Название','План м²','Вес черн.','Вес чист.','∑ весов',
-    'Черн:Пол','Черн:Стены','Черн:Потолок','∑ черн.',
-    'Чист:Пол','Чист:Стены','Чист:Потолок','Чист:Запол.','Чист:Мебл.','∑ чист.',
-    'Начало','Окончание','Длит.(дни)','Труд-proxy','Вес ур.3 (авто)','Вес ур.3','Глоб. вес'];
-  for(let i=0;i<hdrs.length;i++)ws.ss(2,i+1,hdrs[i],2);
+  const{SL,NK}=cfg;
 
-  const ALL=[...G.podzem,...G.nadzem];
-  ALL.forEach((c,idx)=>{
-    const r=3+idx;
-    const isPod=c.c.startsWith('8.1');
-    const part=isPod?'Подзем.':'Надзем.',st=isPod?4:5;
-    const area=isPod?G.ugAreas[idx]:KOR.reduce((s,k)=>s+((KA[k]||DEF_AREAS)[idx-NP]||0),0);
-    ws.ss(r,1,c.c,st);ws.ss(r,2,part,st);ws.ss(r,3,c.n,st);
-    ws.sn(r,4,area,7);ws.sn(r,5,c.wc,7);ws.sn(r,6,c.wh,7);
+  ws.ss(1,1,'Дата старта работ',1);ws.sn(1,2,cfg.sdSer,8);
+  ws.ss(2,1,'СПРАВОЧНИК КАТЕГОРИЙ ОТДЕЛКИ',1);ws.mg(2,1,2,7);
+  ws.ss(3,1,'ПАРКИНГ',3);ws.mg(3,1,3,7);
+
+  const hdrs=['Код','Часть','Название','План м²','Вес черн.','Вес чист.','∑ весов'];
+  for(let i=0;i<hdrs.length;i++)ws.ss(4,i+1,hdrs[i],2);
+
+  PODZEM_CODES.forEach((c,i)=>{
+    const r=5+i,w=G.weights[i];
+    ws.ss(r,1,c.c,4);ws.ss(r,2,'Подзем.',4);ws.ss(r,3,c.n,4);
+    ws.sn(r,4,G.ugAreas[i],7);ws.sn(r,5,w.wc,7);ws.sn(r,6,w.wh,7);
     ws.sf(r,7,`E${r}+F${r}`,7);
-    for(let s=0;s<3;s++)ws.sn(r,8+s,c.cw[s],7);
-    ws.sf(r,11,`SUM(H${r}:J${r})`,7);
-    for(let s=0;s<5;s++)ws.sn(r,12+s,c.hw[s],7);
-    ws.sf(r,17,`SUM(L${r}:P${r})`,7);
-    ws.sf(r,20,`IF(OR(Q${r}="",R${r}=""),0,R${r}-Q${r})`,7);
-    ws.sf(r,21,`S${r}*D${r}`,7);
-    ws.sf(r,22,`IFERROR(T${r}/SUMIF($B$3:$B$${2+NP+NN},$B${r},$T$3:$T$${2+NP+NN}),0)`,7);
-    ws.sf(r,23,`U${r}`,7);
-    ws.sf(r,24,`V${r}*IF($B${r}="Подзем.",$V$${L.a81},$V$${L.a82})`,7);
   });
 
-  ws.ss(L.ah,1,'АГРЕГАЦИЯ ПО УРОВНЯМ (ур.3 → ур.2 → ур.1)',15);
-  ws.ss(L.a81,1,'8.1',7);ws.ss(L.a81,3,'Подземная часть',7);
-  ws.sf(L.a81,4,`SUM(D${L.p0}:D${L.pN})`,6);
-  ws.sf(L.a81,18,`MIN(Q${L.p0}:Q${L.pN})`,7);
-  ws.sf(L.a81,19,`MAX(R${L.p0}:R${L.pN})`,7);
-  ws.sf(L.a81,20,`IF(OR(Q${L.a81}=0,R${L.a81}=0),0,R${L.a81}-Q${L.a81})`,7);
-  ws.sf(L.a81,21,`SUM(T${L.p0}:T${L.pN})`,7);
-  ws.sf(L.a81,22,`IFERROR(T${L.a81}/(T${L.a81}+T${L.a82}),0)`,7);
-  ws.sf(L.a81,23,`U${L.a81}`,7);ws.sf(L.a81,24,`V${L.a81}`,7);
+  ws.ss(11,1,'Итого паркинг',1);
+  ws.sf(11,4,'SUM(D5:D10)',6);
+  ws.sf(11,5,'AVERAGE(E5:E10)',7);ws.sf(11,6,'AVERAGE(F5:F10)',7);ws.sf(11,7,'E11+F11',7);
 
-  ws.ss(L.a82,1,'8.2',7);ws.ss(L.a82,3,'Надземная часть',7);
-  ws.sf(L.a82,4,`SUM(D${L.n0}:D${L.nN})`,6);
-  ws.sf(L.a82,18,`MIN(Q${L.n0}:Q${L.nN})`,7);
-  ws.sf(L.a82,19,`MAX(R${L.n0}:R${L.nN})`,7);
-  ws.sf(L.a82,20,`IF(OR(Q${L.a82}=0,R${L.a82}=0),0,R${L.a82}-Q${L.a82})`,7);
-  ws.sf(L.a82,21,`SUM(T${L.n0}:T${L.nN})`,7);
-  ws.sf(L.a82,22,`IFERROR(T${L.a82}/(T${L.a81}+T${L.a82}),0)`,7);
-  ws.sf(L.a82,23,`U${L.a82}`,7);ws.sf(L.a82,24,`V${L.a82}`,7);
-
-  ws.ss(21,3,'✓ ∑ вес ур.3 подзем.',7);ws.sf(21,23,`SUM(V${L.p0}:V${L.pN})`,7);
-  ws.ss(22,3,'✓ ∑ вес ур.3 надзем.',7);ws.sf(22,23,`SUM(V${L.n0}:V${L.nN})`,7);
-  ws.ss(23,3,'✓ ∑ вес ур.2',7);ws.sf(23,23,`V${L.a81}+V${L.a82}`,7);
-  ws.ss(24,3,'✓ ∑ глоб. вес',7);ws.sf(24,24,`SUM(W${L.p0}:W${L.nN})`,7);
-
-  ws.ss(L.kh,1,'РАСПРЕДЕЛЕНИЕ НАДЗЕМНОЙ ЧАСТИ ПО КОРПУСАМ',15);
-  ws.ss(L.kc,1,'Корпус',2);
-  for(let i=0;i<NN;i++)ws.ss(L.kc,2+i,G.nadzem[i].c,2);
-  ws.ss(L.kc,2+NN,'Σ план',2);ws.ss(L.kc,3+NN,'Вес корп.(авто)',2);ws.ss(L.kc,4+NN,'Вес корп.',2);
-  const iCol=CL(2+NN);
-  KOR.forEach((k,ki)=>{
-    const r=L.k0+ki;ws.ss(r,1,k,7);
-    for(let i=0;i<NN;i++)ws.sn(r,2+i,(KA[k]||DEF_AREAS)[i]||0,7);
-    ws.sf(r,2+NN,`SUM(B${r}:${CL(1+NN)}${r})`,6);
-    const sumP=KOR.map((_,j)=>`${iCol}${L.k0+j}`).join('+');
-    ws.sf(r,3+NN,`IFERROR(${iCol}${r}/(${sumP}),0)`,7);
-    ws.sf(r,4+NN,`${CL(3+NN)}${r}`,7);
+  SL.korpus.forEach((ks,ki)=>{
+    ws.ss(ks.header,1,`КОРПУС ${ki+1}`,3);ws.mg(ks.header,1,ks.header,7);
+    for(let i=0;i<hdrs.length;i++)ws.ss(ks.sub,i+1,hdrs[i],2);
+    NADZEM_CODES.forEach((c,j)=>{
+      const r=ks.dataStart+j,wIdx=NP+j,w=getWeight(wIdx,ki);
+      ws.ss(r,1,c.c,5);ws.ss(r,2,'Надзем.',5);ws.ss(r,3,c.n,5);
+      ws.sn(r,4,(G.korpus[ki]&&G.korpus[ki].areas[j])||0,7);
+      ws.sn(r,5,w.wc,7);ws.sn(r,6,w.wh,7);
+      ws.sf(r,7,`E${r}+F${r}`,7);
+    });
+    ws.ss(ks.avg,1,`Итого К${ki+1}`,1);
+    ws.sf(ks.avg,4,`SUM(D${ks.dataStart}:D${ks.dataEnd})`,6);
+    ws.sf(ks.avg,5,`AVERAGE(E${ks.dataStart}:E${ks.dataEnd})`,7);
+    ws.sf(ks.avg,6,`AVERAGE(F${ks.dataStart}:F${ks.dataEnd})`,7);
+    ws.sf(ks.avg,7,`E${ks.avg}+F${ks.avg}`,7);
   });
-  const kWCol=CL(4+NN);
-  ws.ss(L.kk,1,'✓ ∑ вес корп.',7);
-  ws.sf(L.kk,4+NN,KOR.map((_,ki)=>`${kWCol}${L.k0+ki}`).join('+'),7);
 
-  ws.ss(L.dr,1,'Дата начала проекта',7);ws.sn(L.dr,2,cfg.sdSer,8);
-
-  ws.cw(1,10);ws.cw(2,10);ws.cw(3,42);ws.cw(4,12);
-  for(let i=5;i<=24;i++)ws.cw(i,11);
+  ws.cw(1,20);ws.cw(2,15);ws.cw(3,39);
+  for(let i=4;i<=7;i++)ws.cw(i,13);
   return ws;
 }
 
+/* SHEET: ПЛАН/ФАКТ */
 function gPF(sst,cfg,kind,type,suf,cats){
   const name=`${kind} ${type} ${suf}`;
   const ws=new WS(name,sst);
@@ -494,279 +461,286 @@ function gPF(sst,cfg,kind,type,suf,cats){
   const sl=type==='ЧЕРН'?CHERN_SURFS:CHIST_SURFS;
   const{W}=cfg;
   const isPod=suf==='ПОДЗЕМ';
-  const partKey=isPod?'ПОДЗЕМ':suf;
-  const dataKey=sKey(kind,type,partKey);
-  const dd=G.data[dataKey];
   const totalCols=1+cats.length*ns;
+  const sepCol=totalCols+1;
+  const itogoCol=sepCol+1;
+  const itogoEnd=itogoCol+ns-1;
+  const iLabel=isPod?'Итого подзем.':'Итого надзем.';
 
   ws.ss(1,1,name,3);ws.mg(1,1,1,totalCols);
-  ws.ss(2,1,'Дата',2);
-  ws.ss(3,1,'',2);
-  for(let ci=0;ci<cats.length;ci++){
-    const cc=2+ci*ns;
-    ws.ss(2,cc,isPod?'Подземная часть':'Надземная часть',2);
-    ws.mg(2,cc,2,cc+ns-1);
-    ws.ss(3,cc,cats[ci].c+' '+cats[ci].n,2);
-    if(ns>1)ws.mg(3,cc,3,cc+ns-1);
-    for(let si=0;si<ns;si++)ws.ss(4,cc+si,sl[si],2);
-  }
+  ws.ss(1,itogoCol,iLabel,3);if(ns>1)ws.mg(1,itogoCol,1,itogoEnd);
 
-  const itogoStart = 2 + cats.length * ns + 1;
-  ws.ss(1, itogoStart, 'Итого ' + suf, 1);
-  ws.mg(1, itogoStart, 1, itogoStart + ns - 1);
-  const itSl = type==='ЧЕРН' ? CHERN_SURFS : CHIST_SURFS;
-  if(type==='ЧЕРН'){
-    for(let si=0;si<ns;si++) ws.ss(3, itogoStart+si, itSl[si], 2);
-  }else{
-    ws.ss(3, itogoStart, 'Итого', 2);
-    ws.mg(3, itogoStart, 3, itogoStart+ns-1);
-    for(let si=0;si<ns;si++) ws.ss(4, itogoStart+si, itSl[si], 2);
-  }
+  ws.ss(2,1,'Дата',2);ws.mg(2,1,3,1);
+  const partLabel=isPod?'Подземная часть':'Надземная часть';
+  ws.ss(2,2,partLabel,type==='ЧЕРН'?4:2);ws.mg(2,2,2,totalCols);
+  let col=2;
+  for(const c of cats){ws.ss(3,col,c.c+' '+c.n,type==='ЧЕРН'?4:2);if(ns>1)ws.mg(3,col,3,col+ns-1);col+=ns;}
+  col=2;for(const _c of cats){for(let si=0;si<ns;si++){ws.ss(4,col,sl[si],type==='ЧЕРН'?4:2);col++;}}
+
+  ws.ss(2,itogoCol,'Итого',type==='ЧЕРН'?6:2);if(ns>1)ws.mg(2,itogoCol,3,itogoEnd);
+  for(let si=0;si<ns;si++)ws.ss(4,itogoCol+si,sl[si],type==='ЧЕРН'?6:2);
+
+  const cm=[];
+  col=2;for(let ci=0;ci<cats.length;ci++){const arr=[];for(let si=0;si<ns;si++){arr.push(CL(col));col++;}cm.push(arr);}
 
   for(let w=0;w<W;w++){
     const r=5+w;
-    if(w===0)ws.sf(r,1,`СПРАВОЧНИК!$B$${cfg.drRow}`,8);else ws.sf(r,1,`A${r-1}+7`,8);
-    for(let ci=0;ci<cats.length;ci++){
-      for(let si=0;si<ns;si++){
-        const val=dd&&dd[w]&&dd[w][ci]?(dd[w][ci][si]||0):0;
-        if(val>0)ws.sn(r,2+ci*ns+si,val,7);else ws.sv(r,2+ci*ns+si,null,7);
-      }
-    }
+    if(w===0)ws.sf(r,1,`СПРАВОЧНИК!$B$1`,8);else ws.sf(r,1,`A${r-1}+7`,8);
+    col=2;
+    for(let ci=0;ci<cats.length;ci++){for(let si=0;si<ns;si++){ws.sn(r,col,0,7);col++;}}
     for(let si=0;si<ns;si++){
-      const parts=[];
-      for(let ci=0;ci<cats.length;ci++) parts.push(`${CL(2+ci*ns+si)}${r}`);
-      ws.sf(r, itogoStart+si, parts.join('+'), 6);
+      const parts=[];for(let ci=0;ci<cats.length;ci++)parts.push(`${cm[ci][si]}${r}`);
+      ws.sf(r,itogoCol+si,parts.join('+'),6);
     }
   }
 
-  ws.cw(1,14);for(let i=2;i<=totalCols;i++)ws.cw(i,10);
-  for(let si=0;si<ns;si++)ws.cw(itogoStart+si,10);
+  ws.cw(1,12);for(let c=2;c<=totalCols;c++)ws.cw(c,13);
+  ws.cw(sepCol,3);
+  for(let si=0;si<ns;si++)ws.cw(itogoCol+si,13);
   return ws;
 }
 
+/* SHEET: ОТЧЕТ */
 function gOtchet(sst,cfg){
   const ws=new WS('ОТЧЕТ',sst);
-  const{L,W,NK,NP,NN,KOR}=cfg;
-  const lastRow=4+W;
-  let r=1;
-  ws.ss(r,1,'ОТЧЁТ ПО ОТДЕЛОЧНЫМ РАБОТАМ',3);ws.mg(r,1,r,9);r++;
-  ws.ss(r,1,'⚠ Автоматический. Не вносите данные напрямую.',13);r+=2;
+  const{SL,NK}=cfg;
 
-  function hdr(title){
-    ws.ss(r,1,title,15);ws.mg(r,1,r,9);r++;
-    const hh=['Код','Название','Тип','Вес ур.4','Вес ур.5','План м²','Факт м²','Факт %','Взвеш. %'];
-    for(let i=0;i<hh.length;i++)ws.ss(r,i+1,hh[i],2);r++;
-  }
+  ws.ss(1,1,'ОТЧЁТ ПО ОТДЕЛОЧНЫМ РАБОТАМ',3);ws.mg(1,1,1,7);
+  ws.ss(2,1,'Автоматический расчёт. Не вносите данные напрямую.',13);ws.mg(2,1,2,7);
+  ws.ss(4,1,'ПОДЗЕМНАЯ ЧАСТЬ',15);ws.mg(4,1,4,7);
 
-  function sec(cats,isNdz,factSuf,planRef){
-    for(let ci=0;ci<cats.length;ci++){
-      const c=cats[ci],sr=catRow(ci,isNdz,L);
-      const fcs='ФАКТ ЧЕРН '+factSuf, fis='ФАКТ ЧИСТ '+factSuf;
-      const m=r;
+  const colH=['Код','Название','ВСЕГО м²','План м²','Факт м²','Дельта','Факт %'];
+  for(let i=0;i<colH.length;i++)ws.ss(5,i+1,colH[i],2);
+  ws.rh(5,30);
 
-      ws.ss(r,1,c.c,1);ws.sf(r,2,`СПРАВОЧНИК!C${sr}`,1);ws.ss(r,3,'Главная',1);
-      ws.sf(r,6,planRef(ci),7);
-      ws.sf(r,7,`G${r+1}*D${r+1}+G${r+5}*D${r+5}`,7);
-      ws.sf(r,8,`IF(F${r}=0,0,G${r}/F${r})`,9);
-      ws.sf(r,9,`I${r+1}+I${r+5}`,9);r++;
+  let r=6;
+  PODZEM_CODES.forEach((c,catI)=>{
+    const spR=5+catI;
+    ws.ss(r,1,c.c,10);ws.ss(r,2,c.n,10);
+    for(let cc=3;cc<=6;cc++)ws.sv(r,cc,null,12);
+    const chS=r+2,chE=r+4,hiS=r+6,hiE=r+8;
+    ws.sf(r,7,`IFERROR((SUM(E${chS}:E${chE})/SUM(C${chS}:C${chE})*СПРАВОЧНИК!E${spR})+(SUM(E${hiS}:E${hiE})/SUM(C${hiS}:C${hiE})*СПРАВОЧНИК!F${spR}),0)`,14);
+    r++;
 
-      ws.ss(r,2,'  Черновая',10);ws.ss(r,3,'Категория',10);
-      ws.sf(r,4,`СПРАВОЧНИК!E${sr}`,7);ws.sf(r,6,`F${m}`,7);
-      ws.sf(r,7,`G${r+1}*E${r+1}+G${r+2}*E${r+2}+G${r+3}*E${r+3}`,7);
-      ws.sf(r,8,`IF(F${r}=0,0,G${r}/F${r})`,9);
-      ws.sf(r,9,`H${r}*D${r}`,9);r++;
-
-      for(let si=0;si<NC;si++){
-        const scol=CL(2+ci*NC+si);
-        ws.ss(r,2,'   '+CHERN_SURFS[si],11);ws.ss(r,3,'Вид',11);
-        ws.sf(r,5,`СПРАВОЧНИК!$${cwCol(si)}$${sr}`,7);ws.sf(r,6,`F${m}`,7);
-        ws.sf(r,7,`SUM('${fcs}'!${scol}5:${scol}${lastRow})`,7);
-        ws.sf(r,8,`IF(F${r}=0,0,G${r}/F${r})`,9);
-        ws.sf(r,9,`H${r}*E${r}`,9);r++;
-      }
-
-      const cr=r;
-      ws.ss(r,2,'  Чистовая',10);ws.ss(r,3,'Категория',10);
-      ws.sf(r,4,`СПРАВОЧНИК!F${sr}`,7);ws.sf(r,6,`F${m}`,7);
-      const chParts=[];for(let si=0;si<NI;si++)chParts.push(`G${r+1+si}*E${r+1+si}`);
-      ws.sf(r,7,chParts.join('+'),7);
-      ws.sf(r,8,`IF(F${r}=0,0,G${r}/F${r})`,9);
-      ws.sf(r,9,`H${r}*D${r}`,9);r++;
-
-      for(let si=0;si<NI;si++){
-        const scol=CL(2+ci*NI+si);
-        const surfName=CHIST_SURFS[si];
-        const dispName=si===3?'Заполн. проемов':si===4?'Меблировка':surfName;
-        ws.ss(r,2,'   '+dispName,11);ws.ss(r,3,'Вид',11);
-        ws.sf(r,5,`СПРАВОЧНИК!$${hwCol(si)}$${sr}`,7);ws.sf(r,6,`F${m}`,7);
-        ws.sf(r,7,`SUM('${fis}'!${scol}5:${scol}${lastRow})`,7);
-        ws.sf(r,8,`IF(F${r}=0,0,G${r}/F${r})`,9);
-        ws.sf(r,9,`H${r}*E${r}`,9);r++;
-      }
-
-      ws.ss(r,2,'  ✓ Сумма',12);ws.sf(r,4,`D${m+1}+D${cr}`,7);r+=2;
+    ws.ss(r,2,'  Черновая',10);
+    ws.sf(r,7,`IFERROR(SUM(E${r+1}:E${r+3})/SUM(C${r+1}:C${r+3}),0)`,14);
+    r++;
+    for(let si=0;si<NC;si++){
+      const pcol=CL(2+catI*NC+si);
+      ws.ss(r,2,'    '+CHERN_SURFS[si],11);
+      ws.sf(r,3,`SUM('ПЛАН ЧЕРН ПОДЗЕМ'!${pcol}5:${pcol}90)`,12);
+      ws.sf(r,4,`IFERROR(SUM('ПЛАН ЧЕРН ПОДЗЕМ'!${pcol}5:INDEX('ПЛАН ЧЕРН ПОДЗЕМ'!${pcol}5:${pcol}90,MATCH(TODAY(),'ПЛАН ЧЕРН ПОДЗЕМ'!A5:A90,1))),0)`,12);
+      ws.sf(r,5,`IFERROR(SUM('ФАКТ ЧЕРН ПОДЗЕМ'!${pcol}5:INDEX('ФАКТ ЧЕРН ПОДЗЕМ'!${pcol}5:${pcol}90,MATCH(TODAY(),'ФАКТ ЧЕРН ПОДЗЕМ'!A5:A90,1))),0)`,12);
+      ws.sf(r,6,`E${r}-D${r}`,12);
+      ws.sf(r,7,`IFERROR(E${r}/C${r},0)`,14);
+      r++;
     }
-  }
 
-  hdr('ПОДЗЕМНАЯ ЧАСТЬ');
-  sec(G.podzem,false,'ПОДЗЕМ',ci=>`СПРАВОЧНИК!D${catRow(ci,false,L)}`);
+    ws.ss(r,2,'  Чистовая',10);
+    ws.sf(r,7,`IFERROR(SUM(E${r+1}:E${r+3})/SUM(C${r+1}:C${r+3}),0)`,14);
+    r++;
+    for(let si=0;si<3;si++){
+      const pcol=CL(2+catI*NI+si);
+      ws.ss(r,2,'    '+CHIST_SURFS[si],11);
+      ws.sf(r,3,`SUM('ПЛАН ЧИСТ ПОДЗЕМ'!${pcol}5:${pcol}90)`,12);
+      ws.sf(r,4,`IFERROR(SUM('ПЛАН ЧИСТ ПОДЗЕМ'!${pcol}5:INDEX('ПЛАН ЧИСТ ПОДЗЕМ'!${pcol}5:${pcol}90,MATCH(TODAY(),'ПЛАН ЧИСТ ПОДЗЕМ'!A5:A90,1))),0)`,12);
+      ws.sf(r,5,`IFERROR(SUM('ФАКТ ЧИСТ ПОДЗЕМ'!${pcol}5:INDEX('ФАКТ ЧИСТ ПОДЗЕМ'!${pcol}5:${pcol}90,MATCH(TODAY(),'ФАКТ ЧИСТ ПОДЗЕМ'!A5:A90,1))),0)`,12);
+      ws.sf(r,6,`E${r}-D${r}`,12);
+      ws.sf(r,7,`IFERROR(E${r}/C${r},0)`,14);
+      r++;
+    }
+  });
 
   for(let ki=0;ki<NK;ki++){
-    const k=KOR[ki];
-    hdr('НАДЗЕМНАЯ ЧАСТЬ — '+k);
-    sec(G.nadzem,true,k,ci=>`СПРАВОЧНИК!D${catRow(ci,true,L)}`);
+    const kName=G.korpus[ki]?G.korpus[ki].name:`К${ki+1}`;
+    const spK=SL.korpus[ki];
+    ws.ss(r,1,`НАДЗЕМНАЯ ЧАСТЬ — ${kName}`,15);ws.mg(r,1,r,7);r++;
+    for(let i=0;i<colH.length;i++)ws.ss(r,i+1,colH[i],2);ws.rh(r,30);r++;
+
+    const planC=`ПЛАН ЧЕРН ${kName}`,factC=`ФАКТ ЧЕРН ${kName}`,planI=`ПЛАН ЧИСТ ${kName}`,factI=`ФАКТ ЧИСТ ${kName}`;
+
+    NADZEM_CODES.forEach((c,catI)=>{
+      const spR=spK.dataStart+catI;
+      ws.ss(r,1,c.c,10);ws.ss(r,2,c.n,10);
+      for(let cc=3;cc<=6;cc++)ws.sv(r,cc,null,12);
+      const chS=r+2,chE=r+4,hiS=r+6,hiE=r+8;
+      ws.sf(r,7,`IFERROR((SUM(E${chS}:E${chE})/SUM(C${chS}:C${chE})*СПРАВОЧНИК!E${spR})+(SUM(E${hiS}:E${hiE})/SUM(C${hiS}:C${hiE})*СПРАВОЧНИК!F${spR}),0)`,14);
+      r++;
+
+      ws.ss(r,2,'  Черновая',10);
+      ws.sf(r,7,`IFERROR(SUM(E${r+1}:E${r+3})/SUM(C${r+1}:C${r+3}),0)`,14);
+      r++;
+      for(let si=0;si<NC;si++){
+        const pcol=CL(2+catI*NC+si);
+        ws.ss(r,2,'    '+CHERN_SURFS[si],11);
+        ws.sf(r,3,`SUM('${planC}'!${pcol}5:${pcol}90)`,12);
+        ws.sf(r,4,`IFERROR(SUM('${planC}'!${pcol}5:INDEX('${planC}'!${pcol}5:${pcol}90,MATCH(TODAY(),'${planC}'!A5:A90,1))),0)`,12);
+        ws.sf(r,5,`IFERROR(SUM('${factC}'!${pcol}5:INDEX('${factC}'!${pcol}5:${pcol}90,MATCH(TODAY(),'${factC}'!A5:A90,1))),0)`,12);
+        ws.sf(r,6,`E${r}-D${r}`,12);
+        ws.sf(r,7,`IFERROR(E${r}/C${r},0)`,14);
+        r++;
+      }
+
+      ws.ss(r,2,'  Чистовая',10);
+      ws.sf(r,7,`IFERROR(SUM(E${r+1}:E${r+3})/SUM(C${r+1}:C${r+3}),0)`,14);
+      r++;
+      for(let si=0;si<3;si++){
+        const pcol=CL(2+catI*NI+si);
+        ws.ss(r,2,'    '+CHIST_SURFS[si],11);
+        ws.sf(r,3,`SUM('${planI}'!${pcol}5:${pcol}90)`,12);
+        ws.sf(r,4,`IFERROR(SUM('${planI}'!${pcol}5:INDEX('${planI}'!${pcol}5:${pcol}90,MATCH(TODAY(),'${planI}'!A5:A90,1))),0)`,12);
+        ws.sf(r,5,`IFERROR(SUM('${factI}'!${pcol}5:INDEX('${factI}'!${pcol}5:${pcol}90,MATCH(TODAY(),'${factI}'!A5:A90,1))),0)`,12);
+        ws.sf(r,6,`E${r}-D${r}`,12);
+        ws.sf(r,7,`IFERROR(E${r}/C${r},0)`,14);
+        r++;
+      }
+    });
   }
 
-  ws.cw(1,8);ws.cw(2,40);ws.cw(3,12);ws.cw(4,10);ws.cw(5,10);
-  ws.cw(6,12);ws.cw(7,12);ws.cw(8,10);ws.cw(9,10);
+  ws.cw(1,8);ws.cw(2,36);ws.cw(3,12);ws.cw(4,13);ws.cw(5,13);ws.cw(6,12);ws.cw(7,13);
   return ws;
 }
 
-function cleanN(s){let n=s.replace(/[^A-Za-z0-9А-Яа-яёЁ_]/g,'_');if(/^[0-9]/.test(n))n='_'+n;return n.substring(0,31);}
-
+/* SHEET: SIGNAL */
 function gSignal(sst,cfg){
   const ws=new WS('SIGNAL',sst);
-  const{L,W,NN,NP,NK,KOR}=cfg;
-  const nr=[];
-  ws.ss(1,1,'Дата отчета',7);ws.sn(2,1,cfg.rdSer,8);
+  const{SL,W,NK}=cfg;
 
-  const blocks=[];let col_=2;
-  function ab(label,type,vsego,opts){const base=col_;col_+=6;const b={label,type,vsego,base,...opts};blocks.push(b);return b;}
+  ws.ss(1,1,'Дата отчета',1);ws.sn(2,1,cfg.rdSer,8);
 
-  const vP=`СПРАВОЧНИК!D${L.a81}`,vN=`СПРАВОЧНИК!D${L.a82}`;
-  const bpo=ab('8.1 Подземная часть: Общий','combined',vP,{cs:'ПЛАН ЧЕРН ПОДЗЕМ',fs:'ФАКТ ЧЕРН ПОДЗЕМ',is:'ПЛАН ЧИСТ ПОДЗЕМ',fis:'ФАКТ ЧИСТ ПОДЗЕМ',cats:G.podzem,isNdz:false});
-  const bpc=ab('8.1 Подземная часть: Черновая','weighted',vP,{sheet:'ПЛАН ЧЕРН ПОДЗЕМ',fsheet:'ФАКТ ЧЕРН ПОДЗЕМ',cats:G.podzem,isNdz:false,wtype:'chern'});
-  const bpi=ab('8.1 Подземная часть: Чистовая','weighted',vP,{sheet:'ПЛАН ЧИСТ ПОДЗЕМ',fsheet:'ФАКТ ЧИСТ ПОДЗЕМ',cats:G.podzem,isNdz:false,wtype:'chist'});
-
-  const koA=[],kcA=[],kiA=[];
-  for(let kx=0;kx<NK;kx++){
-    const k=KOR[kx],kRow=L.k0+kx;
-    const vK=Array.from({length:NN},(_,i)=>`СПРАВОЧНИК!${CL(2+i)}${kRow}`).join('+');
-    koA.push(ab(`8.2 Надземная ${k}: Общий`,'combined',vK,{cs:`ПЛАН ЧЕРН ${k}`,fs:`ФАКТ ЧЕРН ${k}`,is:`ПЛАН ЧИСТ ${k}`,fis:`ФАКТ ЧИСТ ${k}`,cats:G.nadzem,isNdz:true}));
-    kcA.push(ab(`8.2 Надземная ${k}: Черновая`,'weighted',vK,{sheet:`ПЛАН ЧЕРН ${k}`,fsheet:`ФАКТ ЧЕРН ${k}`,cats:G.nadzem,isNdz:true,wtype:'chern'}));
-    kiA.push(ab(`8.2 Надземная ${k}: Чистовая`,'weighted',vK,{sheet:`ПЛАН ЧИСТ ${k}`,fsheet:`ФАКТ ЧИСТ ${k}`,cats:G.nadzem,isNdz:true,wtype:'chist'}));
+  const cards=[];
+  cards.push({label:'8.1 Подзем.: Общий',key:'общий_подзем'});
+  cards.push({label:'8.1 Подзем.: Черновая',key:'черн_подзем'});
+  cards.push({label:'8.1 Подзем.: Чистовая',key:'чист_подзем'});
+  for(let k=0;k<NK;k++){
+    const kn=G.korpus[k]?G.korpus[k].name:`К${k+1}`;
+    cards.push({label:`8.2 ${kn}: Общий`,key:`общий_к${k+1}`});
+    cards.push({label:`8.2 ${kn}: Черновая`,key:`черн_к${k+1}`});
+    cards.push({label:`8.2 ${kn}: Чистовая`,key:`чист_к${k+1}`});
   }
+  if(NK>1){
+    cards.push({label:'8.2 Надзем. все: Общий',key:'общий_надзем_все'});
+    cards.push({label:'8.2 Надзем. все: Черновая',key:'черн_надзем_все'});
+    cards.push({label:'8.2 Надзем. все: Чистовая',key:'чист_надзем_все'});
+  }
+  cards.push({label:'8. Отделка: Общий',key:'общий_все'});
+  cards.push({label:'8. Отделка: Черновая',key:'черн_все'});
+  cards.push({label:'8. Отделка: Чистовая',key:'чист_все'});
 
-  const kwc=CL(4+NN);
-  const bno=ab('8.2 Надзем. (все): Общий','sum_blocks',vN,{sources:koA,kwc,kw0:L.k0});
-  const bnc=ab('8.2 Надзем. (все): Черновая','sum_blocks',vN,{sources:kcA,kwc,kw0:L.k0});
-  const bni=ab('8.2 Надзем. (все): Чистовая','sum_blocks',vN,{sources:kiA,kwc,kw0:L.k0});
+  const cardCols={};
+  cards.forEach((card,ci)=>{const cs=2+ci*6;cardCols[card.key]={cs,vc:cs+1,pc:cs+2,fc:cs+3};});
+  function cc(key){const c=cardCols[key];return{p:CL(c.pc),f:CL(c.fc)};}
 
-  const wPod=`СПРАВОЧНИК!$W$${L.a81}`,wNad=`СПРАВОЧНИК!$W$${L.a82}`;
-  const vT=`${vP}+${vN}`;
-  ab('8. Отделка общий: Общий','sum_two',vT,{a:bpo,b:bno,wA:wPod,wB:wNad});
-  ab('8. Отделка общий: Черновая','sum_two',vT,{a:bpc,b:bnc,wA:wPod,wB:wNad});
-  ab('8. Отделка общий: Чистовая','sum_two',vT,{a:bpi,b:bni,wA:wPod,wB:wNad});
+  function pfItogoCol(type,codes){return 1+codes.length*(type==='ЧЕРН'?NC:NI)+1+1;}
+  const chPodItogo=pfItogoCol('ЧЕРН',PODZEM_CODES), ciPodItogo=pfItogoCol('ЧИСТ',PODZEM_CODES);
+  const chKItogo=pfItogoCol('ЧЕРН',NADZEM_CODES), ciKItogo=pfItogoCol('ЧИСТ',NADZEM_CODES);
+  const chPodItogoE=chPodItogo+NC-1, ciPodItogoE=ciPodItogo+NI-1;
+  const chKItogoE=chKItogo+NC-1, ciKItogoE=ciKItogo+NI-1;
 
-  for(const b of blocks){
-    const lc=b.base,dc=lc+1,pc=lc+2,fc=lc+3;
-    ws.ss(1,lc,'Заголовок',7);ws.ss(1,dc,'План-факт по объемам',7);
-    ws.ss(2,lc,'Статус',7);ws.ss(2,dc,'true',7);
-    ws.ss(3,lc,'Url изображения',7);
-    ws.ss(4,lc,'Тип',7);ws.ss(4,dc,'planFact2',7);
-    ws.ss(6,lc,'Дата',7);ws.sf(6,dc,'=$A$2',8);
-    ws.ss(7,lc,'Гистограмма',7);ws.ss(7,dc,'false',7);
-    ws.ss(8,lc,'По месяцам',7);ws.ss(8,dc,'false',7);
-    ws.ss(9,lc,'Всего',7);ws.sf(9,dc,b.vsego,7);
-    ws.ss(10,lc,'Тип',7);ws.ss(10,dc,b.label,7);
-    ws.ss(11,lc,'Ед. изм.',7);ws.ss(11,dc,'м2',7);
-    ws.ss(12,lc,'Учитывать дату карточки',7);ws.ss(12,dc,'true',7);
-    ws.ss(13,lc,'Данные',7);
+  function getFormula(key,sr,pfRow){
+    if(key==='черн_подзем'){return{p:`SUM('ПЛАН ЧЕРН ПОДЗЕМ'!${CL(chPodItogo)}${pfRow}:${CL(chPodItogoE)}${pfRow})`,f:`SUM('ФАКТ ЧЕРН ПОДЗЕМ'!${CL(chPodItogo)}${pfRow}:${CL(chPodItogoE)}${pfRow})`};}
+    if(key==='чист_подзем'){return{p:`SUM('ПЛАН ЧИСТ ПОДЗЕМ'!${CL(ciPodItogo)}${pfRow}:${CL(ciPodItogoE)}${pfRow})`,f:`SUM('ФАКТ ЧИСТ ПОДЗЕМ'!${CL(ciPodItogo)}${pfRow}:${CL(ciPodItogoE)}${pfRow})`};}
+    if(key==='общий_подзем'){const cp=cc('черн_подзем'),tp=cc('чист_подзем');return{p:`IFERROR(${cp.p}${sr}*СПРАВОЧНИК!$E$11+${tp.p}${sr}*СПРАВОЧНИК!$F$11,0)`,f:`IFERROR(${cp.f}${sr}*СПРАВОЧНИК!$E$11+${tp.f}${sr}*СПРАВОЧНИК!$F$11,0)`};}
 
-    for(let w=0;w<W;w++){
-      const r=14+w,pr=5+w;
-      if(w===0)ws.sf(r,dc,`СПРАВОЧНИК!$B$${L.dr}`,8);
-      else ws.sf(r,dc,`${CL(dc)}${r-1}+7`,8);
+    const mK=/^черн_к(\d+)$/.exec(key);
+    if(mK){const kn=G.korpus[mK[1]-1]?.name||'К'+mK[1];return{p:`SUM('ПЛАН ЧЕРН ${kn}'!${CL(chKItogo)}${pfRow}:${CL(chKItogoE)}${pfRow})`,f:`SUM('ФАКТ ЧЕРН ${kn}'!${CL(chKItogo)}${pfRow}:${CL(chKItogoE)}${pfRow})`};}
+    const mKi=/^чист_к(\d+)$/.exec(key);
+    if(mKi){const kn=G.korpus[mKi[1]-1]?.name||'К'+mKi[1];return{p:`SUM('ПЛАН ЧИСТ ${kn}'!${CL(ciKItogo)}${pfRow}:${CL(ciKItogoE)}${pfRow})`,f:`SUM('ФАКТ ЧИСТ ${kn}'!${CL(ciKItogo)}${pfRow}:${CL(ciKItogoE)}${pfRow})`};}
 
-      if(b.type==='combined'){
-        const nc=b.cats.length;const pP=[],fP=[];
-        for(let ci=0;ci<nc;ci++){
-          const sr=catRow(ci,b.isNdz,L);
-          const wc=`СПРАВОЧНИК!$E$${sr}`,wh=`СПРАВОЧНИК!$F$${sr}`;
-          const cp=[],cf=[],ip=[],iff=[];
-          for(let si=0;si<NC;si++){
-            const dcl=pfCol(ci,NC,si);
-            cp.push(`'${b.cs}'!${dcl}${pr}*СПРАВОЧНИК!$${cwCol(si)}$${sr}`);
-            cf.push(`'${b.fs}'!${dcl}${pr}*СПРАВОЧНИК!$${cwCol(si)}$${sr}`);
-          }
-          for(let si=0;si<NI;si++){
-            const dcl=pfCol(ci,NI,si);
-            ip.push(`'${b.is}'!${dcl}${pr}*СПРАВОЧНИК!$${hwCol(si)}$${sr}`);
-            iff.push(`'${b.fis}'!${dcl}${pr}*СПРАВОЧНИК!$${hwCol(si)}$${sr}`);
-          }
-          pP.push(`${wc}*(${cp.join('+')})+${wh}*(${ip.join('+')})`);
-          fP.push(`${wc}*(${cf.join('+')})+${wh}*(${iff.join('+')})`);
-        }
-        ws.sf(r,pc,pP.join('+'),7);
-        ws.sf(r,fc,fP.join('+'),7);
-      }else if(b.type==='weighted'){
-        const nc=b.cats.length,ns=b.wtype==='chist'?NI:NC;
-        const wcf=b.wtype==='chist'?hwCol:cwCol;
-        const pP=[],fP=[];
-        for(let ci=0;ci<nc;ci++){
-          const sr=catRow(ci,b.isNdz,L);
-          for(let si=0;si<ns;si++){
-            const dcl=pfCol(ci,ns,si),wc=wcf(si);
-            pP.push(`'${b.sheet}'!${dcl}${pr}*СПРАВОЧНИК!$${wc}$${sr}`);
-            fP.push(`'${b.fsheet}'!${dcl}${pr}*СПРАВОЧНИК!$${wc}$${sr}`);
-          }
-        }
-        ws.sf(r,pc,pP.join('+'),7);
-        ws.sf(r,fc,fP.join('+'),7);
-      }else if(b.type==='sum_blocks'){
-        ws.sf(r,pc,b.sources.map((s,i)=>`${CL(s.base+2)}${r}*СПРАВОЧНИК!$${b.kwc}$${b.kw0+i}`).join('+')||'0',7);
-        ws.sf(r,fc,b.sources.map((s,i)=>`${CL(s.base+3)}${r}*СПРАВОЧНИК!$${b.kwc}$${b.kw0+i}`).join('+')||'0',7);
-      }else if(b.type==='sum_two'){
-        ws.sf(r,pc,`${CL(b.a.base+2)}${r}*${b.wA}+${CL(b.b.base+2)}${r}*${b.wB}`,7);
-        ws.sf(r,fc,`${CL(b.a.base+3)}${r}*${b.wA}+${CL(b.b.base+3)}${r}*${b.wB}`,7);
-      }
+    const mO=/^общий_к(\d+)$/.exec(key);
+    if(mO){const k=+mO[1],ar=SL.korpus[k-1].avg,cp=cc(`черн_к${k}`),tp=cc(`чист_к${k}`);return{p:`IFERROR(${cp.p}${sr}*СПРАВОЧНИК!$E$${ar}+${tp.p}${sr}*СПРАВОЧНИК!$F$${ar},0)`,f:`IFERROR(${cp.f}${sr}*СПРАВОЧНИК!$E$${ar}+${tp.f}${sr}*СПРАВОЧНИК!$F$${ar},0)`};}
+
+    if(key==='черн_надзем_все'){const pp=[],ff=[];for(let k=1;k<=NK;k++){const c=cc(`черн_к${k}`);pp.push(c.p+sr);ff.push(c.f+sr);}return{p:pp.join('+')||'0',f:ff.join('+')||'0'};}
+    if(key==='чист_надзем_все'){const pp=[],ff=[];for(let k=1;k<=NK;k++){const c=cc(`чист_к${k}`);pp.push(c.p+sr);ff.push(c.f+sr);}return{p:pp.join('+')||'0',f:ff.join('+')||'0'};}
+    if(key==='общий_надзем_все'){const cp=cc('черн_надзем_все'),tp=cc('чист_надзем_все');const avgs=SL.korpus.map(ks=>ks.avg);const eA=avgs.map(r=>`СПРАВОЧНИК!$E$${r}`).join('+'),fA=avgs.map(r=>`СПРАВОЧНИК!$F$${r}`).join('+');const n=NK;return{p:`IFERROR(${cp.p}${sr}*((${eA})/${n})+${tp.p}${sr}*((${fA})/${n}),0)`,f:`IFERROR(${cp.f}${sr}*((${eA})/${n})+${tp.f}${sr}*((${fA})/${n}),0)`};}
+
+    if(key==='черн_все'){
+      if(NK>1){const np=cc('черн_надзем_все'),pp=cc('черн_подзем');return{p:`${np.p}${sr}+${pp.p}${sr}`,f:`${np.f}${sr}+${pp.f}${sr}`};}
+      if(NK===1){const k1=cc('черн_к1'),pp=cc('черн_подзем');return{p:`${k1.p}${sr}+${pp.p}${sr}`,f:`${k1.f}${sr}+${pp.f}${sr}`};}
+      return{p:cc('черн_подзем').p+sr,f:cc('черн_подзем').f+sr};
     }
-    nr.push({name:cleanN(b.label),ref:`'SIGNAL'!$${CL(lc)}:$${CL(fc)}`});
+    if(key==='чист_все'){
+      if(NK>1){const np=cc('чист_надзем_все'),pp=cc('чист_подзем');return{p:`${np.p}${sr}+${pp.p}${sr}`,f:`${np.f}${sr}+${pp.f}${sr}`};}
+      if(NK===1){const k1=cc('чист_к1'),pp=cc('чист_подзем');return{p:`${k1.p}${sr}+${pp.p}${sr}`,f:`${k1.f}${sr}+${pp.f}${sr}`};}
+      return{p:cc('чист_подзем').p+sr,f:cc('чист_подзем').f+sr};
+    }
+    if(key==='общий_все'){
+      const cp=cc('черн_все'),tp=cc('чист_все');
+      const avgs=[11,...SL.korpus.map(ks=>ks.avg)];
+      const eA=avgs.map(r=>`СПРАВОЧНИК!$E$${r}`).join('+'),fA=avgs.map(r=>`СПРАВОЧНИК!$F$${r}`).join('+');
+      const n=avgs.length;
+      return{p:`IFERROR(${cp.p}${sr}*((${eA})/${n})+${tp.p}${sr}*((${fA})/${n}),0)`,f:`IFERROR(${cp.f}${sr}*((${eA})/${n})+${tp.f}${sr}*((${fA})/${n}),0)`};
+    }
+    return{p:'0',f:'0'};
   }
-  return{sheet:ws,nr};
+
+  cards.forEach((card,ci)=>{
+    const c=cardCols[card.key];
+    ws.ss(1,c.cs,'Заголовок',16);ws.ss(1,c.vc,'План-факт по объемам',16);
+    ws.ss(2,c.cs,'Статус',16);ws.ss(2,c.vc,'true',16);
+    ws.ss(3,c.cs,'Url изображения',16);
+    ws.ss(4,c.cs,'Тип',16);ws.ss(4,c.vc,'planFact2',16);
+    ws.ss(6,c.cs,'Дата',16);ws.sf(6,c.vc,'=$A$2',8);
+    ws.ss(7,c.cs,'Гистограмма',16);ws.ss(7,c.vc,'false',16);
+    ws.ss(8,c.cs,'По месяцам',16);ws.ss(8,c.vc,'false',16);
+    ws.ss(9,c.cs,'Всего',16);ws.sf(9,c.vc,`SUM(${CL(c.pc)}14:${CL(c.pc)}79)`,7);
+    ws.ss(10,c.cs,'Тип',16);ws.ss(10,c.vc,card.label,16);
+    ws.ss(11,c.cs,'Ед. изм.',16);ws.ss(11,c.vc,'м2',16);
+    ws.ss(12,c.cs,'Учитывать дату карточки',16);ws.ss(12,c.vc,'true',16);
+    ws.ss(13,c.cs,'Данные',2);
+
+    for(let w=0;w<Math.min(W,66);w++){
+      const r=14+w,pfRow=5+w;
+      if(w===0)ws.sf(r,c.vc,`СПРАВОЧНИК!$B$1`,8);
+      else ws.sf(r,c.vc,`${CL(c.vc)}${r-1}+7`,8);
+      const fm=getFormula(card.key,r,pfRow);
+      ws.sf(r,c.pc,fm.p,7);ws.sf(r,c.fc,fm.f,7);
+    }
+  });
+
+  ws.cw(1,11);
+  const cWidths=[25,10,10,10,8,8];
+  cards.forEach((_card,ci)=>{const cs=2+ci*6;for(let o=0;o<6;o++)ws.cw(cs+o,cWidths[o]);});
+  return ws;
 }
 
-/* ═══ EXPORT ═══ */
+/* EXPORT */
 function doExport(){
   const btn=document.getElementById('btnExport');
+  if(G.weeks<1){alert('Укажите кол-во недель (> 0)');return;}
+  if(!G.startDate){alert('Укажите дату начала СМР');return;}
   btn.disabled=true;btn.textContent='Генерация...';
   setTimeout(()=>{
     try{
       save();
       const sst=new SST();
-      const NK=G.korpus.length,NP=G.podzem.length,NN=G.nadzem.length;
-      const L=compL(NP,NN,NK);
-      const KA={};for(const k of G.korpus)KA[k]=G.areas[k]||[...DEF_AREAS];
-      const cfg={KOR:G.korpus,KA,L,W:G.weeks,NP,NN,NK,sdSer:DS(G.startDate),rdSer:DS(G.reportDate),drRow:L.dr};
+      const NK=G.korpus.length;
+      const SL=spravLayout(NK);
+      const W=G.weeks;
+      const sdSer=DS(G.startDate),rdSer=DS(G.reportDate||G.startDate);
+      const cfg={SL,NK,W,sdSer,rdSer};
 
       const sheets=[];
-      sheets.push(gInstr(sst));
       sheets.push(gSprav(sst,cfg));
-
-      sheets.push(gPF(sst,cfg,'ПЛАН','ЧЕРН','ПОДЗЕМ',G.podzem));
-      sheets.push(gPF(sst,cfg,'ПЛАН','ЧИСТ','ПОДЗЕМ',G.podzem));
-
-      const sig=gSignal(sst,cfg);
-      sheets.push(sig.sheet);
-
-      for(const k of G.korpus){
-        sheets.push(gPF(sst,cfg,'ПЛАН','ЧЕРН',k,G.nadzem));
-        sheets.push(gPF(sst,cfg,'ПЛАН','ЧИСТ',k,G.nadzem));
-      }
-      sheets.push(gPF(sst,cfg,'ФАКТ','ЧЕРН','ПОДЗЕМ',G.podzem));
-      sheets.push(gPF(sst,cfg,'ФАКТ','ЧИСТ','ПОДЗЕМ',G.podzem));
-      for(const k of G.korpus){
-        sheets.push(gPF(sst,cfg,'ФАКТ','ЧЕРН',k,G.nadzem));
-        sheets.push(gPF(sst,cfg,'ФАКТ','ЧИСТ',k,G.nadzem));
-      }
-
+      sheets.push(gSignal(sst,cfg));
       sheets.push(gOtchet(sst,cfg));
+      sheets.push(gPF(sst,cfg,'ПЛАН','ЧЕРН','ПОДЗЕМ',PODZEM_CODES));
+      sheets.push(gPF(sst,cfg,'ФАКТ','ЧЕРН','ПОДЗЕМ',PODZEM_CODES));
+      sheets.push(gPF(sst,cfg,'ПЛАН','ЧИСТ','ПОДЗЕМ',PODZEM_CODES));
+      sheets.push(gPF(sst,cfg,'ФАКТ','ЧИСТ','ПОДЗЕМ',PODZEM_CODES));
+      for(let ki=0;ki<NK;ki++){
+        const kn=G.korpus[ki].name;
+        sheets.push(gPF(sst,cfg,'ПЛАН','ЧЕРН',kn,NADZEM_CODES));
+        sheets.push(gPF(sst,cfg,'ФАКТ','ЧЕРН',kn,NADZEM_CODES));
+        sheets.push(gPF(sst,cfg,'ПЛАН','ЧИСТ',kn,NADZEM_CODES));
+        sheets.push(gPF(sst,cfg,'ФАКТ','ЧИСТ',kn,NADZEM_CODES));
+      }
 
       const names=sheets.map(s=>s.name);const n=sheets.length;
       const files=[
         {name:'[Content_Types].xml',content:ctXml(n)},
         {name:'_rels/.rels',content:relsXml()},
-        {name:'xl/workbook.xml',content:wbXml(names,sig.nr)},
+        {name:'xl/workbook.xml',content:wbXml(names)},
         {name:'xl/_rels/workbook.xml.rels',content:wbRelsXml(n)},
         {name:'xl/styles.xml',content:styXml()},
         {name:'xl/sharedStrings.xml',content:sst.xml()},
@@ -777,14 +751,13 @@ function doExport(){
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a');a.href=url;a.download=`Отделка для SIGNAL (${NK} корп).xlsx`;
       document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-      const sz=(blob.size/1024).toFixed(0);
-      btn.textContent=`Готово: ${n} листов, ${sz} КБ`;
+      btn.textContent=`Готово: ${n} листов, ${(blob.size/1024).toFixed(0)} КБ`;
       setTimeout(()=>{btn.textContent='Скачать Excel';btn.disabled=false;},3000);
     }catch(e){alert('Ошибка: '+e.message);console.error(e);btn.textContent='Скачать Excel';btn.disabled=false;}
   },50);
 }
 
-/* ═══ INIT ═══ */
+/* INIT */
 load();
 initSettings();
 </script>
