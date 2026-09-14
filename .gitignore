@@ -1,0 +1,32 @@
+node_modules/
+__pycache__/
+*.pyc
+*.zip
+*.mpp
+*.json
+!config.json
+nul
+
+# Data files
+*.xlsx
+Данные_сервака.xlsx
+
+# Binary/media
+*.ttf
+*.otf
+*.eps
+*.ico
+*.pdf
+*.pptx
+*.png
+
+# Other projects (only Проверка tracked)
+Deploy-MR.html
+DesignProject/
+PermitFlow/
+TipSmeta/
+brend/
+buildsmeta/
+smetaforge/
+moscow_urban_monitor/
+# Отделка SIGNAL — track .py and .html only (xlsx excluded by *.xlsx rule above)
