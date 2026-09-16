@@ -586,23 +586,32 @@ function gSignal(sst,cfg){
   ws.ss(1,1,'Дата отчета',1);ws.sn(2,1,cfg.rdSer,8);
 
   const cards=[];
-  cards.push({label:'8.1 Подзем.: Общий',key:'общий_подзем'});
-  cards.push({label:'8.1 Подзем.: Черновая',key:'черн_подзем'});
-  cards.push({label:'8.1 Подзем.: Чистовая',key:'чист_подзем'});
+  cards.push({label:'8.1 Подземная часть: Общий',key:'общий_подзем'});
+  cards.push({label:'8.1 Подземная часть: Черновая',key:'черн_подзем'});
+  cards.push({label:'8.1 Подземная часть: Чистовая',key:'чист_подзем'});
   for(let k=0;k<NK;k++){
     const kn=G.korpus[k]?G.korpus[k].name:`К${k+1}`;
-    cards.push({label:`8.2 ${kn}: Общий`,key:`общий_к${k+1}`});
-    cards.push({label:`8.2 ${kn}: Черновая`,key:`черн_к${k+1}`});
-    cards.push({label:`8.2 ${kn}: Чистовая`,key:`чист_к${k+1}`});
+    cards.push({label:`8.2 Надземная ${kn}: Общий`,key:`общий_к${k+1}`});
+    cards.push({label:`8.2 Надземная ${kn}: Черновая`,key:`черн_к${k+1}`});
+    cards.push({label:`8.2 Надземная ${kn}: Чистовая`,key:`чист_к${k+1}`});
   }
   if(NK>1){
-    cards.push({label:'8.2 Надзем. все: Общий',key:'общий_надзем_все'});
-    cards.push({label:'8.2 Надзем. все: Черновая',key:'черн_надзем_все'});
-    cards.push({label:'8.2 Надзем. все: Чистовая',key:'чист_надзем_все'});
+    cards.push({label:'8.2 Надзем. (все): Общий',key:'общий_надзем_все'});
+    cards.push({label:'8.2 Надзем. (все): Черновая',key:'черн_надзем_все'});
+    cards.push({label:'8.2 Надзем. (все): Чистовая',key:'чист_надзем_все'});
   }
-  cards.push({label:'8. Отделка: Общий',key:'общий_все'});
-  cards.push({label:'8. Отделка: Черновая',key:'черн_все'});
-  cards.push({label:'8. Отделка: Чистовая',key:'чист_все'});
+  cards.push({label:'8. Отделка общий: Общий',key:'общий_все'});
+  cards.push({label:'8. Отделка общий: Черновая',key:'черн_все'});
+  cards.push({label:'8. Отделка общий: Чистовая',key:'чист_все'});
+  cards.push({label:'8. Отделка общий: Заполн. Проемов',key:'запол_все'});
+  cards.push({label:'8.1 Подземная часть: Заполн. Проемов',key:'запол_подзем'});
+  if(NK>1){
+    cards.push({label:'8.2 Надзем. (все): Заполн. Проемов',key:'запол_надзем_все'});
+  }
+  for(let k=0;k<NK;k++){
+    const kn=G.korpus[k]?G.korpus[k].name:`К${k+1}`;
+    cards.push({label:`8.2 Надземная ${kn}: Заполн. Проемов`,key:`запол_к${k+1}`});
+  }
 
   const cardCols={};
   cards.forEach((card,ci)=>{const cs=2+ci*6;cardCols[card.key]={cs,vc:cs+1,pc:cs+2,fc:cs+3};});
@@ -648,6 +657,15 @@ function gSignal(sst,cfg){
       const n=avgs.length;
       return{p:`IFERROR(${cp.p}${sr}*((${eA})/${n})+${tp.p}${sr}*((${fA})/${n}),0)`,f:`IFERROR(${cp.f}${sr}*((${eA})/${n})+${tp.f}${sr}*((${fA})/${n}),0)`};
     }
+    if(key==='запол_подзем'){const zc=CL(ciPodItogo+3);return{p:`'ПЛАН ЧИСТ ПОДЗЕМ'!${zc}${pfRow}`,f:`'ФАКТ ЧИСТ ПОДЗЕМ'!${zc}${pfRow}`};}
+    const mZ=/^запол_к(\d+)$/.exec(key);
+    if(mZ){const kn=G.korpus[mZ[1]-1]?.name||'К'+mZ[1];const zc=CL(ciKItogo+3);return{p:`'ПЛАН ЧИСТ ${kn}'!${zc}${pfRow}`,f:`'ФАКТ ЧИСТ ${kn}'!${zc}${pfRow}`};}
+    if(key==='запол_надзем_все'){const pp=[],ff=[];for(let k=1;k<=NK;k++){const c=cc(`запол_к${k}`);pp.push(c.p+sr);ff.push(c.f+sr);}return{p:pp.join('+')||'0',f:ff.join('+')||'0'};}
+    if(key==='запол_все'){
+      if(NK>1){const np=cc('запол_надзем_все'),pp=cc('запол_подзем');return{p:`${np.p}${sr}+${pp.p}${sr}`,f:`${np.f}${sr}+${pp.f}${sr}`};}
+      if(NK===1){const k1=cc('запол_к1'),pp=cc('запол_подзем');return{p:`${k1.p}${sr}+${pp.p}${sr}`,f:`${k1.f}${sr}+${pp.f}${sr}`};}
+      return{p:cc('запол_подзем').p+sr,f:cc('запол_подзем').f+sr};
+    }
     return{p:'0',f:'0'};
   }
 
@@ -657,7 +675,7 @@ function gSignal(sst,cfg){
     ws.ss(2,c.cs,'Статус',16);ws.ss(2,c.vc,'true',16);
     ws.ss(3,c.cs,'Url изображения',16);
     ws.ss(4,c.cs,'Тип',16);ws.ss(4,c.vc,'planFact2',16);
-    ws.ss(6,c.cs,'Дата',16);ws.sf(6,c.vc,'=$A$2',8);
+    ws.ss(6,c.cs,'Дата',16);ws.sf(6,c.vc,'$A$2',8);
     ws.ss(7,c.cs,'Гистограмма',16);ws.ss(7,c.vc,'false',16);
     ws.ss(8,c.cs,'По месяцам',16);ws.ss(8,c.vc,'false',16);
     ws.ss(9,c.cs,'Всего',16);ws.sf(9,c.vc,`SUM(${CL(c.pc)}14:${CL(c.pc)}79)`,7);
